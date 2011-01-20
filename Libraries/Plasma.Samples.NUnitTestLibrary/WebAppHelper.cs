@@ -9,6 +9,7 @@
  *
  * **********************************************************************************/
 using System;
+using System.IO;
 using Plasma.Core;
 
 namespace Plasma.Samples.NUnitTestLibrary
@@ -24,7 +25,7 @@ namespace Plasma.Samples.NUnitTestLibrary
                 // Todo: Make this configurable from a configuration file
 
                 if (_appInstance == null)
-                    _appInstance = new AspNetApplication("/", @"C:\Users\Steve\Documents\VS2005\PlasmaRoot\Plasma_v1.0.07015.0\Websites\PlasmaSampleCS");
+                    _appInstance = new AspNetApplication("/", Path.GetFullPath(@".\..\..\..\..\Websites\PlasmaSampleCS"));
 
                 return _appInstance;
             }
