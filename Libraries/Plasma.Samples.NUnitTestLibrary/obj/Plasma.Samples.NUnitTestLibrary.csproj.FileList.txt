@@ -1,9 +1,0 @@
-bin\Debug\Plasma.Samples.NUnitTestLibrary.dll
-bin\Debug\Plasma.Samples.NUnitTestLibrary.pdb
-bin\Debug\ASPTestLibrary.dll
-bin\Debug\nunit.core.dll
-bin\Debug\nunit.core.extensions.dll
-bin\Debug\ASPTestLibrary.pdb
-obj\Debug\ResolveAssemblyReference.cache
-obj\Debug\Plasma.Samples.NUnitTestLibrary.dll
-obj\Debug\Plasma.Samples.NUnitTestLibrary.pdb

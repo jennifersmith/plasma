@@ -23,6 +23,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PlasmaSampleCS", "Websites\
 		VWDPort = "54179"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Samples.NUnitTestLibrary", "Libraries\Plasma.Samples.NUnitTestLibrary\Plasma.Samples.NUnitTestLibrary.csproj", "{30A63F7D-03DA-4DCC-8C36-D2F116741548}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{B0283CD0-2FA4-4E4E-8784-5A07953E5D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0283CD0-2FA4-4E4E-8784-5A07953E5D6C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{B0283CD0-2FA4-4E4E-8784-5A07953E5D6C}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
