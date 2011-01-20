@@ -1,0 +1,223 @@
+/* **********************************************************************************
+ *
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Permissive
+ * License (MS-PL).
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Text;
+using System.Web;
+
+namespace Plasma.Core {
+    public class AspNetForm : NameValueCollection {
+        private string _method;
+        private string _action;
+
+        internal AspNetForm(string requestVirtualPath, HtmlNode htmlForm) : base() {
+            // form's method
+            string method = GetNodeAttribute(htmlForm, "method");
+            _method = string.IsNullOrEmpty(method) ? "POST" : method;
+
+            // form's action
+            string action = GetNodeAttribute(htmlForm, "action");
+            _action = string.IsNullOrEmpty(method) ? requestVirtualPath :
+                VirtualPathUtility.Combine(requestVirtualPath, action);
+
+            bool hasChildren = htmlForm.HasChildNodes;
+            // populate the dictionary with form fields
+            RetrieveFormFields(htmlForm);
+        }
+
+        public string Method {
+            get { return _method; }
+            set { _method = value; }
+        }
+
+        public string Action {
+            get { return _action; }
+            set { _action = value; }
+        }
+
+        public AspNetRequest GenerateFormPostRequest() {
+            // path and query string
+
+            string path;
+            string query;
+
+            int iQuery = _action.IndexOf('?');
+
+            if (iQuery >= 0) {
+                path = _action.Substring(0, iQuery);
+                query = _action.Substring(iQuery+1);
+            }
+            else {
+                path = _action;
+                query = null;
+            }
+
+            // form collection as string
+
+            string formData = GenerateFormDataAsString();
+
+            // form data as query string or body (depending on method)
+
+            string verb;
+            List<KeyValuePair<string, string>> headers = new List<KeyValuePair<string, string>>();
+            byte[] formBody = null;
+
+            if (string.Compare(_method, "GET", StringComparison.OrdinalIgnoreCase) == 0) {
+                verb = "GET";
+
+                // for GET requests form goes into query string
+                query = formData;
+            }
+            else {
+                verb = "POST";
+
+                // for POST requests form goes into request body
+                formBody = Encoding.UTF8.GetBytes(formData);
+                headers.Add(new KeyValuePair<string, string>("Content-Length", formBody.Length.ToString()));
+                headers.Add(new KeyValuePair<string, string>("Content-Type", "application/x-www-form-urlencoded"));
+            }
+
+            // create the request based on the above
+
+            return new AspNetRequest(path, null, query, verb, headers, formBody);
+        }
+
+        private string GenerateFormDataAsString() {
+            int n = Count;
+
+            if (n == 0) {
+                return string.Empty;
+            }
+
+            StringBuilder s = new StringBuilder();
+
+            for (int i = 0; i < n; i++) {
+                string key = HttpUtility.UrlEncodeUnicode(GetKey(i));
+
+                if (!string.IsNullOrEmpty(key)) {
+                    key += "=";
+                }
+
+                ArrayList values = (ArrayList)BaseGet(i);
+                int numValues = (values != null) ? values.Count : 0;
+
+                if (i > 0) {
+                    s.Append('&');
+                }
+
+                if (numValues == 1) {
+                    s.Append(key);
+                    s.Append(HttpUtility.UrlEncodeUnicode((string)values[0]));
+                }
+                else if (numValues == 0) {
+                    s.Append(key);
+                }
+                else {
+                    for (int j = 0; j < numValues; j++) {
+                        if (j > 0) {
+                            s.Append('&');
+                        }
+
+                        s.Append(key);
+                        s.Append(HttpUtility.UrlEncodeUnicode((string)values[j]));
+                    }
+                }
+            }
+
+            return s.ToString();
+        }
+
+        private void RetrieveFormFields(HtmlNode node) {
+            foreach (HtmlNode childNode in node.ChildNodes) {
+                if (childNode.NodeType != HtmlNodeType.Element) {
+                    continue;
+                }
+
+                if (AddFormField(childNode)) {
+                    // if this a form field already no need to recurse
+                    continue;
+                }
+
+                // recurse down
+                RetrieveFormFields(childNode);
+            }
+        }
+
+        private bool AddFormField(HtmlNode node) {
+            if (NodeNameIs(node, "input")) {
+                string type = GetNodeAttribute(node, "type");
+
+                if (StringsEqual(type, "text") || StringsEqual(type, "hidden")) {
+                    AddFieldValue(node, GetNodeAttribute(node, "value"));
+                }
+                else if (StringsEqual(type, "checkbox")) {
+                    if (NodeHasAttributeWithValue(node, "cheched", "checked")) {
+                        AddFieldValue(node, "on");
+                    }
+                }
+                else if (StringsEqual(type, "submit")) {
+                    //AddFieldValue(node, GetNodeAttribute(node, "text"));
+                }
+            }
+            else if (NodeNameIs(node, "textarea")) {
+                AddFieldValue(node, node.InnerHtml);
+            }
+            else if (NodeNameIs(node, "select")) {
+                foreach (HtmlNode childNode in node.ChildNodes) {
+                    if (NodeNameIs(childNode, "option") &&
+                        NodeHasAttributeWithValue(childNode, "selected", "selected")) {
+                        AddFieldValue(node, GetNodeAttribute(childNode, "value"));
+                    }
+                }
+            }
+            else {
+                // not a field
+                return false;
+            }
+
+            // field processed
+            return true;
+        }
+
+        private void AddFieldValue(HtmlNode node, string fieldValue) {
+            string fieldName = GetNodeAttribute(node, "name");
+
+            if (!string.IsNullOrEmpty(fieldName)) {
+                Add(fieldName, fieldValue);
+            }
+        }
+
+        private static bool NodeNameIs(HtmlNode node, string name) {
+            return (node.NodeType == HtmlNodeType.Element) && StringsEqual(node.Name, name);
+        }
+
+        private static string GetNodeAttribute(HtmlNode node, string attributeName) {
+            HtmlAttribute attribute = node.Attributes[attributeName];
+
+            if (attribute != null && attribute.Value != null) {
+                return attribute.Value;
+            }
+            else {
+                return string.Empty;
+            }
+        }
+
+        private static bool NodeHasAttributeWithValue(HtmlNode node, string attributeName, string attributeValue) {
+            return StringsEqual(GetNodeAttribute(node, attributeName), attributeValue);
+        }
+
+        private static bool StringsEqual(string s1, string s2) {
+            return (string.Compare(s1, s2, StringComparison.OrdinalIgnoreCase) == 0);
+        }
+    }
+}

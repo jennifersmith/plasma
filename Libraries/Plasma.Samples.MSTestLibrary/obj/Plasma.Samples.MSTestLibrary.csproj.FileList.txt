@@ -1,0 +1,7 @@
+.\bin\Debug\Plasma.Samples.MSTestLibrary.dll
+.\bin\Debug\Plasma.Samples.MSTestLibrary.pdb
+.\bin\Debug\ASPTestLibrary.dll
+.\bin\Debug\ASPTestLibrary.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\Plasma.Samples.MSTestLibrary.dll
+obj\Debug\Plasma.Samples.MSTestLibrary.pdb
