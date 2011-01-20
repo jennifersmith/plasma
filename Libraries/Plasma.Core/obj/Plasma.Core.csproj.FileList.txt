@@ -1,5 +1,0 @@
-bin\Debug\ASPTestLibrary.dll
-bin\Debug\ASPTestLibrary.pdb
-obj\Debug\ResolveAssemblyReference.cache
-obj\Debug\ASPTestLibrary.dll
-obj\Debug\ASPTestLibrary.pdb
