@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
 using Plasma.Core;
 
 namespace Plasma.Samples.MSTestLibrary.MasterPages
@@ -23,7 +24,7 @@ namespace Plasma.Samples.MSTestLibrary.MasterPages
             form["ctl00$ContentPlaceHolder1$Button1"] = "Button";
 
             AspNetResponse secondResponse = WebApp.ProcessRequest(form.GenerateFormPostRequest());
-            string label1 = secondResponse.FindHtmlElementById("ctl00_ContentPlaceHolder1_Label1").InnerHtml;
+            string label1 = secondResponse.InnerHtml(secondResponse.FindElement(By.Id("ctl00_ContentPlaceHolder1_Label1")));
 
             Assert.AreEqual("Hello Scott you selected: Foo", label1);
         }

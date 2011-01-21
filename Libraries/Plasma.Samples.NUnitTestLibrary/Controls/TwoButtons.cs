@@ -10,6 +10,7 @@
  * **********************************************************************************/
 using System;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using Plasma.Core;
 
 namespace Plasma.Samples.NUnitTestLibrary.Controls
@@ -34,7 +35,7 @@ namespace Plasma.Samples.NUnitTestLibrary.Controls
 
             AspNetResponse secondResponse = WebApp.ProcessRequest(Button.Click(form, "Button1"));
 
-            Assert.AreEqual("Value: Testing", secondResponse.FindHtmlElementById("Label1").InnerHtml);
+            Assert.AreEqual("Value: Testing", secondResponse.InnerHtml(secondResponse.FindElement(By.Id("Label1"))));
 
 
             /////////////////////////////////////////////////////////////////////////////
@@ -44,7 +45,7 @@ namespace Plasma.Samples.NUnitTestLibrary.Controls
 
             AspNetResponse thirdResponse = WebApp.ProcessRequest(Button.Click(form, "Button2"));
 
-            Assert.AreEqual("Selected", thirdResponse.FindHtmlElementById("Label1").Attributes["class"].Value);
+            Assert.AreEqual("Selected", thirdResponse.FindElement(By.Id("Label1")).GetAttribute("class"));
         }
     }
 }

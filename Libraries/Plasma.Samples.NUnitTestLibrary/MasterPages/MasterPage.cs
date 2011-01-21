@@ -10,6 +10,7 @@
  * **********************************************************************************/
 using System;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using Plasma.Core;
 
 namespace Plasma.Samples.NUnitTestLibrary.MasterPages
@@ -31,7 +32,7 @@ namespace Plasma.Samples.NUnitTestLibrary.MasterPages
 
             AspNetResponse secondResponse = WebApp.ProcessRequest(Button.Click(form, "ctl00$ContentPlaceHolder1$Button1"));
 
-            Assert.AreEqual("Hello Scott you selected: Foo", secondResponse.FindHtmlElementById("ctl00_ContentPlaceHolder1_Label1").InnerHtml);
+            Assert.AreEqual("Hello Scott you selected: Foo", secondResponse.InnerHtml(secondResponse.FindElement(By.Id("ctl00_ContentPlaceHolder1_Label1"))));
         }
     }
 }

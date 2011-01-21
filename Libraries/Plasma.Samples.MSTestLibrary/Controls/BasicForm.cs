@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
 using Plasma.Core;
 
 namespace Plasma.Samples.MSTestLibrary.Controls
@@ -22,7 +23,7 @@ namespace Plasma.Samples.MSTestLibrary.Controls
             form["Button1"] = "Button";
             
             AspNetResponse secondResponse = WebApp.ProcessRequest(form.GenerateFormPostRequest());
-            string label1 = secondResponse.FindHtmlElementById("Label1").InnerHtml;
+            string label1 = secondResponse.InnerHtml(secondResponse.FindElement(By.Id("Label1")));
 
             Assert.AreEqual(label1, "Value: Testing");
         }

@@ -10,103 +10,126 @@
  * **********************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web;
+using System.Xml;
+using OpenQA.Selenium;
 
 namespace Plasma.Core
 {
-
-    public class AspNetResponse {
-        private string _requestVirtualPath;
-        private int _status;
-        private List<KeyValuePair<string, string>> _headers;
-        private byte[] _body;
-        private string _bodyAsString;
-        private HtmlDocument _bodyAsHtmlDoc;
+    public class AspNetResponse : ISearchContext
+    {
+        private readonly byte[] body;
+        private readonly IEnumerable<KeyValuePair<string, string>> headers;
+        private readonly string requestVirtualPath;
+        private readonly int status;
+        private string bodyAsString;
+        private IWebElement htmlElement;
 
         internal AspNetResponse(string requestVirtualPath,
-            int status, List<KeyValuePair<string, string>> headers, byte[] body) {
-
-            _requestVirtualPath = requestVirtualPath;
-
-            _status = status;
-            _headers = headers;
-            _body = body;
-        }
-
-        public int Status {
-            get { return _status; }
-        }
-
-        public List<KeyValuePair<string, string>> Headers {
-            get {
-                if (_headers == null) {
-                    _headers = new List<KeyValuePair<string, string>>();
-                }
-
-                return _headers; 
-            }
-        }
-
-        public byte[] Body {
-            get { return _body; }
-        }
-
-        public string BodyAsString {
-            get {
-                if (_bodyAsString == null) {
-                    if (_body != null && _body.Length > 0) {
-                        _bodyAsString = Encoding.UTF8.GetString(_body);
-                    }
-                    else {
-                        _bodyAsString = string.Empty;
-                    }
-                }
-
-                return _bodyAsString;
-            }
-        }
-
-        public HtmlNode FindHtmlElementById(string id) {
-            HtmlDocument doc = BodyAsHtmlDocument;
-            HtmlNode node = FindChildNode(doc.DocumentNode, null, id);
-
-            return node;
-        }
-
-        public string FindInnerHtmlById(string id)
+                                int status, IEnumerable<KeyValuePair<string, string>> headers, byte[] body)
         {
-            HtmlDocument doc = BodyAsHtmlDocument;
-            HtmlNode node = FindChildNode(doc.DocumentNode, null, id);
+            this.requestVirtualPath = requestVirtualPath;
 
-            if (node != null)
+            this.status = status;
+            this.headers = headers ?? new Dictionary<string, string>();
+            this.body = body;
+        }
+
+        public string RequestVirtualPath
+        {
+            get { return requestVirtualPath; }
+        }
+
+        public int Status
+        {
+            get { return status; }
+        }
+
+        public IEnumerable<KeyValuePair<string, string>> Headers
+        {
+            get { return headers; }
+        }
+
+        public byte[] Body
+        {
+            get { return body; }
+        }
+
+        public string BodyAsString
+        {
+            get
             {
-                return node.InnerHtml;
-            }
-            else
-            {
-                return null;
+                if (bodyAsString == null)
+                {
+                    if (body != null && body.Length > 0)
+                    {
+                        bodyAsString = Encoding.UTF8.GetString(body);
+                    }
+                    else
+                    {
+                        bodyAsString = String.Empty;
+                    }
+                }
+
+                return bodyAsString;
             }
         }
 
-        public AspNetForm GetForm() {
-            HtmlDocument doc = BodyAsHtmlDocument;
-            HtmlNode formNode = FindChildNode(doc.DocumentNode, "form", null);
-
-            if (formNode == null) {
-                return null;
+        private IWebElement HtmlElement
+        {
+            get
+            {
+                if (htmlElement == null)
+                {
+                    htmlElement = new HtmlElement(CreateXmlDocument(BodyAsString).DocumentElement);
+                }
+                return htmlElement;
             }
-
-            return new AspNetForm(_requestVirtualPath, formNode);
         }
 
-        public string ToEntireResponseString() {
+        public String Title
+        {
+            get { return FindElement(By.TagName("title")).Text; }
+        }
+
+        public IWebElement FindElement(By mechanism)
+        {
+            return HtmlElement.FindElement(mechanism);
+        }
+
+        public ReadOnlyCollection<IWebElement> FindElements(By mechanism)
+        {
+            return HtmlElement.FindElements(mechanism);
+        }
+
+
+        public AspNetForm GetForm()
+        {
+            IWebElement formNode = HtmlElement.FindElement(By.TagName("form"));
+
+            return new AspNetForm(requestVirtualPath, formNode);
+        }
+        public AspNetForm GetFormById(string formId)
+        {
+            IWebElement formNode =
+                HtmlElement.FindElements(By.TagName("form")).Single(e => e.GetAttribute("id").Equals(formId));
+
+            return new AspNetForm(requestVirtualPath, formNode);
+        }
+
+
+        public string ToEntireResponseString()
+        {
             TextWriter output = new StringWriter();
 
             output.WriteLine("{0} {1}", Status, HttpWorkerRequest.GetStatusDescription(200));
 
-            foreach (KeyValuePair<string, string> header in Headers) {
+            foreach (var header in Headers)
+            {
                 output.WriteLine("{0}: {1}", header.Key, header.Value);
             }
 
@@ -117,46 +140,38 @@ namespace Plasma.Core
             return output.ToString();
         }
 
-        private HtmlDocument BodyAsHtmlDocument {
-            get {
-                if (_bodyAsHtmlDoc == null) {
-                    HtmlDocument doc = new HtmlDocument();
-                    doc.LoadHtml(BodyAsString);
-                    _bodyAsHtmlDoc = doc;
-                }
-
-                return _bodyAsHtmlDoc;
-            }
+        public string InnerHtml(IWebElement element)
+        {
+            return ((HtmlElement)element).InnerHtml;
         }
 
-        private HtmlNode FindChildNode(HtmlNode node, string name, string id) {
-            foreach (HtmlNode childNode in node.ChildNodes) {
-                if (childNode.NodeType == HtmlNodeType.Element) {
-                    if (!string.IsNullOrEmpty(name)) {
-                        if (string.Compare(childNode.Name, name, StringComparison.OrdinalIgnoreCase) == 0) {
-                            return childNode;
-                        }
-                    }
+        public AspNetForm GetFormByClass(string cssClass)
+        {
+            IWebElement formNode =
+                HtmlElement.FindElements(By.TagName("form")).Single(e => e.GetAttribute("class").Equals(cssClass));
 
-                    if (!string.IsNullOrEmpty(id)) {
-                        HtmlAttribute idAttribute = childNode.Attributes["id"];
-
-                        if (idAttribute != null &&
-                            string.Compare(idAttribute.Value, id, StringComparison.OrdinalIgnoreCase) == 0) {
-                            return childNode;
-                        }
-                    }
-
-                    HtmlNode childNodeWithId = FindChildNode(childNode, name, id);
-
-                    if (childNodeWithId != null) {
-                        return childNodeWithId;
-                    }
-                }
-            }
-
-            return null;
+            return new AspNetForm(requestVirtualPath, formNode);
         }
 
+        private static XmlDocument CreateXmlDocument(string html)
+        {
+            var doc = new XmlDocument();
+            var xmlReaderSettings = new XmlReaderSettings
+            {
+                XmlResolver = new LocalEntityResolver(),
+                ProhibitDtd = false
+            };
+
+            try
+            {
+                doc.Load(XmlReader.Create(new StringReader(html), xmlReaderSettings));
+            }
+            catch (XmlException)
+            {
+                Console.Out.WriteLine("Failed to parse response as html:\n{0}", html);
+                throw;
+            }
+            return doc;
+        }
     }
 }

@@ -62,13 +62,18 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebDriver.Common">
+      <HintPath>..\..\References\WebDriver.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AspNetApplication.cs" />
     <Compile Include="AspNetForm.cs" />
     <Compile Include="AspNetRequest.cs" />
     <Compile Include="AspNetResponse.cs" />
+    <Compile Include="HtmlElement.cs" />
     <Compile Include="HtmlParser.cs" />
+    <Compile Include="LocalEntityResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIControlHelpers.cs" />
   </ItemGroup>
@@ -91,6 +96,13 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\xhtml-lat1.ent" />
+    <EmbeddedResource Include="Resources\xhtml-special.ent" />
+    <EmbeddedResource Include="Resources\xhtml-symbol.ent" />
+    <EmbeddedResource Include="Resources\xhtml1-strict.dtd" />
+    <EmbeddedResource Include="Resources\xhtml1-transitional.dtd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

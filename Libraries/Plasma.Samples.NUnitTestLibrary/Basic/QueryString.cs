@@ -10,6 +10,7 @@
  * **********************************************************************************/
 using System;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using Plasma.Core;
 
 namespace Plasma.Samples.NUnitTestLibrary.Basic
@@ -25,7 +26,7 @@ namespace Plasma.Samples.NUnitTestLibrary.Basic
 
             AspNetResponse response = WebApp.ProcessRequest("~/Basic/Querystring.aspx?test=Hello");
 
-            string message = response.FindHtmlElementById("Label1").InnerHtml;
+            string message = response.InnerHtml(response.FindElement(By.Id("Label1")));
 
             Assert.AreEqual("Hello", message);
         }

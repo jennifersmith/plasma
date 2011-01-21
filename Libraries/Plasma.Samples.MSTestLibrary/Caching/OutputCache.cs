@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
 using Plasma.Core;
 
 namespace Plasma.Samples.MSTestLibrary.Caching
@@ -16,10 +17,10 @@ namespace Plasma.Samples.MSTestLibrary.Caching
             // Test OutputCaching
 
             AspNetResponse responseFirst = WebApp.ProcessRequest("~/Caching/OutputCache.aspx");
-            string timestamp1 = responseFirst.FindHtmlElementById("Label1").InnerHtml;
+            string timestamp1 = responseFirst.InnerHtml(responseFirst.FindElement(By.Id("Label1")));
 
             AspNetResponse responseSecond = WebApp.ProcessRequest("~/Caching/OutputCache.aspx");
-            string timestamp2 = responseSecond.FindHtmlElementById("Label1").InnerHtml;
+            string timestamp2 = responseSecond.InnerHtml(responseSecond.FindElement(By.Id("Label1")));
 
             Assert.AreEqual(timestamp1, timestamp2);
         }
