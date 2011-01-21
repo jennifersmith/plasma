@@ -11,7 +11,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -24,13 +23,33 @@ using Microsoft.Win32.SafeHandles;
 namespace Plasma.Core {
 
     public sealed class AspNetApplication : MarshalByRefObject {
-        Host _host;
-        string _virtualPath;
-        string _physicalPath;
-
+        private Host _host;
+        private readonly string _virtualPath;
+        private readonly string _physicalPath;
+        
         public AspNetApplication(string virtualPath, string physicalPath) {
             _virtualPath = virtualPath;
             _physicalPath = physicalPath;
+        }
+
+        public TR InvokeInAspAppDomain<T, TR>(Func<T, TR> func, T arg) {
+            return GetHost().InvokeInAspAppDomain(func, arg);
+        }
+
+        public TR InvokeInAspAppDomain<T1, T2, TR>(Func<T1, T2, TR> func, T1 arg1, T2 arg2) {
+            return GetHost().InvokeInAspAppDomain(func, arg1, arg2);
+        }
+
+        public void InvokeInAspAppDomain<T>(Action<T> func, T arg) {
+            GetHost().InvokeInAspAppDomain(func, arg);
+        }
+
+        public void InvokeInAspAppDomain(Action func) {
+            GetHost().InvokeInAspAppDomain(func);
+        }
+
+        public TR InvokeInAspAppDomain<TR>(Func<TR> func) {
+            return GetHost().InvokeInAspAppDomain(func);
         }
 
         public override object InitializeLifetimeService() {
@@ -44,8 +63,8 @@ namespace Plasma.Core {
             string requestVirtualPath = VirtualPathUtility.ToAbsolute(request.FilePath, _virtualPath);
 
             int status = ProcessRequest(requestVirtualPath, request.PathInfo, request.QueryString,
-                            request.Method, request.Headers, request.Body, 
-                            out responseHeaders, out responseBody);
+                                        request.Method, request.Headers, request.Body,
+                                        out responseHeaders, out responseBody);
 
             return new AspNetResponse(requestVirtualPath, status, responseHeaders, responseBody);
         }
@@ -55,35 +74,32 @@ namespace Plasma.Core {
         }
 
         private int ProcessRequest(
-                string requestFilePath,
-                string requestPathInfo,
-                string requestQueryString,
-                string requestMethod,
-                List<KeyValuePair<string, string>> requestHeaders,
-                byte[] requestBody,
-                out List<KeyValuePair<string, string>> responseHeaders,
-                out byte[] responseBody) {
+            string requestFilePath,
+            string requestPathInfo,
+            string requestQueryString,
+            string requestMethod,
+            IEnumerable<KeyValuePair<string, string>> requestHeaders,
+            byte[] requestBody,
+            out List<KeyValuePair<string, string>> responseHeaders,
+            out byte[] responseBody) {
 
             return GetHost().ProcessRequest(requestFilePath, requestPathInfo, requestQueryString,
-                requestMethod, requestHeaders, requestBody, out responseHeaders, out responseBody);
+                                            requestMethod, requestHeaders, requestBody, out responseHeaders,
+                                            out responseBody);
         }
 
         private Host GetHost() {
-            Host host = _host;
-
-            if (host == null) {
+            if (_host == null) {
                 lock (this) {
-                    host = _host;
-
-                    if (host == null) {
-                        host = (Host)CreateWorkerAppDomainWithHost(_virtualPath, _physicalPath, typeof(Host));
-                        host.Configure(this, _virtualPath, _physicalPath);
-                        _host = host;
+                    if (_host == null) {
+                        var hostInApplicationDomain = (Host)CreateWorkerAppDomainWithHost(_virtualPath, _physicalPath, typeof(Host));
+                        hostInApplicationDomain.Configure(this);
+                        _host = hostInApplicationDomain;
                     }
                 }
             }
 
-            return host;
+            return _host;
         }
 
         private static object CreateWorkerAppDomainWithHost(string virtualPath, string physicalPath, Type hostType) {
@@ -95,7 +111,8 @@ namespace Plasma.Core {
 
             // create BuildManagerHost in the worker app domain
             Type buildManagerHostType = typeof(HttpRuntime).Assembly.GetType("System.Web.Compilation.BuildManagerHost");
-            object buildManagerHost = appManager.CreateObject(appId, buildManagerHostType, virtualPath, physicalPath, false);
+            object buildManagerHost = appManager.CreateObject(appId, buildManagerHostType, virtualPath, physicalPath,
+                                                              false);
 
             // call BuildManagerHost.RegisterAssembly to make Host type loadable in the worker app domain
             buildManagerHostType.InvokeMember(
@@ -103,7 +120,7 @@ namespace Plasma.Core {
                 BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic,
                 null,
                 buildManagerHost,
-                new object[2] { hostType.Assembly.FullName, hostType.Assembly.Location });
+                new object[] { hostType.Assembly.FullName, hostType.Assembly.Location });
 
             // create Host in the worker app domain
             return appManager.CreateObject(appId, hostType, virtualPath, physicalPath, false);
@@ -113,10 +130,8 @@ namespace Plasma.Core {
             _host = null;
         }
 
-        class Host : MarshalByRefObject, IRegisteredObject {
-            private string _virtualPath;
-            private string _physicalPath;
 
+        private class Host : MarshalByRefObject, IRegisteredObject {
             private AspNetApplication _app;
 
             public Host() {
@@ -127,32 +142,51 @@ namespace Plasma.Core {
                 return null;
             }
 
-            public void Configure(AspNetApplication app, string virtualPath, string physicalPath) {
+            public void Configure(AspNetApplication app) {
                 _app = app;
-                _virtualPath = virtualPath;
-                _physicalPath = physicalPath;
             }
 
-            void IRegisteredObject.Stop(bool immediate) {
+			void IRegisteredObject.Stop(bool immediate) {
                 if (_app != null) {
                     _app.HostStopped();
                 }
 
                 HostingEnvironment.UnregisterObject(this);
             }
+            
+            public void InvokeInAspAppDomain(Action func) {
+                func.Invoke();
+            }
+
+            public void InvokeInAspAppDomain<T>(Action<T> func, T arg) {
+                func.Invoke(arg);
+            }
+
+
+            public TR InvokeInAspAppDomain<TR>(Func<TR> func) {
+                return func.Invoke();
+            }
+
+            public TR InvokeInAspAppDomain<T, TR>(Func<T, TR> func, T arg) {
+                return func.Invoke(arg);
+            }
+
+            public TR InvokeInAspAppDomain<T1, T2, TR>(Func<T1, T2, TR> func, T1 arg1, T2 arg2) {
+                return func.Invoke(arg1, arg2);
+            }
 
             internal int ProcessRequest(
-                            string requestFilePath,
-                            string requestPathInfo,
-                            string requestQueryString,
-                            string requestMethod,
-                            List<KeyValuePair<string, string>> requestHeaders,
-                            byte[] requestBody,
-                            out List<KeyValuePair<string, string>> responseHeaders,
-                            out byte[] responseBody) {
+                string requestFilePath,
+                string requestPathInfo,
+                string requestQueryString,
+                string requestMethod,
+                IEnumerable<KeyValuePair<string, string>> requestHeaders,
+                byte[] requestBody,
+                out List<KeyValuePair<string, string>> responseHeaders,
+                out byte[] responseBody) {
 
-                WorkerRequest wr = new WorkerRequest(requestFilePath, requestPathInfo,
-                    requestQueryString, requestMethod, requestHeaders, requestBody);
+                var wr = new WorkerRequest(requestFilePath, requestPathInfo,
+                                           requestQueryString, requestMethod, requestHeaders, requestBody);
 
                 HttpRuntime.ProcessRequest(wr);
 
@@ -166,38 +200,38 @@ namespace Plasma.Core {
             }
         }
 
-        class WorkerRequest : SimpleWorkerRequest {
+        private class WorkerRequest : SimpleWorkerRequest {
             // request data
-            private string _path;
-            private string _pathInfo;
-            private string _filePath;
-            private string _physicalPath;
-            private string _queryString;
-            private string _rawUrl;
-            private string _method;
-            private byte[] _preloadedContent;
-
+            private readonly string _filePath;
+            private readonly string _method;
+            private readonly string _path;
+            private readonly string _pathInfo;
+            private readonly string _physicalPath;
+            private readonly byte[] _preloadedContent;
+            private readonly string _queryString;
+            private readonly string _rawUrl;
+            
             private string _allRawHeaders;
             private string[][] _unknownRequestHeaders;
             private string[] _knownRequestHeaders;
 
             // response data
             private int _responseStatus;
-            private List<KeyValuePair<string, string>> _responseHeaders;
-            private List<byte[]> _responseBuilder;
+            private readonly List<KeyValuePair<string, string>> _responseHeaders;
+            private readonly List<byte[]> _responseBuilder;
 
             // status
-            volatile private bool _completed;
-
+            private volatile bool _completed;
+            
             internal WorkerRequest(
-                            string requestFilePath,
-                            string requestPathInfo,
-                            string requestQueryString,
-                            string requestMethod,
-                            List<KeyValuePair<string, string>> requestHeaders,
-                            byte[] requestBody)
+                string requestFilePath,
+                string requestPathInfo,
+                string requestQueryString,
+                string requestMethod,
+                IEnumerable<KeyValuePair<string, string>> requestHeaders,
+                byte[] requestBody)
                 : base(String.Empty, String.Empty, null) {
-
+                
                 _filePath = requestFilePath;
                 _pathInfo = requestPathInfo;
                 _path = _filePath + _pathInfo;
@@ -221,23 +255,23 @@ namespace Plasma.Core {
                 get {
                     int responseLength = 0;
 
-                    foreach (byte[] buffer in _responseBuilder) {
+                    foreach (var buffer in _responseBuilder) {
                         if (buffer != null) {
                             responseLength += buffer.Length;
                         }
                     }
 
-                    byte[] responseBuffer = new byte[responseLength];
+                    var responseBuffer = new byte[responseLength];
                     int offset = 0;
 
-                    foreach (byte[] buffer in _responseBuilder) {
+                    foreach (var buffer in _responseBuilder) {
                         if (buffer != null && buffer.Length > 0) {
                             Array.Copy(buffer, 0, responseBuffer, offset, buffer.Length);
                             offset += buffer.Length;
                         }
                     }
 
-                    return responseBuffer; 
+                    return responseBuffer;
                 }
             }
 
@@ -249,15 +283,15 @@ namespace Plasma.Core {
                 get { return _responseHeaders; }
             }
 
-            private void ParseHeaders(List<KeyValuePair<string, string>> requestHeaders) {
+            private void ParseHeaders(IEnumerable<KeyValuePair<string, string>> requestHeaders) {
                 _knownRequestHeaders = new string[RequestHeaderMaximum];
 
                 // construct unknown headers as array list of name1,value1,...
-                ArrayList headers = new ArrayList();
-                StringBuilder allRaw = new StringBuilder();
+                var headers = new ArrayList();
+                var allRaw = new StringBuilder();
 
                 if (requestHeaders != null) {
-                    foreach (KeyValuePair<string, string> header in requestHeaders) {
+                    foreach (var header in requestHeaders) {
                         string name = header.Key;
                         string value = header.Value;
 
@@ -403,7 +437,9 @@ namespace Plasma.Core {
             }
 
             public override void SendCalculatedContentLength(int contentLength) {
-                _responseHeaders.Add(new KeyValuePair<string, string>("Content-Length", contentLength.ToString(CultureInfo.InvariantCulture)));
+                _responseHeaders.Add(new KeyValuePair<string, string>("Content-Length",
+                                                                     contentLength.ToString(
+                                                                         CultureInfo.InvariantCulture)));
             }
 
             public override bool HeadersSent() {
@@ -420,7 +456,7 @@ namespace Plasma.Core {
 
             public override void SendResponseFromMemory(byte[] data, int length) {
                 if (length > 0) {
-                    byte[] buffer = new byte[length];
+                    var buffer = new byte[length];
                     Array.Copy(data, buffer, length);
                     _responseBuilder.Add(buffer);
                 }
@@ -428,23 +464,23 @@ namespace Plasma.Core {
 
             public override void SendResponseFromFile(string filename, long offset, long length) {
                 if (length > 0) {
-                    using (FileStream f = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                        SendResponseFromFileStream(f, offset, length);
+                    using (var f = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                        SendResponseFromStream(f, offset, length);
                     }
                 }
             }
 
             public override void SendResponseFromFile(IntPtr handle, long offset, long length) {
                 if (length > 0) {
-                    SafeFileHandle sfh = new SafeFileHandle(handle, false);
+                    var sfh = new SafeFileHandle(handle, false);
 
-                    using (FileStream f = new FileStream(sfh, FileAccess.Read)) {
-                        SendResponseFromFileStream(f, offset, length);
+                    using (var f = new FileStream(sfh, FileAccess.Read)) {
+                        SendResponseFromStream(f, offset, length);
                     }
                 }
             }
 
-            private void SendResponseFromFileStream(FileStream f, long offset, long length) {
+            private void SendResponseFromStream(Stream f, long offset, long length) {
                 long fileSize = f.Length;
 
                 if (length == -1) {
@@ -459,7 +495,7 @@ namespace Plasma.Core {
                     f.Seek(offset, SeekOrigin.Begin);
                 }
 
-                byte[] fileBytes = new byte[(int)length];
+                var fileBytes = new byte[(int)length];
                 int bytesRead = f.Read(fileBytes, 0, (int)length);
                 SendResponseFromMemory(fileBytes, bytesRead);
             }
@@ -471,6 +507,10 @@ namespace Plasma.Core {
             public override void EndOfRequest() {
                 _completed = true;
             }
+        }
+
+        public void Close() {
+            HttpRuntime.Close();
         }
     }
 }
