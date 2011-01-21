@@ -15,7 +15,10 @@ namespace Plasma.Samples.MSTestLibrary
                 // Todo: Make this configurable from a configuration file
 
                 if (_appInstance == null)
-                    _appInstance = new AspNetApplication("/", Path.GetFullPath(@".\..\..\..\..\Websites\PlasmaSampleCS"));
+                {
+                    var physicalPath = Path.GetFullPath(@".\..\..\..\..\..\..\..\Websites\PlasmaSampleCS");
+                    _appInstance = new AspNetApplication("/", physicalPath);
+                }
 
                 return _appInstance;
             }
