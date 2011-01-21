@@ -17,7 +17,7 @@ namespace Plasma.Samples.MSTestLibrary.Basic
             // Test passing a QueryString value to QueryString.aspx
 
             AspNetResponse response = WebApp.ProcessRequest("~/Basic/Querystring.aspx?test=Hello");
-            string message = response.InnerHtml(response.FindElement(By.Id("Label1")));
+            string message = response.FindElement(By.Id("Label1")).InnerHtml();
             Assert.AreEqual(message, "Hello", "QueryString Value Not Output Back Correctly");
         }
     }

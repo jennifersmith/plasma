@@ -140,11 +140,6 @@ namespace Plasma.Core
             return output.ToString();
         }
 
-        public string InnerHtml(IWebElement element)
-        {
-            return ((HtmlElement)element).InnerHtml;
-        }
-
         public AspNetForm GetFormByClass(string cssClass)
         {
             IWebElement formNode =

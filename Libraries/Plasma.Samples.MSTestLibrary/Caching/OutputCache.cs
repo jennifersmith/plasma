@@ -17,10 +17,10 @@ namespace Plasma.Samples.MSTestLibrary.Caching
             // Test OutputCaching
 
             AspNetResponse responseFirst = WebApp.ProcessRequest("~/Caching/OutputCache.aspx");
-            string timestamp1 = responseFirst.InnerHtml(responseFirst.FindElement(By.Id("Label1")));
+            string timestamp1 = responseFirst.FindElement(By.Id("Label1")).InnerHtml();
 
             AspNetResponse responseSecond = WebApp.ProcessRequest("~/Caching/OutputCache.aspx");
-            string timestamp2 = responseSecond.InnerHtml(responseSecond.FindElement(By.Id("Label1")));
+            string timestamp2 = responseSecond.FindElement(By.Id("Label1")).InnerHtml();
 
             Assert.AreEqual(timestamp1, timestamp2);
         }

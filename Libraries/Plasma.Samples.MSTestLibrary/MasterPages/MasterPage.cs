@@ -24,7 +24,7 @@ namespace Plasma.Samples.MSTestLibrary.MasterPages
             form["ctl00$ContentPlaceHolder1$Button1"] = "Button";
 
             AspNetResponse secondResponse = WebApp.ProcessRequest(form.GenerateFormPostRequest());
-            string label1 = secondResponse.InnerHtml(secondResponse.FindElement(By.Id("ctl00_ContentPlaceHolder1_Label1")));
+            string label1 = secondResponse.FindElement(By.Id("ctl00_ContentPlaceHolder1_Label1")).InnerHtml();
 
             Assert.AreEqual("Hello Scott you selected: Foo", label1);
         }

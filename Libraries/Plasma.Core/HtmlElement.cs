@@ -254,5 +254,14 @@ namespace Plasma.Core
         {
             xmlElement.SetAttribute(attributeName, attributeValue);
         }
+        
+    }
+
+    public static class WebElementExtensions
+    {
+          public static string InnerHtml(this IWebElement webElement)
+          {
+              return ((HtmlElement) webElement).InnerHtml;
+          }
     }
 }

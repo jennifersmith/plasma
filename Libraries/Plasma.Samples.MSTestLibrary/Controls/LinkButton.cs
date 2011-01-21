@@ -22,7 +22,7 @@ namespace Plasma.Samples.MSTestLibrary.Controls
             form["__EVENTTARGET"] = "LinkButton1";
 
             AspNetResponse secondResponse = WebApp.ProcessRequest(form.GenerateFormPostRequest());
-            string label1 = secondResponse.InnerHtml(secondResponse.FindElement(By.Id("Label1")));
+            string label1 = secondResponse.FindElement(By.Id("Label1")).InnerHtml();
 
             Assert.AreEqual(label1, "LinkButton Pushed!");                
         }

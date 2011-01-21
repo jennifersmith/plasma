@@ -31,7 +31,7 @@ namespace Plasma.Samples.NUnitTestLibrary.Controls
             
             AspNetResponse secondResponse = WebApp.ProcessRequest(Button.Click(form, "Button1"));
 
-            Assert.AreEqual("Value: Testing", secondResponse.InnerHtml(secondResponse.FindElement(By.Id("Label1"))));
+            Assert.AreEqual("Value: Testing", secondResponse.FindElement(By.Id("Label1")).InnerHtml());
         }
     }
 }

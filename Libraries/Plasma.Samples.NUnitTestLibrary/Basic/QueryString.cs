@@ -26,7 +26,7 @@ namespace Plasma.Samples.NUnitTestLibrary.Basic
 
             AspNetResponse response = WebApp.ProcessRequest("~/Basic/Querystring.aspx?test=Hello");
 
-            string message = response.InnerHtml(response.FindElement(By.Id("Label1")));
+            string message = response.FindElement(By.Id("Label1")).InnerHtml();
 
             Assert.AreEqual("Hello", message);
         }
