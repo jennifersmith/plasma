@@ -10,17 +10,17 @@ namespace Plasma.Core
 {
     public class HtmlElement : IWebElement, IFindsByClassName, IFindsByXPath, IFindsByTagName, IFindsById, IFindsByName
     {
-        private const string XHTMLNamespacePrefix = "xhtml";
-        private readonly XmlElement xmlElement;
+        private const string XhtmlNamespacePrefix = "xhtml";
+        private readonly XmlElement _xmlElement;
 
         public HtmlElement(XmlElement xmlElement)
         {
-            this.xmlElement = xmlElement;
+            _xmlElement = xmlElement;
         }
 
         public string InnerHtml
         {
-            get { return RemoveXhtmlNamespaces(xmlElement.InnerXml); }
+            get { return RemoveXhtmlNamespaces(_xmlElement.InnerXml); }
         }
 
 
@@ -87,7 +87,7 @@ namespace Plasma.Core
 
         public ReadOnlyCollection<IWebElement> FindElementsByTagName(string tagName)
         {
-            return FindElementsByXPath(String.Format("descendant::{0}:{1}", XHTMLNamespacePrefix, tagName));
+            return FindElementsByXPath(String.Format("descendant::{0}:{1}", XhtmlNamespacePrefix, tagName));
         }
 
         public IWebElement FindElementByXPath(string xpath)
@@ -102,11 +102,11 @@ namespace Plasma.Core
 
         public ReadOnlyCollection<IWebElement> FindElementsByXPath(string xpath)
         {
-            var namespaceManager = new XmlNamespaceManager(xmlElement.OwnerDocument.NameTable);
-            namespaceManager.AddNamespace(XHTMLNamespacePrefix, "http://www.w3.org/1999/xhtml");
+            var namespaceManager = new XmlNamespaceManager(_xmlElement.OwnerDocument.NameTable);
+            namespaceManager.AddNamespace(XhtmlNamespacePrefix, "http://www.w3.org/1999/xhtml");
 
             var elements = new List<IWebElement>();
-            XmlNodeList nodes = xmlElement.SelectNodes(xpath, namespaceManager);
+            XmlNodeList nodes = _xmlElement.SelectNodes(xpath, namespaceManager);
 
             if (nodes != null)
                 foreach (object node in nodes)
@@ -151,7 +151,7 @@ namespace Plasma.Core
 
         public void Select()
         {
-            if (xmlElement.Name == "option")
+            if (_xmlElement.Name == "option")
             {
                 SelectOption();
             }
@@ -163,9 +163,9 @@ namespace Plasma.Core
 
         private void SelectCheckBox()
         {
-            if (!xmlElement.HasAttribute("checked"))
+            if (!_xmlElement.HasAttribute("checked"))
             {
-                XmlElement documentElement = xmlElement.OwnerDocument.DocumentElement;
+                XmlElement documentElement = _xmlElement.OwnerDocument.DocumentElement;
                 IEnumerable<HtmlElement> allElementsWithName = new HtmlElement(documentElement).FindElementsByName(GetAttribute("name")).Cast<HtmlElement>();
                 foreach (HtmlElement element in allElementsWithName)
                 {
@@ -177,9 +177,9 @@ namespace Plasma.Core
 
         private void SelectOption()
         {
-            if (!xmlElement.HasAttribute("selected"))
+            if (!_xmlElement.HasAttribute("selected"))
             {                
-                var selectElement = (HtmlElement) FindElementByXPath(string.Format("ancestor::{0}:{1}", XHTMLNamespacePrefix, "select"));
+                var selectElement = (HtmlElement) FindElementByXPath(string.Format("ancestor::{0}:{1}", XhtmlNamespacePrefix, "select"));
                 IEnumerable<HtmlElement> allOptionElements = selectElement.FindElementsByName("option").Cast<HtmlElement>();
                 foreach (HtmlElement element in allOptionElements)
                 {
@@ -191,7 +191,7 @@ namespace Plasma.Core
 
         public string GetAttribute(string attributeName)
         {
-            return xmlElement.GetAttribute(attributeName, "");
+            return _xmlElement.GetAttribute(attributeName, "");
         }
 
         public bool Toggle()
@@ -201,22 +201,22 @@ namespace Plasma.Core
 
         public string TagName
         {
-            get { return xmlElement.Name; }
+            get { return _xmlElement.Name; }
         }
 
         public string Text
         {
-            get { return xmlElement.InnerText.Trim(); }
+            get { return _xmlElement.InnerText.Trim(); }
         }
 
         public string Value
         {
-            get { return xmlElement.GetAttribute("value", ""); }
+            get { return _xmlElement.GetAttribute("value", ""); }
         }
 
         public bool Enabled
         {
-            get { return string.IsNullOrEmpty(xmlElement.GetAttribute("disabled")); }
+            get { return string.IsNullOrEmpty(_xmlElement.GetAttribute("disabled")); }
         }
 
         public bool Selected
@@ -235,9 +235,9 @@ namespace Plasma.Core
 
         private void DeleteAttribute(string attributeName)
         {
-            if (xmlElement.HasAttribute(attributeName))
+            if (_xmlElement.HasAttribute(attributeName))
             {
-                xmlElement.RemoveAttribute(attributeName);
+                _xmlElement.RemoveAttribute(attributeName);
             }
         }
 
@@ -247,12 +247,12 @@ namespace Plasma.Core
 
         public override string ToString()
         {
-            return RemoveXhtmlNamespaces(xmlElement.OuterXml);
+            return RemoveXhtmlNamespaces(_xmlElement.OuterXml);
         }
 
         private void SetAttribute(string attributeName, string attributeValue)
         {
-            xmlElement.SetAttribute(attributeName, attributeValue);
+            _xmlElement.SetAttribute(attributeName, attributeValue);
         }
         
     }

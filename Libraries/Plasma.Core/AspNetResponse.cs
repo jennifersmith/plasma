@@ -22,60 +22,60 @@ namespace Plasma.Core
 {
     public class AspNetResponse : ISearchContext
     {
-        private readonly byte[] body;
-        private readonly IEnumerable<KeyValuePair<string, string>> headers;
-        private readonly string requestVirtualPath;
-        private readonly int status;
-        private string bodyAsString;
-        private IWebElement htmlElement;
+        private readonly byte[] _body;
+        private readonly IEnumerable<KeyValuePair<string, string>> _headers;
+        private readonly string _requestVirtualPath;
+        private readonly int _status;
+        private string _bodyAsString;
+        private IWebElement _htmlElement;
 
         internal AspNetResponse(string requestVirtualPath,
                                 int status, IEnumerable<KeyValuePair<string, string>> headers, byte[] body)
         {
-            this.requestVirtualPath = requestVirtualPath;
+            _requestVirtualPath = requestVirtualPath;
 
-            this.status = status;
-            this.headers = headers ?? new Dictionary<string, string>();
-            this.body = body;
+            _status = status;
+            _headers = headers ?? new Dictionary<string, string>();
+            _body = body;
         }
 
         public string RequestVirtualPath
         {
-            get { return requestVirtualPath; }
+            get { return _requestVirtualPath; }
         }
 
         public int Status
         {
-            get { return status; }
+            get { return _status; }
         }
 
         public IEnumerable<KeyValuePair<string, string>> Headers
         {
-            get { return headers; }
+            get { return _headers; }
         }
 
         public byte[] Body
         {
-            get { return body; }
+            get { return _body; }
         }
 
         public string BodyAsString
         {
             get
             {
-                if (bodyAsString == null)
+                if (_bodyAsString == null)
                 {
-                    if (body != null && body.Length > 0)
+                    if (_body != null && _body.Length > 0)
                     {
-                        bodyAsString = Encoding.UTF8.GetString(body);
+                        _bodyAsString = Encoding.UTF8.GetString(_body);
                     }
                     else
                     {
-                        bodyAsString = String.Empty;
+                        _bodyAsString = String.Empty;
                     }
                 }
 
-                return bodyAsString;
+                return _bodyAsString;
             }
         }
 
@@ -83,11 +83,11 @@ namespace Plasma.Core
         {
             get
             {
-                if (htmlElement == null)
+                if (_htmlElement == null)
                 {
-                    htmlElement = new HtmlElement(CreateXmlDocument(BodyAsString).DocumentElement);
+                    _htmlElement = new HtmlElement(CreateXmlDocument(BodyAsString).DocumentElement);
                 }
-                return htmlElement;
+                return _htmlElement;
             }
         }
 
@@ -111,14 +111,14 @@ namespace Plasma.Core
         {
             IWebElement formNode = HtmlElement.FindElement(By.TagName("form"));
 
-            return new AspNetForm(requestVirtualPath, formNode);
+            return new AspNetForm(_requestVirtualPath, formNode);
         }
         public AspNetForm GetFormById(string formId)
         {
             IWebElement formNode =
                 HtmlElement.FindElements(By.TagName("form")).Single(e => e.GetAttribute("id").Equals(formId));
 
-            return new AspNetForm(requestVirtualPath, formNode);
+            return new AspNetForm(_requestVirtualPath, formNode);
         }
 
 
@@ -145,7 +145,7 @@ namespace Plasma.Core
             IWebElement formNode =
                 HtmlElement.FindElements(By.TagName("form")).Single(e => e.GetAttribute("class").Equals(cssClass));
 
-            return new AspNetForm(requestVirtualPath, formNode);
+            return new AspNetForm(_requestVirtualPath, formNode);
         }
 
         private static XmlDocument CreateXmlDocument(string html)
