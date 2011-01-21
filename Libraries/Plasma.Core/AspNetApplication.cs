@@ -198,6 +198,11 @@ namespace Plasma.Core {
                 responseBody = wr.ResponseBody;
                 return wr.ResponseStatus;
             }
+
+            public void Close()
+            {
+                HttpRuntime.Close();
+            }
         }
 
         private class WorkerRequest : SimpleWorkerRequest {
@@ -510,7 +515,7 @@ namespace Plasma.Core {
         }
 
         public void Close() {
-            HttpRuntime.Close();
+            GetHost().Close();
         }
     }
 }
