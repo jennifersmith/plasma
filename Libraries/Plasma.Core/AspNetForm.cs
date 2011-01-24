@@ -18,8 +18,7 @@ using OpenQA.Selenium;
 
 namespace Plasma.Core
 {
-    public class AspNetForm : NameValueCollection
-    {
+    public class AspNetForm : NameValueCollection {
         private readonly IWebElement _formWebElement;
         private string _action;
         private string _method;
@@ -65,7 +64,8 @@ namespace Plasma.Core
             if (iQuery >= 0) {
                 path = _action.Substring(0, iQuery);
                 query = _action.Substring(iQuery + 1);
-            } else {
+            } 
+            else {
                 path = _action;
                 query = null;
             }
@@ -85,7 +85,8 @@ namespace Plasma.Core
 
                 // for GET requests form goes into query string
                 query = formData;
-            } else {
+            } 
+            else {
                 verb = "POST";
 
                 // for POST requests form goes into request body
