@@ -54,8 +54,7 @@ namespace Plasma.Core
         }
 
         public string BodyAsString {
-            get
-            {
+            get {
                 if (_bodyAsString == null) {
                     if (_body != null && _body.Length > 0) {
                         _bodyAsString = Encoding.UTF8.GetString(_body);
@@ -90,18 +89,15 @@ namespace Plasma.Core
         }
 
 
-        public AspNetForm GetForm()
-        {
+        public AspNetForm GetForm() {
             IWebElement formNode = HtmlElement.FindElement(By.TagName("form"));
 
             return new AspNetForm(_requestVirtualPath, formNode);
         }
-        public AspNetForm GetFormById(string formId)
-        {
-            IWebElement formNode =
-                HtmlElement.FindElements(By.TagName("form")).Single(e => e.GetAttribute("id").Equals(formId));
 
-            return new AspNetForm(_requestVirtualPath, formNode);
+        public IEnumerable<AspNetForm> GetForms()
+        {
+            return HtmlElement.FindElements(By.TagName("form")).Select(x=> new AspNetForm(_requestVirtualPath, x));
         }
 
 
@@ -110,8 +106,7 @@ namespace Plasma.Core
 
             output.WriteLine("{0} {1}", Status, HttpWorkerRequest.GetStatusDescription(200));
 
-            foreach (var header in Headers)
-            {
+            foreach (var header in Headers) {
                 output.WriteLine("{0}: {1}", header.Key, header.Value);
             }
 
@@ -122,27 +117,18 @@ namespace Plasma.Core
             return output.ToString();
         }
 
-        public AspNetForm GetFormByClass(string cssClass) {
-            IWebElement formNode =
-                HtmlElement.FindElements(By.TagName("form")).Single(e => e.GetAttribute("class").Equals(cssClass));
-
-            return new AspNetForm(_requestVirtualPath, formNode);
-        }
-
+        
         private static XmlDocument CreateXmlDocument(string html) {
             var doc = new XmlDocument();
-            var xmlReaderSettings = new XmlReaderSettings
-            {
+            var xmlReaderSettings = new XmlReaderSettings {
                 XmlResolver = new LocalEntityResolver(),
                 ProhibitDtd = false
             };
 
-            try
-            {
+            try {
                 doc.Load(XmlReader.Create(new StringReader(html), xmlReaderSettings));
             }
-            catch (XmlException)
-            {
+            catch (XmlException) {
                 Console.Out.WriteLine("Failed to parse response as html:\n{0}", html);
                 throw;
             }

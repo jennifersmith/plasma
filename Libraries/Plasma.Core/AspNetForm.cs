@@ -20,23 +20,30 @@ namespace Plasma.Core
 {
     public class AspNetForm : NameValueCollection
     {
+        private readonly IWebElement _formWebElement;
         private string _action;
         private string _method;
 
-        internal AspNetForm(string requestVirtualPath, IWebElement htmlForm)
+        internal AspNetForm(string requestVirtualPath, IWebElement formWebElement)
         {
+            _formWebElement = formWebElement;
             // form's method
-            string formMethod = htmlForm.GetAttribute("method");
+            string formMethod = formWebElement.GetAttribute("method");
             _method = string.IsNullOrEmpty(formMethod) ? "POST" : formMethod;
 
             // form's action
-            string formAction = htmlForm.GetAttribute("action");
+            string formAction = formWebElement.GetAttribute("action");
             _action = string.IsNullOrEmpty(formAction)
                          ? requestVirtualPath
                          : VirtualPathUtility.Combine(requestVirtualPath, formAction);
 
             // populate the dictionary with form fields
-            RetrieveFormFields(htmlForm);
+            RetrieveFormFields(formWebElement);
+        }
+
+        public IWebElement FormWebElement
+        {
+            get { return _formWebElement; }
         }
 
         public string Method
