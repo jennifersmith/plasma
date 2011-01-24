@@ -20,8 +20,7 @@ using OpenQA.Selenium;
 
 namespace Plasma.Core
 {
-    public class AspNetResponse : ISearchContext
-    {
+    public class AspNetResponse : ISearchContext {
         private readonly byte[] _body;
         private readonly IEnumerable<KeyValuePair<string, string>> _headers;
         private readonly string _requestVirtualPath;
@@ -30,8 +29,7 @@ namespace Plasma.Core
         private IWebElement _htmlElement;
 
         internal AspNetResponse(string requestVirtualPath,
-                                int status, IEnumerable<KeyValuePair<string, string>> headers, byte[] body)
-        {
+                                int status, IEnumerable<KeyValuePair<string, string>> headers, byte[] body) {
             _requestVirtualPath = requestVirtualPath;
 
             _status = status;
@@ -39,38 +37,29 @@ namespace Plasma.Core
             _body = body;
         }
 
-        public string RequestVirtualPath
-        {
+        public string RequestVirtualPath {
             get { return _requestVirtualPath; }
         }
 
-        public int Status
-        {
+        public int Status {
             get { return _status; }
         }
 
-        public IEnumerable<KeyValuePair<string, string>> Headers
-        {
+        public IEnumerable<KeyValuePair<string, string>> Headers {
             get { return _headers; }
         }
 
-        public byte[] Body
-        {
+        public byte[] Body {
             get { return _body; }
         }
 
-        public string BodyAsString
-        {
+        public string BodyAsString {
             get
             {
-                if (_bodyAsString == null)
-                {
-                    if (_body != null && _body.Length > 0)
-                    {
+                if (_bodyAsString == null) {
+                    if (_body != null && _body.Length > 0) {
                         _bodyAsString = Encoding.UTF8.GetString(_body);
-                    }
-                    else
-                    {
+                    } else {
                         _bodyAsString = String.Empty;
                     }
                 }
@@ -79,30 +68,24 @@ namespace Plasma.Core
             }
         }
 
-        private IWebElement HtmlElement
-        {
-            get
-            {
-                if (_htmlElement == null)
-                {
+        private IWebElement HtmlElement {
+            get {
+                if (_htmlElement == null) {
                     _htmlElement = new HtmlElement(CreateXmlDocument(BodyAsString).DocumentElement);
                 }
                 return _htmlElement;
             }
         }
 
-        public String Title
-        {
+        public String Title {
             get { return FindElement(By.TagName("title")).Text; }
         }
 
-        public IWebElement FindElement(By mechanism)
-        {
+        public IWebElement FindElement(By mechanism) {
             return HtmlElement.FindElement(mechanism);
         }
 
-        public ReadOnlyCollection<IWebElement> FindElements(By mechanism)
-        {
+        public ReadOnlyCollection<IWebElement> FindElements(By mechanism) {
             return HtmlElement.FindElements(mechanism);
         }
 
@@ -122,8 +105,7 @@ namespace Plasma.Core
         }
 
 
-        public string ToEntireResponseString()
-        {
+        public string ToEntireResponseString() {
             TextWriter output = new StringWriter();
 
             output.WriteLine("{0} {1}", Status, HttpWorkerRequest.GetStatusDescription(200));
@@ -140,16 +122,14 @@ namespace Plasma.Core
             return output.ToString();
         }
 
-        public AspNetForm GetFormByClass(string cssClass)
-        {
+        public AspNetForm GetFormByClass(string cssClass) {
             IWebElement formNode =
                 HtmlElement.FindElements(By.TagName("form")).Single(e => e.GetAttribute("class").Equals(cssClass));
 
             return new AspNetForm(_requestVirtualPath, formNode);
         }
 
-        private static XmlDocument CreateXmlDocument(string html)
-        {
+        private static XmlDocument CreateXmlDocument(string html) {
             var doc = new XmlDocument();
             var xmlReaderSettings = new XmlReaderSettings
             {

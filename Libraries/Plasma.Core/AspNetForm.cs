@@ -20,18 +20,18 @@ namespace Plasma.Core
 {
     public class AspNetForm : NameValueCollection
     {
-        private string action;
-        private string method;
+        private string _action;
+        private string _method;
 
         internal AspNetForm(string requestVirtualPath, IWebElement htmlForm)
         {
             // form's method
             string formMethod = htmlForm.GetAttribute("method");
-            method = string.IsNullOrEmpty(formMethod) ? "POST" : formMethod;
+            _method = string.IsNullOrEmpty(formMethod) ? "POST" : formMethod;
 
             // form's action
             string formAction = htmlForm.GetAttribute("action");
-            action = string.IsNullOrEmpty(formAction)
+            _action = string.IsNullOrEmpty(formAction)
                          ? requestVirtualPath
                          : VirtualPathUtility.Combine(requestVirtualPath, formAction);
 
@@ -41,14 +41,14 @@ namespace Plasma.Core
 
         public string Method
         {
-            get { return method; }
-            set { method = value; }
+            get { return _method; }
+            set { _method = value; }
         }
 
         public string Action
         {
-            get { return action; }
-            set { action = value; }
+            get { return _action; }
+            set { _action = value; }
         }
 
         public AspNetRequest GenerateFormPostRequest()
@@ -58,16 +58,16 @@ namespace Plasma.Core
             string path;
             string query;
 
-            int iQuery = action.IndexOf('?');
+            int iQuery = _action.IndexOf('?');
 
             if (iQuery >= 0)
             {
-                path = action.Substring(0, iQuery);
-                query = action.Substring(iQuery + 1);
+                path = _action.Substring(0, iQuery);
+                query = _action.Substring(iQuery + 1);
             }
             else
             {
-                path = action;
+                path = _action;
                 query = null;
             }
 
@@ -81,7 +81,7 @@ namespace Plasma.Core
             var headers = new List<KeyValuePair<string, string>>();
             byte[] formBody = null;
 
-            if (string.Compare(method, "GET", StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(_method, "GET", StringComparison.OrdinalIgnoreCase) == 0)
             {
                 verb = "GET";
 
