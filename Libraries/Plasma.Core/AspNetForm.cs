@@ -16,8 +16,7 @@ using System.Text;
 using System.Web;
 using OpenQA.Selenium;
 
-namespace Plasma.Core
-{
+namespace Plasma.Core {
     public class AspNetForm : NameValueCollection {
         private readonly IWebElement _formWebElement;
         private string _action;
@@ -162,15 +161,18 @@ namespace Plasma.Core
 
                 if (StringsEqual(type, "text") || StringsEqual(type, "hidden")) {
                     AddFieldValue(node, node.GetAttribute("value"));
-                } else if (StringsEqual(type, "checkbox")) {
+                } 
+                else if (StringsEqual(type, "checkbox")) {
                     if (NodeHasAttributeWithValue(node, "checked", "checked")) {
                         AddFieldValue(node, "checked");
                     }
-                } else if (StringsEqual(type, "radio")) {
+                } 
+                else if (StringsEqual(type, "radio")) {
                     if (NodeHasAttributeWithValue(node, "checked", "checked")) {
                         AddFieldValue(node, node.GetAttribute("value"));
                     }
-                } else if (StringsEqual(type, "submit")) {
+                } 
+                else if (StringsEqual(type, "submit")) {
                     //                    AddFieldValue(node, node.GetAttribute("value"));
                 }
             }
