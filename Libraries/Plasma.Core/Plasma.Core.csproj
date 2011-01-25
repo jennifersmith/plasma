@@ -72,7 +72,6 @@
     <Compile Include="AspNetRequest.cs" />
     <Compile Include="AspNetResponse.cs" />
     <Compile Include="HtmlElement.cs" />
-    <Compile Include="HtmlParser.cs" />
     <Compile Include="LocalEntityResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIControlHelpers.cs" />
