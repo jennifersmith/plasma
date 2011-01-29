@@ -1,0 +1,39 @@
+require 'rubygems'
+require 'albacore'
+     
+ namespace :plasma do
+	def write_assembly_info project_path
+		asm = AssemblyInfo.new
+		asm.output_file = "#{project_path}/Properties/AssemblyInfo.cs"
+		asm.title = "Plasma.Core"
+		asm.description = "Plasma provides web automation and testing capabilities to ASP.NET projects."
+		asm.copyright = "Copyright 2011"
+		asm.company_name = "n/a"
+		asm.product_name = "Plasma"
+		asm.trademark = ""
+		asm.com_visible = false
+		asm.version = "1.1.0.0"
+		asm.file_version = "1.1.0.0"
+		asm.execute
+	end
+    desc "Build project"
+    task :sample => ['plasma:all_assembly_info', 'plasma:msbuild']
+		
+    desc "Build solution with MSBuild"
+    msbuild do |msb|
+		msb.properties :configuration => :Debug
+        msb.targets [:Clean, :Build]
+        msb.solution = "Plasma.sln"
+    end
+	
+	task :all_assembly_info do |task|
+		write_assembly_info "Libraries/Plasma.Core"
+		write_assembly_info "Libraries/Plasma.Samples.NUnitTestLibrary"
+		write_assembly_info "Libraries/Plasma.Samples.MSTestLibrary"
+	end
+    desc "Update assembly info"
+    assemblyinfo :assemblyinfo do |asm, args|
+		puts args
+    end
+
+end
