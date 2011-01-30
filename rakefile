@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'albacore'
   
- task :default =>['plasma:all']
+ task :default =>['plasma:build_and_test']
  
  namespace :plasma do
 	
@@ -20,8 +20,8 @@ require 'albacore'
 		asm.execute
 	end
 	
-    desc "Build project"
-    task :all => ['plasma:all_assembly_info', 'plasma:msbuild', 'plasma:nunit']
+    desc "Build project and run tests"
+    task :build_and_test => ['plasma:all_assembly_info', 'plasma:msbuild', 'plasma:nunit']
 		
     desc "Build solution with MSBuild"
     msbuild do |msb|
@@ -45,7 +45,7 @@ require 'albacore'
     end
 	
 	nunit :nunit => [:msbuild, :create_output_folders] do |nunit|
-		nunit.command = "bin/Nunit-2.5.8/nunit-console.exe"
+		nunit.command = "tools/Nunit-2.5.8/nunit-console.exe"
 		nunit.assemblies "src/Plasma.Samples.NUnitTestLibrary/Plasma.Samples.NUnitTestLibrary.csproj"	
 		nunit.options '/xml=build/Results/Plasma.Samples.NUnitTestLibrary-results.xml'
 	end
