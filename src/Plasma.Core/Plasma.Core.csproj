@@ -63,7 +63,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="WebDriver.Common">
-      <HintPath>..\..\References\WebDriver.Common.dll</HintPath>
+      <HintPath>..\..\lib\WebDriver\WebDriver.Common.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
