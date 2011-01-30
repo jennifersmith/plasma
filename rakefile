@@ -56,8 +56,7 @@ require 'albacore'
 	
 	task :all_assembly_info do |task|
 		write_assembly_info "src/Plasma.Core"
-		write_assembly_info "src/Plasma.Samples.NUnitTestLibrary"
-		write_assembly_info "src/Plasma.Samples.MSTestLibrary"
+		write_assembly_info "src/Plasma.Core.Test"
 	end
 	task :create_output_folders do
 		remove_dir "build"
@@ -72,7 +71,7 @@ require 'albacore'
 	
 	nunit :nunit => [:msbuild, :create_output_folders] do |nunit|
 		nunit.command = "tools/Nunit-2.5.8/nunit-console.exe"
-		nunit.assemblies "src/Plasma.Samples.NUnitTestLibrary/Plasma.Samples.NUnitTestLibrary.csproj"	
-		nunit.options '/xml=build/Results/Plasma.Samples.NUnitTestLibrary-results.xml'
+		nunit.assemblies "src/Plasma.Core.Test/Plasma.Core.Test.csproj"	
+		nunit.options '/xml=build/Results/Plasma.Core.Test.xml'
 	end
 end
