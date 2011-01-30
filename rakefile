@@ -4,7 +4,9 @@ require 'albacore'
  task :default =>['plasma:build_and_test']
  
  namespace :plasma do
-	
+	def get_version_number
+		(File.read "version.txt").strip
+	end
 	def write_assembly_info project_path
 		asm = AssemblyInfo.new
 		asm.output_file = "#{project_path}/Properties/AssemblyInfo.cs"
@@ -15,14 +17,36 @@ require 'albacore'
 		asm.product_name = "Plasma"
 		asm.trademark = ""
 		asm.com_visible = false
-		asm.version = "1.1.0.0"
-		asm.file_version = "1.1.0.0"
+		asm.version = get_version_number
+		asm.file_version = get_version_number
 		asm.execute
 	end
 	
     desc "Build project and run tests"
     task :build_and_test => ['plasma:all_assembly_info', 'plasma:msbuild', 'plasma:nunit']
 		
+	desc "Builds, tests and packages a release"
+	task :package_release =>['plasma:build_and_test', 'plasma:zip']
+	
+	desc "Copies built files to release folder"
+	task :copy_to_release_folder => ['plasma:build_and_test'] do |task|
+		cp "src/Plasma.Core/bin/Debug/Plasma.Core.dll", "build/Plasma-#{get_version_number}/bin"
+		cp "src/Plasma.Core/bin/Debug/Plasma.Core.pdb", "build/Plasma-#{get_version_number}/bin"
+		cp "lib/WebDriver/WebDriver.Common.dll", "build/Plasma-#{get_version_number}/lib"
+		cp "license.txt", "build/Plasma-#{get_version_number}/"
+		cp "license.htm", "build/Plasma-#{get_version_number}/"
+		cp "readme.txt", "build/Plasma-#{get_version_number}/"
+		cp "version.txt", "build/Plasma-#{get_version_number}/"
+	end
+	
+	desc "Zip into archive"
+	zip :zip => [:copy_to_release_folder] do |zip|
+		zip.directories_to_zip = ["build/Plasma-#{get_version_number}"]
+		zip.output_file = "Plasma-#{get_version_number}.zip"
+		zip.output_path = "build"
+	end
+	
+	
     desc "Build solution with MSBuild"
     msbuild do |msb|
 		msb.properties :configuration => :Debug
@@ -36,8 +60,10 @@ require 'albacore'
 		write_assembly_info "src/Plasma.Samples.MSTestLibrary"
 	end
 	task :create_output_folders do
-		Dir.mkdir "build" if !Dir.exists?"build"
-		Dir.mkdir "build/Results" if !Dir.exists?"build/Results"
+		remove_dir "build"
+		mkdir_p "build/results"
+		mkdir_p "build/Plasma-#{get_version_number}/bin"
+		mkdir_p "build/Plasma-#{get_version_number}/lib"
 	end
     desc "Update assembly info"
     assemblyinfo :assemblyinfo do |asm, args|
