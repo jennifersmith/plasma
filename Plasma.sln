@@ -5,29 +5,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Core", "Libraries\Plasma.Core\Plasma.Core.csproj", "{C10B09AA-98AC-4062-AF32-7E0DB602CCCD}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PlasmaSampleCS", "Websites\PlasmaSampleCS\", "{B0283CD0-2FA4-4E4E-8784-5A07953E5D6C}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv3.5"
-		Debug.AspNetCompiler.VirtualPath = "/PlasmaSampleCS"
-		Debug.AspNetCompiler.PhysicalPath = "Websites\PlasmaSampleCS\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\PlasmaSampleCS\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/PlasmaSampleCS"
-		Release.AspNetCompiler.PhysicalPath = "Websites\PlasmaSampleCS\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\PlasmaSampleCS\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "54179"
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Samples.NUnitTestLibrary", "Libraries\Plasma.Samples.NUnitTestLibrary\Plasma.Samples.NUnitTestLibrary.csproj", "{30A63F7D-03DA-4DCC-8C36-D2F116741548}"
 EndProject
-Project("{00000000-0000-0000-0000-000000000000}") = "Plasma.Samples.MSTestLibrary", "Libraries\Plasma.Samples.MSTestLibrary\Plasma.Samples.MSTestLibrary.csproj", "{D60CC763-2324-42FB-86FA-C5613D3BD4F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Samples.MSTestLibrary", "Libraries\Plasma.Samples.MSTestLibrary\Plasma.Samples.MSTestLibrary.csproj", "{D60CC763-2324-42FB-86FA-C5613D3BD4F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Sample.Web", "Websites\Plasma.Sample.Web\Plasma.Sample.Web.csproj", "{DB722FC4-660F-4302-B84A-B97C9FCA89D9}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -42,10 +24,6 @@ Global
 		{C10B09AA-98AC-4062-AF32-7E0DB602CCCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C10B09AA-98AC-4062-AF32-7E0DB602CCCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C10B09AA-98AC-4062-AF32-7E0DB602CCCD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0283CD0-2FA4-4E4E-8784-5A07953E5D6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0283CD0-2FA4-4E4E-8784-5A07953E5D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0283CD0-2FA4-4E4E-8784-5A07953E5D6C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0283CD0-2FA4-4E4E-8784-5A07953E5D6C}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -54,6 +32,10 @@ Global
 		{D60CC763-2324-42FB-86FA-C5613D3BD4F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D60CC763-2324-42FB-86FA-C5613D3BD4F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D60CC763-2324-42FB-86FA-C5613D3BD4F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB722FC4-660F-4302-B84A-B97C9FCA89D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB722FC4-660F-4302-B84A-B97C9FCA89D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB722FC4-660F-4302-B84A-B97C9FCA89D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB722FC4-660F-4302-B84A-B97C9FCA89D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,7 +16,7 @@ namespace Plasma.Samples.MSTestLibrary
 
                 if (_appInstance == null)
                 {
-                    var physicalPath = Path.GetFullPath(@".\..\..\..\..\..\..\..\Websites\PlasmaSampleCS");
+                    var physicalPath = Path.GetFullPath(@".\..\..\..\..\..\..\..\Websites\Plasma.Sample.Web");
                     _appInstance = new AspNetApplication("/", physicalPath);
                 }
 

@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="~/MasterPages/Site.master" AutoEventWireup="true" CodeFile="MasterPage1.aspx.cs" Inherits="MasterPages_MasterPage1" Title="Untitled Page" %>
+<%@ Page Language="C#" MasterPageFile="~/MasterPages/Site.master" AutoEventWireup="true" Inherits="MasterPages_MasterPage1" Title="Untitled Page" Codebehind="MasterPage1.aspx.cs" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox><br />

@@ -1,4 +1,4 @@
-<%@ Page Language="VB" AutoEventWireup="false" CodeFile="LinkButton.aspx.vb" Inherits="Controls_LinkButton" %>
+<%@ Page Language="C#" AutoEventWireup="true" Inherits="Basic_Querystring" Codebehind="Querystring.aspx.cs" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -9,10 +9,6 @@
 <body>
     <form id="form1" runat="server">
     <div>
-        <asp:LinkButton ID="LinkButton1" runat="server">Push Me</asp:LinkButton>
-        <br />
-        <br />
-        
         <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
     </div>
     </form>
