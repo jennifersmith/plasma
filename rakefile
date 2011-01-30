@@ -31,13 +31,13 @@ require 'albacore'
     end
 	
 	task :all_assembly_info do |task|
-		write_assembly_info "Libraries/Plasma.Core"
-		write_assembly_info "Libraries/Plasma.Samples.NUnitTestLibrary"
-		write_assembly_info "Libraries/Plasma.Samples.MSTestLibrary"
+		write_assembly_info "src/Plasma.Core"
+		write_assembly_info "src/Plasma.Samples.NUnitTestLibrary"
+		write_assembly_info "src/Plasma.Samples.MSTestLibrary"
 	end
 	task :create_output_folders do
-		Dir.mkdir "Build" if !Dir.exists?"Build"
-		Dir.mkdir "Build/Results" if !Dir.exists?"Build/Results"
+		Dir.mkdir "build" if !Dir.exists?"build"
+		Dir.mkdir "build/Results" if !Dir.exists?"build/Results"
 	end
     desc "Update assembly info"
     assemblyinfo :assemblyinfo do |asm, args|
@@ -46,7 +46,7 @@ require 'albacore'
 	
 	nunit :nunit => [:msbuild, :create_output_folders] do |nunit|
 		nunit.command = "bin/Nunit-2.5.8/nunit-console.exe"
-		nunit.assemblies "Libraries/Plasma.Samples.NUnitTestLibrary/Plasma.Samples.NUnitTestLibrary.csproj"	
-		nunit.options '/xml=Build/Results/Plasma.Samples.NUnitTestLibrary-results.xml'
+		nunit.assemblies "src/Plasma.Samples.NUnitTestLibrary/Plasma.Samples.NUnitTestLibrary.csproj"	
+		nunit.options '/xml=build/Results/Plasma.Samples.NUnitTestLibrary-results.xml'
 	end
 end
