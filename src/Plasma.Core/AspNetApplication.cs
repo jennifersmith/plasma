@@ -22,7 +22,10 @@ using Microsoft.Win32.SafeHandles;
 
 namespace Plasma.Core {
 
-    public sealed class AspNetApplication : MarshalByRefObject {
+    public sealed class AspNetApplication : MarshalByRefObject
+    {
+        private readonly IList<Assembly> _references = new List<Assembly>();
+
         private Host _host;
         private readonly string _virtualPath;
         private readonly string _physicalPath;
@@ -30,6 +33,12 @@ namespace Plasma.Core {
         public AspNetApplication(string virtualPath, string physicalPath) {
             _virtualPath = virtualPath;
             _physicalPath = physicalPath;
+        }
+
+
+        public void AddReference(Assembly assembly)
+        {
+            _references.Add(assembly);
         }
 
         public TR InvokeInAspAppDomain<T, TR>(Func<T, TR> func, T arg) {
@@ -92,7 +101,7 @@ namespace Plasma.Core {
             if (_host == null) {
                 lock (this) {
                     if (_host == null) {
-                        var hostInApplicationDomain = (Host)CreateWorkerAppDomainWithHost(_virtualPath, _physicalPath, typeof(Host));
+                        var hostInApplicationDomain = (Host)CreateWorkerAppDomainWithHost(_virtualPath, _physicalPath, typeof(Host), _references);
                         hostInApplicationDomain.Configure(this);
                         _host = hostInApplicationDomain;
                     }
@@ -102,7 +111,7 @@ namespace Plasma.Core {
             return _host;
         }
 
-        private static object CreateWorkerAppDomainWithHost(string virtualPath, string physicalPath, Type hostType) {
+        private static object CreateWorkerAppDomainWithHost(string virtualPath, string physicalPath, Type hostType, IEnumerable<Assembly> references) {
             // this creates worker app domain in a way that host doesn't need to be in GAC or bin
             // using BuildManagerHost via private reflection
             ApplicationManager appManager = ApplicationManager.GetApplicationManager();
@@ -115,15 +124,26 @@ namespace Plasma.Core {
                                                               false);
 
             // call BuildManagerHost.RegisterAssembly to make Host type loadable in the worker app domain
-            buildManagerHostType.InvokeMember(
-                "RegisterAssembly",
-                BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic,
-                null,
-                buildManagerHost,
-                new object[] { hostType.Assembly.FullName, hostType.Assembly.Location });
+            RegisterAssembly(buildManagerHostType, buildManagerHost, hostType.Assembly);
+
+            foreach (var assembly in references)
+            {
+                RegisterAssembly(buildManagerHostType, buildManagerHost, assembly);
+            }
 
             // create Host in the worker app domain
             return appManager.CreateObject(appId, hostType, virtualPath, physicalPath, false);
+        }
+
+        private static void RegisterAssembly(Type buildManagerHostType, object buildManagerHost, Assembly assembly)
+        {
+            buildManagerHostType.InvokeMember(
+            "RegisterAssembly",
+            BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic,
+            null,
+            buildManagerHost,
+            new object[] { assembly.FullName, assembly.Location });
+    
         }
 
         internal void HostStopped() {
