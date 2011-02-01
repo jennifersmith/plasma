@@ -59,7 +59,8 @@ require 'albacore'
 		write_assembly_info "src/Plasma.Core.Test"
 	end
 	task :create_output_folders do
-		remove_dir "build"
+		if File.directory? "build" then remove_dir "build" end
+		mkdir_p "build"
 		mkdir_p "build/results"
 		mkdir_p "build/Plasma-#{get_version_number}/bin"
 		mkdir_p "build/Plasma-#{get_version_number}/lib"
