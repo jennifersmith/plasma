@@ -70,7 +70,7 @@ require 'albacore'
     end
 	
 	nunit :nunit => [:msbuild, :create_output_folders] do |nunit|
-		nunit.command = "tools/Nunit-2.5.8/nunit-console.exe"
+		nunit.command = "tools/Nunit-2.5.9/nunit-console.exe"
 		nunit.assemblies "src/Plasma.Core.Test/Plasma.Core.Test.csproj"	
 		nunit.options '/xml=build/Results/Plasma.Core.Test.xml'
 	end
