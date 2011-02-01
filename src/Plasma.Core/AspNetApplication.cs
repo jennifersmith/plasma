@@ -36,8 +36,7 @@ namespace Plasma.Core {
         }
 
 
-        public void AddReference(Assembly assembly)
-        {
+        public void AddReference(Assembly assembly) {
             _references.Add(assembly);
         }
 
@@ -126,8 +125,7 @@ namespace Plasma.Core {
             // call BuildManagerHost.RegisterAssembly to make Host type loadable in the worker app domain
             RegisterAssembly(buildManagerHostType, buildManagerHost, hostType.Assembly);
 
-            foreach (var assembly in references)
-            {
+            foreach (var assembly in references) {
                 RegisterAssembly(buildManagerHostType, buildManagerHost, assembly);
             }
 
@@ -135,8 +133,7 @@ namespace Plasma.Core {
             return appManager.CreateObject(appId, hostType, virtualPath, physicalPath, false);
         }
 
-        private static void RegisterAssembly(Type buildManagerHostType, object buildManagerHost, Assembly assembly)
-        {
+        private static void RegisterAssembly(Type buildManagerHostType, object buildManagerHost, Assembly assembly) {
             buildManagerHostType.InvokeMember(
             "RegisterAssembly",
             BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic,
