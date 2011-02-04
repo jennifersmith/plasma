@@ -216,8 +216,8 @@ namespace Plasma.Core {
                 return wr.ResponseStatus;
             }
 
-            public void Close()
-            {
+            public void Close() {
+                _app = null;
                 HttpRuntime.Close();
             }
         }
@@ -533,6 +533,7 @@ namespace Plasma.Core {
 
         public void Close() {
             GetHost().Close();
+            HostStopped();
         }
     }
 }
