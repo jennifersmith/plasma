@@ -8,12 +8,10 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using Plasma.Core;
 
-namespace Plasma.Samples.NUnitTestLibrary.Controls
+namespace Plasma.Core.Test.Controls
 {
     [TestFixture]
     public class LinkButtonTest

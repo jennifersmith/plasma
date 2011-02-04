@@ -8,11 +8,9 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
 using NUnit.Framework;
-using Plasma.Core;
 
-namespace Plasma.Samples.NUnitTestLibrary.Basic
+namespace Plasma.Core.Test.Redirect
 {
     [TestFixture]
     public class Redirect

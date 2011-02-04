@@ -10,9 +10,8 @@
  * **********************************************************************************/
 using System.IO;
 using NUnit.Framework;
-using Plasma.Core;
 
-namespace Plasma.Samples.NUnitTestLibrary
+namespace Plasma.Core.Test
 {
     [SetUpFixture]
     public class WebApplicationFixture
