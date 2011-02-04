@@ -23,7 +23,7 @@ namespace Plasma.Samples.NUnitTestLibrary.Basic
             /////////////////////////////////////////////////////////////////////////////
             // Test Verifying a Redirect on Redirect.aspx
 
-            AspNetResponse response = WebApp.ProcessRequest("~/Basic/Redirect.aspx");
+            AspNetResponse response = WebApplicationFixture.ProcessRequest("~/Basic/Redirect.aspx");
 
             Assert.AreEqual(response.Status, 302);
         }

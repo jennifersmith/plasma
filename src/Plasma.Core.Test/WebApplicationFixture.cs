@@ -8,26 +8,35 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
 using System.IO;
+using NUnit.Framework;
 using Plasma.Core;
 
 namespace Plasma.Samples.NUnitTestLibrary
 {
-    public class WebApp
+    [SetUpFixture]
+    public class WebApplicationFixture
     {
         static AspNetApplication _appInstance;
 
-        public static AspNetApplication AppInstance {
-
+        public static AspNetApplication AppInstance 
+        {
             get
             {
-                // Todo: Make this configurable from a configuration file
-                if (_appInstance == null)
-                    _appInstance = new AspNetApplication("/", Path.GetFullPath(@".\..\..\..\web\Plasma.Sample.Web"));
-
                 return _appInstance;
             }
+        }
+
+        [SetUp]
+        public void SetUp() 
+        {
+            _appInstance = new AspNetApplication("/", Path.GetFullPath(@".\..\..\..\web\Plasma.Sample.Web"));
+        }
+
+        [TearDown]
+        public void TearDown() 
+        {
+            _appInstance.Close();
         }
 
         public static AspNetResponse ProcessRequest(string url)

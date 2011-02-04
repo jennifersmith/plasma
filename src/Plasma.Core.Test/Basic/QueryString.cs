@@ -24,7 +24,7 @@ namespace Plasma.Samples.NUnitTestLibrary.Basic
             /////////////////////////////////////////////////////////////////////////////
             // Test passing a QueryString value to QueryString.aspx
 
-            AspNetResponse response = WebApp.ProcessRequest("~/Basic/Querystring.aspx?test=Hello");
+            AspNetResponse response = WebApplicationFixture.ProcessRequest("~/Basic/Querystring.aspx?test=Hello");
 
             string message = response.FindElement(By.Id("Label1")).InnerHtml();
 

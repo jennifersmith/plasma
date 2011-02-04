@@ -24,12 +24,12 @@ namespace Plasma.Samples.NUnitTestLibrary.Controls
             /////////////////////////////////////////////////////////////////////////////
             // Test Pushing a Button on BasicForm.aspx
 
-            AspNetResponse firstResponse = WebApp.ProcessRequest("~/Controls/BasicForm.aspx");
+            AspNetResponse firstResponse = WebApplicationFixture.ProcessRequest("~/Controls/BasicForm.aspx");
 
             AspNetForm form = firstResponse.GetForm();
             form["TextBox1"] = "Testing";
             
-            AspNetResponse secondResponse = WebApp.ProcessRequest(Button.Click(form, "Button1"));
+            AspNetResponse secondResponse = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button1"));
 
             Assert.AreEqual("Value: Testing", secondResponse.FindElement(By.Id("Label1")).InnerHtml());
         }

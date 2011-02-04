@@ -24,7 +24,7 @@ namespace Plasma.Samples.NUnitTestLibrary.Controls
             /////////////////////////////////////////////////////////////////////////////
             // Initial request for TwoButton.aspx page
 
-            AspNetResponse firstResponse = WebApp.ProcessRequest("~/Controls/TwoButton.aspx");
+            AspNetResponse firstResponse = WebApplicationFixture.ProcessRequest("~/Controls/TwoButton.aspx");
 
 
             /////////////////////////////////////////////////////////////////////////////
@@ -33,7 +33,7 @@ namespace Plasma.Samples.NUnitTestLibrary.Controls
             AspNetForm form = firstResponse.GetForm();
             form["TextBox1"] = "Testing";
 
-            AspNetResponse secondResponse = WebApp.ProcessRequest(Button.Click(form, "Button1"));
+            AspNetResponse secondResponse = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button1"));
 
             Assert.AreEqual("Value: Testing", secondResponse.FindElement(By.Id("Label1")).InnerHtml());
 
@@ -43,7 +43,7 @@ namespace Plasma.Samples.NUnitTestLibrary.Controls
 
             form = secondResponse.GetForm();
 
-            AspNetResponse thirdResponse = WebApp.ProcessRequest(Button.Click(form, "Button2"));
+            AspNetResponse thirdResponse = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button2"));
 
             Assert.AreEqual("Selected", thirdResponse.FindElement(By.Id("Label1")).GetAttribute("class"));
         }

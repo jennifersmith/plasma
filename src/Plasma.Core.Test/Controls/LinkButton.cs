@@ -24,11 +24,11 @@ namespace Plasma.Samples.NUnitTestLibrary.Controls
             /////////////////////////////////////////////////////////////////////////////
             // Test Pushing a LinkButton on LinkButton.aspx
 
-            AspNetResponse firstResponse = WebApp.ProcessRequest("~/Controls/LinkButton.aspx");
+            AspNetResponse firstResponse = WebApplicationFixture.ProcessRequest("~/Controls/LinkButton.aspx");
 
             AspNetForm form = firstResponse.GetForm();
 
-            AspNetResponse secondResponse = WebApp.ProcessRequest(LinkButton.Click(form, "LinkButton1"));
+            AspNetResponse secondResponse = WebApplicationFixture.ProcessRequest(LinkButton.Click(form, "LinkButton1"));
 
             Assert.AreEqual("LinkButton Pushed!", secondResponse.FindElement(By.Id("Label1")).InnerHtml());                
         }
