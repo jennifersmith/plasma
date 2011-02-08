@@ -52,6 +52,7 @@
     <Content Include="Basic\Redirect.aspx" />
     <Content Include="Caching\OutputCache.aspx" />
     <Content Include="Controls\BasicForm.aspx" />
+    <Content Include="Controls\FileUpload.aspx" />
     <Content Include="Controls\LinkButton.aspx" />
     <Content Include="Controls\Style.aspx" />
     <Content Include="Controls\TwoButton.aspx" />
@@ -91,6 +92,13 @@
     </Compile>
     <Compile Include="Controls\BasicForm.aspx.designer.cs">
       <DependentUpon>BasicForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FileUpload.aspx.cs">
+      <DependentUpon>FileUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\FileUpload.aspx.designer.cs">
+      <DependentUpon>FileUpload.aspx</DependentUpon>
     </Compile>
     <Compile Include="Controls\LinkButton.aspx.cs">
       <DependentUpon>LinkButton.aspx</DependentUpon>

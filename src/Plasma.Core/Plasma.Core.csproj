@@ -71,8 +71,10 @@
     <Compile Include="AspNetForm.cs" />
     <Compile Include="AspNetRequest.cs" />
     <Compile Include="AspNetResponse.cs" />
+    <Compile Include="ContentTypeMapper.cs" />
     <Compile Include="HtmlElement.cs" />
     <Compile Include="LocalEntityResolver.cs" />
+    <Compile Include="MultipartFormBody.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIControlHelpers.cs" />
   </ItemGroup>

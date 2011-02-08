@@ -23,6 +23,7 @@ using OpenQA.Selenium;
 namespace Plasma.Core {
     public class AspNetForm : NameValueCollection {
         private readonly IWebElement _formWebElement;
+        private readonly HashSet<string> _fileControls = new HashSet<string>(); 
         private string _action;
         private string _method;
 
@@ -72,6 +73,16 @@ namespace Plasma.Core {
                 path = _action;
                 query = null;
             }
+            
+            var headers = new List<KeyValuePair<string, string>>();
+
+            if (_fileControls.Count > 0)
+            {
+                var multipartFormBody = new MultipartFormBody(this, _fileControls);
+                headers.Add(new KeyValuePair<string, string>("Content-Length", multipartFormBody.ContentLength));
+                headers.Add(new KeyValuePair<string, string>("Content-Type", multipartFormBody.ContentType));
+                return new AspNetRequest(path, null, query, "POST", headers, multipartFormBody.FormBodyData());
+            }
 
             // form collection as string
 
@@ -80,7 +91,6 @@ namespace Plasma.Core {
             // form data as query string or body (depending on method)
 
             string verb;
-            var headers = new List<KeyValuePair<string, string>>();
             byte[] formBody = null;
 
             if (string.Compare(_method, "GET", StringComparison.OrdinalIgnoreCase) == 0) {
@@ -175,7 +185,11 @@ namespace Plasma.Core {
                     if (NodeHasAttributeWithValue(node, "checked", "checked")) {
                         AddFieldValue(node, node.GetAttribute("value"));
                     }
-                } 
+                }
+                else if (StringsEqual(type, "file")) {
+                    _fileControls.Add(node.GetAttribute("name"));
+                    AddFieldValue(node, node.GetAttribute("value"));
+                }  
                 else if (StringsEqual(type, "submit")) {
                     //                    AddFieldValue(node, node.GetAttribute("value"));
                 }

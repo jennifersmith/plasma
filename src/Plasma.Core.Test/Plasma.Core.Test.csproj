@@ -77,6 +77,7 @@
     <Compile Include="Basic\QueryString.cs" />
     <Compile Include="Caching\OutputCache.cs" />
     <Compile Include="Controls\BasicForm.cs" />
+    <Compile Include="Controls\FileUpload.cs" />
     <Compile Include="Controls\LinkButton.cs" />
     <Compile Include="Controls\TwoButtons.cs" />
     <Compile Include="MasterPages\MasterPage.cs" />
