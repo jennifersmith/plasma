@@ -22,9 +22,9 @@ namespace Plasma.Core.Test.Basic
             /////////////////////////////////////////////////////////////////////////////
             // Test passing a QueryString value to QueryString.aspx
 
-            AspNetResponse response = WebApplicationFixture.ProcessRequest("~/Basic/Querystring.aspx?test=Hello");
+            HtmlNavigator html = WebApplicationFixture.ProcessRequest("~/Basic/Querystring.aspx?test=Hello").Html();
 
-            string message = response.FindElement(By.Id("Label1")).InnerHtml();
+            string message = html.FindElement(By.Id("Label1")).InnerHtml();
 
             Assert.AreEqual("Hello", message);
         }
