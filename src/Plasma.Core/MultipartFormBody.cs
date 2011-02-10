@@ -53,7 +53,7 @@ namespace Plasma.Core {
                 string header = String.Format(headerTemplate, fileControl, Path.GetFileName(filePath), ContentTypeMapper.MimeType(filePath));
                 byte[] headerbytes = Encoding.UTF8.GetBytes(header);
                 rs.Write(headerbytes, 0, headerbytes.Length);
-
+                if (string.IsNullOrEmpty(filePath)) continue;
                 using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read)) {
                     var buffer = new byte[4096];
                     int bytesRead;
