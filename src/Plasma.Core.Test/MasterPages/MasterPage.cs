@@ -22,15 +22,15 @@ namespace Plasma.Core.Test.MasterPages
             /////////////////////////////////////////////////////////////////////////////
             // Test Pushing a Button with a DropDownList within a MasterPage
 
-            AspNetResponse firstResponse = WebApplicationFixture.ProcessRequest("~/MasterPages/MasterPage1.aspx");
+            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/MasterPages/MasterPage1.aspx").Html();
 
-            AspNetForm form = firstResponse.GetForm();
+            AspNetForm form = firstHtml.GetForm();
             form["ctl00$ContentPlaceHolder1$TextBox1"] = "Scott";
             form["ctl00$ContentPlaceHolder1$DropDownList1"] = "Foo";
 
-            AspNetResponse secondResponse = WebApplicationFixture.ProcessRequest(Button.Click(form, "ctl00$ContentPlaceHolder1$Button1"));
+            HtmlNavigator secondHtml = WebApplicationFixture.ProcessRequest(Button.Click(form, "ctl00$ContentPlaceHolder1$Button1")).Html();
 
-            Assert.AreEqual("Hello Scott you selected: Foo", secondResponse.FindElement(By.Id("ctl00_ContentPlaceHolder1_Label1")).InnerHtml());
+            Assert.AreEqual("Hello Scott you selected: Foo", secondHtml.FindElement(By.Id("ctl00_ContentPlaceHolder1_Label1")).InnerHtml());
         }
     }
 }

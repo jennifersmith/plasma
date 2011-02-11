@@ -21,9 +21,9 @@ namespace Plasma.Core.Test.Redirect
             /////////////////////////////////////////////////////////////////////////////
             // Test Verifying a Redirect on Redirect.aspx
 
-            AspNetResponse response = WebApplicationFixture.ProcessRequest("~/Basic/Redirect.aspx");
+            HtmlNavigator html = WebApplicationFixture.ProcessRequest("~/Basic/Redirect.aspx").Html();
 
-            Assert.AreEqual(response.Status, 302);
+            Assert.AreEqual(html.Response.Status, 302);
         }
     }
 }
