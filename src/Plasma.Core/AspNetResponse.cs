@@ -14,24 +14,19 @@
  * **********************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Web;
-using System.Xml;
-using OpenQA.Selenium;
 
 namespace Plasma.Core
 {
-    public class AspNetResponse : ISearchContext {
+    public class AspNetResponse {
         private readonly byte[] _body;
         private readonly IEnumerable<KeyValuePair<string, string>> _headers;
         private readonly string _requestVirtualPath;
         private readonly string _queryString;
         private readonly int _status;
         private string _bodyAsString;
-        private IWebElement _htmlElement;
 
         internal AspNetResponse(string requestVirtualPath, string queryString,
                                 int status, IEnumerable<KeyValuePair<string, string>> headers, byte[] body) {
@@ -81,39 +76,6 @@ namespace Plasma.Core
             }
         }
 
-        private IWebElement HtmlElement {
-            get {
-                if (_htmlElement == null) {
-                    _htmlElement = new HtmlElement(CreateXmlDocument(BodyAsString).DocumentElement);
-                }
-                return _htmlElement;
-            }
-        }
-
-        public String Title {
-            get { return FindElement(By.TagName("title")).Text; }
-        }
-
-        public IWebElement FindElement(By mechanism) {
-            return HtmlElement.FindElement(mechanism);
-        }
-
-        public ReadOnlyCollection<IWebElement> FindElements(By mechanism) {
-            return HtmlElement.FindElements(mechanism);
-        }
-
-
-        public AspNetForm GetForm() {
-            IWebElement formNode = HtmlElement.FindElement(By.TagName("form"));
-
-            return new AspNetForm(_requestVirtualPath, formNode);
-        }
-
-        public IEnumerable<AspNetForm> GetForms()
-        {
-            return HtmlElement.FindElements(By.TagName("form")).Select(x=> new AspNetForm(_requestVirtualPath, x));
-        }
-
 
         public string ToEntireResponseString() {
             TextWriter output = new StringWriter();
@@ -130,23 +92,6 @@ namespace Plasma.Core
 
             return output.ToString();
         }
-
-        
-        private static XmlDocument CreateXmlDocument(string html) {
-            var doc = new XmlDocument();
-            var xmlReaderSettings = new XmlReaderSettings {
-                XmlResolver = new LocalEntityResolver(),
-                ProhibitDtd = false
-            };
-
-            try {
-                doc.Load(XmlReader.Create(new StringReader(html), xmlReaderSettings));
-            }
-            catch (XmlException) {
-                Console.Out.WriteLine("Failed to parse response as html:\n{0}", html);
-                throw;
-            }
-            return doc;
-        }
+                
     }
 }
