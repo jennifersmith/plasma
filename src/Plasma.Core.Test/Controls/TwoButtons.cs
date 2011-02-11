@@ -22,28 +22,28 @@ namespace Plasma.Core.Test.Controls
             /////////////////////////////////////////////////////////////////////////////
             // Initial request for TwoButton.aspx page
 
-            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/Controls/TwoButton.aspx").Html();
+            AspNetResponse firstResponse = WebApplicationFixture.ProcessRequest("~/Controls/TwoButton.aspx");
 
 
             /////////////////////////////////////////////////////////////////////////////
             // Test Pushing Button1 with value in TextBox
 
-            AspNetForm form = firstHtml.GetForm();
+            AspNetForm form = firstResponse.GetForm();
             form["TextBox1"] = "Testing";
 
-            HtmlNavigator secondHtml = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button1")).Html();
+            AspNetResponse secondResponse = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button1"));
 
-            Assert.AreEqual("Value: Testing", secondHtml.FindElement(By.Id("Label1")).InnerHtml());
+            Assert.AreEqual("Value: Testing", secondResponse.FindElement(By.Id("Label1")).InnerHtml());
 
 
             /////////////////////////////////////////////////////////////////////////////
             // Test Pushing Button2 on TwoButton.aspx
 
-            form = secondHtml.GetForm();
+            form = secondResponse.GetForm();
 
-            HtmlNavigator thirdHtml = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button2")).Html();
+            AspNetResponse thirdResponse = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button2"));
 
-            Assert.AreEqual("Selected", thirdHtml.FindElement(By.Id("Label1")).GetAttribute("class"));
+            Assert.AreEqual("Selected", thirdResponse.FindElement(By.Id("Label1")).GetAttribute("class"));
         }
     }
 }

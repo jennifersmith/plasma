@@ -22,14 +22,14 @@ namespace Plasma.Core.Test.Controls
             /////////////////////////////////////////////////////////////////////////////
             // Test Pushing a Button on BasicForm.aspx
 
-            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/Controls/BasicForm.aspx").Html();
+            AspNetResponse firstResponse = WebApplicationFixture.ProcessRequest("~/Controls/BasicForm.aspx");
 
-            AspNetForm form = firstHtml.GetForm();
+            AspNetForm form = firstResponse.GetForm();
             form["TextBox1"] = "Testing";
             
-            HtmlNavigator secondHtml = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button1")).Html();
+            AspNetResponse secondResponse = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button1"));
 
-            Assert.AreEqual("Value: Testing", secondHtml.FindElement(By.Id("Label1")).InnerHtml());
+            Assert.AreEqual("Value: Testing", secondResponse.FindElement(By.Id("Label1")).InnerHtml());
         }
     }
 }

@@ -25,17 +25,17 @@ namespace Plasma.Core.Test.Controls {
             byte[] data = GenerateRandomData(contentLength);
             WriteDataToFile(srcFile, data);
 
-            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/Controls/FileUpload.aspx").Html();
+            AspNetResponse firstResponse = WebApplicationFixture.ProcessRequest("~/Controls/FileUpload.aspx");
 
-            AspNetForm form = firstHtml.GetForm();
+            AspNetForm form = firstResponse.GetForm();
             form["FileUpload1"] = srcFile;
 
-            HtmlNavigator secondHtml = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button1")).Html();
+            AspNetResponse secondResponse = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button1"));
 
-            Assert.AreEqual(Path.GetFileName(srcFile), secondHtml.FindElement(By.Id("FileName")).Text);
-            Assert.AreEqual(contentLength.ToString(), secondHtml.FindElement(By.Id("ContentLength")).Text);
-            Assert.AreEqual("application/octet-stream", secondHtml.FindElement(By.Id("ContentType")).Text);
-            string destinationFile = secondHtml.FindElement(By.Id("SavedTo")).Text;
+            Assert.AreEqual(Path.GetFileName(srcFile), secondResponse.FindElement(By.Id("FileName")).Text);
+            Assert.AreEqual(contentLength.ToString(), secondResponse.FindElement(By.Id("ContentLength")).Text);
+            Assert.AreEqual("application/octet-stream", secondResponse.FindElement(By.Id("ContentType")).Text);
+            string destinationFile = secondResponse.FindElement(By.Id("SavedTo")).Text;
 
             byte[] copiedData = File.ReadAllBytes(destinationFile);
             

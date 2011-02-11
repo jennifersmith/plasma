@@ -38,11 +38,13 @@ namespace Plasma.Core.Test
             _appInstance.Close();
         }
 
-        public static AspNetResponse ProcessRequest(string url) {
+        public static AspNetResponse ProcessRequest(string url)
+        {
             return AppInstance.ProcessRequest(url);
         }
 
-        public static AspNetResponse ProcessRequest(AspNetRequest request) {
+        public static AspNetResponse ProcessRequest(AspNetRequest request)
+        {
             return AppInstance.ProcessRequest(request);
         }
     }

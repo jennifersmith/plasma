@@ -22,13 +22,13 @@ namespace Plasma.Core.Test.Controls
             /////////////////////////////////////////////////////////////////////////////
             // Test Pushing a LinkButton on LinkButton.aspx
 
-            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/Controls/LinkButton.aspx").Html();
+            AspNetResponse firstResponse = WebApplicationFixture.ProcessRequest("~/Controls/LinkButton.aspx");
 
-            AspNetForm form = firstHtml.GetForm();
+            AspNetForm form = firstResponse.GetForm();
 
-            HtmlNavigator secondHtml = WebApplicationFixture.ProcessRequest(LinkButton.Click(form, "LinkButton1")).Html();
+            AspNetResponse secondResponse = WebApplicationFixture.ProcessRequest(LinkButton.Click(form, "LinkButton1"));
 
-            Assert.AreEqual("LinkButton Pushed!", secondHtml.FindElement(By.Id("Label1")).InnerHtml());                
+            Assert.AreEqual("LinkButton Pushed!", secondResponse.FindElement(By.Id("Label1")).InnerHtml());                
         }
     }
 }

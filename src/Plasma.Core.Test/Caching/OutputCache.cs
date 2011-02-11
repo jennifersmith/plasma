@@ -22,11 +22,11 @@ namespace Plasma.Core.Test.Caching
             /////////////////////////////////////////////////////////////////////////////
             // Test OutputCaching
 
-            HtmlNavigator htmlFirst = WebApplicationFixture.ProcessRequest("~/Caching/OutputCache.aspx").Html();
-            string timestamp1 = htmlFirst.FindElement(By.Id("Label1")).InnerHtml();
+            AspNetResponse responseFirst = WebApplicationFixture.ProcessRequest("~/Caching/OutputCache.aspx");
+            string timestamp1 = responseFirst.FindElement(By.Id("Label1")).InnerHtml();
 
-            HtmlNavigator htmlSecond = WebApplicationFixture.ProcessRequest("~/Caching/OutputCache.aspx").Html();
-            string timestamp2 = htmlSecond.FindElement(By.Id("Label1")).InnerHtml();
+            AspNetResponse responseSecond = WebApplicationFixture.ProcessRequest("~/Caching/OutputCache.aspx");
+            string timestamp2 = responseSecond.FindElement(By.Id("Label1")).InnerHtml();
 
             Assert.AreEqual(timestamp1, timestamp2);
         }

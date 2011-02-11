@@ -75,8 +75,6 @@
     <Compile Include="HtmlElement.cs" />
     <Compile Include="LocalEntityResolver.cs" />
     <Compile Include="MultipartFormBody.cs" />
-    <Compile Include="HtmlNavigator.cs" />
-    <Compile Include="HtmlNavigatorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIControlHelpers.cs" />
   </ItemGroup>
