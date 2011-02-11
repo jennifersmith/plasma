@@ -28,13 +28,15 @@ namespace Plasma.Core
         private readonly byte[] _body;
         private readonly IEnumerable<KeyValuePair<string, string>> _headers;
         private readonly string _requestVirtualPath;
+        private readonly string _queryString;
         private readonly int _status;
         private string _bodyAsString;
         private IWebElement _htmlElement;
 
-        internal AspNetResponse(string requestVirtualPath,
+        internal AspNetResponse(string requestVirtualPath, string queryString,
                                 int status, IEnumerable<KeyValuePair<string, string>> headers, byte[] body) {
             _requestVirtualPath = requestVirtualPath;
+            _queryString = queryString;
 
             _status = status;
             _headers = headers ?? new Dictionary<string, string>();
@@ -43,6 +45,14 @@ namespace Plasma.Core
 
         public string RequestVirtualPath {
             get { return _requestVirtualPath; }
+        }
+
+        public string QueryString {
+            get { return _queryString; }
+        }
+
+        public string Url {
+            get { return string.IsNullOrEmpty(_queryString) ? _requestVirtualPath : _requestVirtualPath + "?" + _queryString; }
         }
 
         public int Status {
