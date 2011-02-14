@@ -19,8 +19,9 @@ using System.Collections.Specialized;
 using System.Text;
 using System.Web;
 using OpenQA.Selenium;
+using Plasma.Core;
 
-namespace Plasma.Core {
+namespace Plasma.WebDriver {
     public class AspNetForm : NameValueCollection {
         private readonly IWebElement _formWebElement;
         private readonly HashSet<string> _fileControls = new HashSet<string>(); 

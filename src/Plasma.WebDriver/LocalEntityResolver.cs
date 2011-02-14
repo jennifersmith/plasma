@@ -17,7 +17,7 @@ using System.Net;
 using System.Reflection;
 using System.Xml;
 
-namespace Plasma.Core
+namespace Plasma.WebDriver
 {
     public class LocalEntityResolver : XmlResolver
     {
@@ -25,7 +25,7 @@ namespace Plasma.Core
 
         public LocalEntityResolver()
         {
-            const string baseName = "Plasma.Core.Resources";
+            const string baseName = "Plasma.WebDriver.Resources";
 
             Assembly asm = GetType().Assembly;
 

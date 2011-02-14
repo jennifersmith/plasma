@@ -9,6 +9,7 @@
  *
  * **********************************************************************************/
 using NUnit.Framework;
+using Plasma.WebDriver;
 
 namespace Plasma.Core.Test.Redirect
 {

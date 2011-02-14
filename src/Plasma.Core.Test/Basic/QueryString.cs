@@ -10,6 +10,7 @@
  * **********************************************************************************/
 using NUnit.Framework;
 using OpenQA.Selenium;
+using Plasma.WebDriver;
 
 namespace Plasma.Core.Test.Basic
 {

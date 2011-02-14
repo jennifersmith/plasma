@@ -17,8 +17,9 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using OpenQA.Selenium;
+using Plasma.Core;
 
-namespace Plasma.Core {
+namespace Plasma.WebDriver {
     public class HtmlNavigator : ISearchContext {
         private readonly AspNetResponse _response;
         private IWebElement _htmlElement;

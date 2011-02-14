@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using Plasma.WebDriver;
 
 namespace Plasma.Core.Test.Controls {
     [TestFixture]

@@ -18,7 +18,7 @@ using System.Xml;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Internal;
 
-namespace Plasma.Core
+namespace Plasma.WebDriver
 {
     public class HtmlElement : IWebElement, IFindsByClassName, IFindsByXPath, IFindsByTagName, IFindsById, IFindsByName
     {

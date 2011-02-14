@@ -10,7 +10,9 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-namespace Plasma.Core {
+using Plasma.Core;
+
+namespace Plasma.WebDriver {
     public static class HtmlNavigatorExtensions {
         public static HtmlNavigator Html(this AspNetResponse response) {
             return new HtmlNavigator(response);

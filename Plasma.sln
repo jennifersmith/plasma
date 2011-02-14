@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Sample.Web", "src\we
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Core.Test", "src\Plasma.Core.Test\Plasma.Core.Test.csproj", "{30A63F7D-03DA-4DCC-8C36-D2F116741548}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.WebDriver", "src\Plasma.WebDriver\Plasma.WebDriver.csproj", "{F514E455-98F9-44CA-8CA2-2FAF21E67591}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Plasma.vsmdi
@@ -33,6 +35,10 @@ Global
 		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F514E455-98F9-44CA-8CA2-2FAF21E67591}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F514E455-98F9-44CA-8CA2-2FAF21E67591}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F514E455-98F9-44CA-8CA2-2FAF21E67591}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F514E455-98F9-44CA-8CA2-2FAF21E67591}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

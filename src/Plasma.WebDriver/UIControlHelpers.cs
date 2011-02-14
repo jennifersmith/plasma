@@ -8,11 +8,9 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Plasma.Core;
 
-namespace Plasma.Core
+namespace Plasma.WebDriver
 {
     public class Button
     {

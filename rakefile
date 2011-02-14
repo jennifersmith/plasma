@@ -32,6 +32,8 @@ require 'albacore'
 	task :copy_to_release_folder => ['plasma:build_and_test'] do |task|
 		cp "src/Plasma.Core/bin/Debug/Plasma.Core.dll", "build/Plasma-#{get_version_number}/bin"
 		cp "src/Plasma.Core/bin/Debug/Plasma.Core.pdb", "build/Plasma-#{get_version_number}/bin"
+		cp "src/Plasma.WebDriver/bin/Debug/Plasma.WebDriver.dll", "build/Plasma-#{get_version_number}/bin"
+		cp "src/Plasma.WebDriver/bin/Debug/Plasma.WebDriver.pdb", "build/Plasma-#{get_version_number}/bin"
 		cp "lib/WebDriver/WebDriver.Common.dll", "build/Plasma-#{get_version_number}/lib"
 		cp "license.txt", "build/Plasma-#{get_version_number}/"
 		cp "license.htm", "build/Plasma-#{get_version_number}/"
@@ -56,6 +58,7 @@ require 'albacore'
 	
 	task :all_assembly_info do |task|
 		write_assembly_info "src/Plasma.Core"
+		write_assembly_info "src/Plasma.WebDriver"
 		write_assembly_info "src/Plasma.Core.Test"
 	end
 	task :create_output_folders do
