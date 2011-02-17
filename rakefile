@@ -4,14 +4,22 @@ require 'albacore'
  task :default =>['plasma:build_and_test']
  
  namespace :plasma do
+	$hg_hash = `hg tip --template "{node|short}"`
+	$hg_rev = `hg tip --template "{rev}"`
+	
 	def get_version_number
 		(File.read "version.txt").strip
 	end
+	
+	$base_version = get_version_number
+	$version =  "#{$base_version}.0.0"
+	
 	def write_assembly_info project_path
 		asm = AssemblyInfo.new
 		asm.output_file = "#{project_path}/Properties/VersionInfo.cs"
-		asm.version = get_version_number
-		asm.file_version = get_version_number
+		asm.version = $version
+		asm.file_version = "#{$base_version}.0.#{$hg_rev}"
+		asm.custom_attributes :AssemblyInformationalVersion =>  "#{$base_version} Alpha (#{$hg_rev} #{$hg_hash})"
 		asm.execute
 	end
 	
@@ -23,21 +31,20 @@ require 'albacore'
 	
 	desc "Copies built files to release folder"
 	task :copy_to_release_folder => ['plasma:build_and_test'] do |task|
-		cp "src/Plasma.Core/bin/Debug/Plasma.Core.dll", "build/Plasma-#{get_version_number}/bin"
-		cp "src/Plasma.Core/bin/Debug/Plasma.Core.pdb", "build/Plasma-#{get_version_number}/bin"
-		cp "src/Plasma.WebDriver/bin/Debug/Plasma.WebDriver.dll", "build/Plasma-#{get_version_number}/bin"
-		cp "src/Plasma.WebDriver/bin/Debug/Plasma.WebDriver.pdb", "build/Plasma-#{get_version_number}/bin"
-		cp "lib/WebDriver/WebDriver.Common.dll", "build/Plasma-#{get_version_number}/lib"
-		cp "license.txt", "build/Plasma-#{get_version_number}/"
-		cp "license.htm", "build/Plasma-#{get_version_number}/"
-		cp "readme.txt", "build/Plasma-#{get_version_number}/"
-		cp "version.txt", "build/Plasma-#{get_version_number}/"
+		cp "src/Plasma.Core/bin/Debug/Plasma.Core.dll", "build/Plasma-#{$version}/bin"
+		cp "src/Plasma.Core/bin/Debug/Plasma.Core.pdb", "build/Plasma-#{$version}/bin"
+		cp "src/Plasma.WebDriver/bin/Debug/Plasma.WebDriver.dll", "build/Plasma-#{$version}/bin"
+		cp "src/Plasma.WebDriver/bin/Debug/Plasma.WebDriver.pdb", "build/Plasma-#{$version}/bin"
+		cp "lib/WebDriver/WebDriver.Common.dll", "build/Plasma-#{$version}/lib"
+		cp "license.txt", "build/Plasma-#{$version}/"
+		cp "license.htm", "build/Plasma-#{$version}/"
+		cp "readme.txt", "build/Plasma-#{$version}/"
 	end
 	
 	desc "Zip into archive"
 	zip :zip => [:copy_to_release_folder] do |zip|
-		zip.directories_to_zip = ["build/Plasma-#{get_version_number}"]
-		zip.output_file = "Plasma-#{get_version_number}.zip"
+		zip.directories_to_zip = ["build/Plasma-#{$version}"]
+		zip.output_file = "Plasma-#{$version}.zip"
 		zip.output_path = "build"
 	end
 	
@@ -56,8 +63,8 @@ require 'albacore'
 		if File.directory? "build" then remove_dir "build" end
 		mkdir_p "build"
 		mkdir_p "build/results"
-		mkdir_p "build/Plasma-#{get_version_number}/bin"
-		mkdir_p "build/Plasma-#{get_version_number}/lib"
+		mkdir_p "build/Plasma-#{$version}/bin"
+		mkdir_p "build/Plasma-#{$version}/lib"
 	end
     desc "Update assembly info"
     assemblyinfo :assemblyinfo do |asm, args|
