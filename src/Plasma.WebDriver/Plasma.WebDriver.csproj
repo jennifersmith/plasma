@@ -41,6 +41,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Plasma.Core\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Plasma.Core\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
@@ -49,9 +52,6 @@
     <Compile Include="HtmlNavigator.cs" />
     <Compile Include="HtmlNavigatorExtensions.cs" />
     <Compile Include="LocalEntityResolver.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="UIControlHelpers.cs" />
   </ItemGroup>
   <ItemGroup>

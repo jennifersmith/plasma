@@ -74,6 +74,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Plasma.Core\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Plasma.Core\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
@@ -84,7 +87,6 @@
     <Compile Include="Controls\LinkButton.cs" />
     <Compile Include="Controls\TwoButtons.cs" />
     <Compile Include="MasterPages\MasterPage.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Redirect\Redirect.cs" />
     <Compile Include="WebApplicationFixture.cs" />
   </ItemGroup>
