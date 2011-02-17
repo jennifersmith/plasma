@@ -27,3 +27,4 @@ obj/
 _ReSharper*/
 [Tt]est[Rr]esult*
 build/
+glob:src/Plasma.Core/Properties/VersionInfo.cs

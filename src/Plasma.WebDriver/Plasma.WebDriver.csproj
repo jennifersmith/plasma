@@ -41,6 +41,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Plasma.Core\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="AspNetForm.cs" />
     <Compile Include="HtmlElement.cs" />
     <Compile Include="HtmlNavigator.cs" />

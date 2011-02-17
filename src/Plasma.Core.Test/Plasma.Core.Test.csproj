@@ -74,6 +74,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Plasma.Core\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Basic\QueryString.cs" />
     <Compile Include="Caching\OutputCache.cs" />
     <Compile Include="Controls\BasicForm.cs" />

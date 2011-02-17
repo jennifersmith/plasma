@@ -9,14 +9,7 @@ require 'albacore'
 	end
 	def write_assembly_info project_path
 		asm = AssemblyInfo.new
-		asm.output_file = "#{project_path}/Properties/AssemblyInfo.cs"
-		asm.title = "Plasma.Core"
-		asm.description = "Plasma provides web automation and testing capabilities to ASP.NET projects."
-		asm.copyright = "Copyright 2011"
-		asm.company_name = "n/a"
-		asm.product_name = "Plasma"
-		asm.trademark = ""
-		asm.com_visible = false
+		asm.output_file = "#{project_path}/Properties/VersionInfo.cs"
 		asm.version = get_version_number
 		asm.file_version = get_version_number
 		asm.execute
@@ -51,15 +44,13 @@ require 'albacore'
 	
     desc "Build solution with MSBuild"
     msbuild do |msb|
-		msb.properties :configuration => :Debug
+		msb.properties :configuration => :Debug, :SkipDefaultVersion => :True
         msb.targets [:Clean, :Build]
         msb.solution = "Plasma.sln"
     end
 	
 	task :all_assembly_info do |task|
 		write_assembly_info "src/Plasma.Core"
-		write_assembly_info "src/Plasma.WebDriver"
-		write_assembly_info "src/Plasma.Core.Test"
 	end
 	task :create_output_folders do
 		if File.directory? "build" then remove_dir "build" end
