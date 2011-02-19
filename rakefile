@@ -12,13 +12,13 @@ require 'albacore'
 	end
 	
 	$base_version = get_version_number
-	$version =  "#{$base_version}.0.0"
+	$version =  "#{$base_version}.0"
 	
 	def write_assembly_info project_path
 		asm = AssemblyInfo.new
 		asm.output_file = "#{project_path}/Properties/VersionInfo.cs"
 		asm.version = $version
-		asm.file_version = "#{$base_version}.0.#{$hg_rev}"
+		asm.file_version = "#{$base_version}.#{$hg_rev}"
 		asm.custom_attributes :AssemblyInformationalVersion =>  "#{$base_version} Alpha (#{$hg_rev} #{$hg_hash})"
 		asm.execute
 	end
