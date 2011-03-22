@@ -9,6 +9,8 @@
  *
  * **********************************************************************************/
 using System.Collections.Generic;
+using System.Text;
+using System.Web;
 
 namespace Plasma.Core
 {
@@ -54,5 +56,16 @@ namespace Plasma.Core
         public List<KeyValuePair<string, string>> Headers { get; private set; }
 
         public byte[] Body { get; set; }
+
+        public void AddCookies(IEnumerable<HttpCookie> cookies) {
+            var stringBuilder = new StringBuilder();
+
+            foreach (HttpCookie cookie in cookies)
+            {
+                stringBuilder.Append(string.Format("{0}={1}; ", cookie.Name, cookie.Value));
+            }
+
+            Headers.Add(new KeyValuePair<string, string>("Cookie", stringBuilder.ToString()));
+        }
     }
 }

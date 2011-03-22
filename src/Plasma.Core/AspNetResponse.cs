@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web;
 
@@ -58,10 +59,18 @@ namespace Plasma.Core
             get { return _headers; }
         }
 
+        public IEnumerable<HttpCookie> Cookies {
+            get {
+                var cookieParser = new CookieParser();
+                return _headers.Where(x => x.Key == "Set-Cookie").Select(x => cookieParser.ParseCookie(x.Value));
+            }
+        }
+
         public byte[] Body {
             get { return _body; }
         }
 
+        
         public string BodyAsString {
             get {
                 if (_bodyAsString == null) {
