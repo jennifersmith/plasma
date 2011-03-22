@@ -8,10 +8,11 @@
     <ProjectGuid>{1E42AFED-F6D7-4B3B-9CD0-194C4486D15E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Plasama.Test.Unit</RootNamespace>
-    <AssemblyName>Plasama.Test.Unit</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <RootNamespace>Plasma.Test.Unit</RootNamespace>
+    <AssemblyName>Plasma.Test.Unit</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

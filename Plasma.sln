@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Core.Test", "src\Pla
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.WebDriver", "src\Plasma.WebDriver\Plasma.WebDriver.csproj", "{F514E455-98F9-44CA-8CA2-2FAF21E67591}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasama.Test.Unit", "src\Plasama.Test.Unit\Plasama.Test.Unit.csproj", "{1E42AFED-F6D7-4B3B-9CD0-194C4486D15E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Test.Unit", "src\Plasma.Test.Unit\Plasma.Test.Unit.csproj", "{1E42AFED-F6D7-4B3B-9CD0-194C4486D15E}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution

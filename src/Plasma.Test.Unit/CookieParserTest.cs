@@ -3,7 +3,7 @@ using System.Web;
 using NUnit.Framework;
 using Plasma.Core;
 
-namespace Plasama.Test.Unit
+namespace Plasma.Test.Unit
 {
     [TestFixture]
     public class CookieParserTest
