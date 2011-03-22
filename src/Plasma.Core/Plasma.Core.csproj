@@ -68,6 +68,7 @@
     <Compile Include="AspNetRequest.cs" />
     <Compile Include="AspNetResponse.cs" />
     <Compile Include="ContentTypeMapper.cs" />
+    <Compile Include="CookieParser.cs" />
     <Compile Include="MultipartFormBody.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\VersionInfo.cs" />
