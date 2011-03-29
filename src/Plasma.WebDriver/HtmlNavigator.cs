@@ -55,13 +55,13 @@ namespace Plasma.WebDriver {
 		public AspNetForm GetForm() {
 			IWebElement formNode = HtmlElement.FindElement(By.TagName("form"));
 
-			return new AspNetForm(_response.Url, formNode);
+			return new AspNetForm(_response.RequestVirtualPath, _response.QueryString, formNode);
 		}
 
 		public IEnumerable<AspNetForm> GetForms() {
 			return
 				HtmlElement.FindElements(By.TagName("form")).Select(
-					x => new AspNetForm(_response.Url, x));
+                    x => new AspNetForm(_response.RequestVirtualPath, _response.QueryString, x));
 		}
 
 		private static XmlDocument CreateXmlDocument(string html) {

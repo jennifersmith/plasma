@@ -28,7 +28,7 @@ namespace Plasma.WebDriver {
         private string _action;
         private string _method;
 
-        internal AspNetForm(string requestVirtualPath, IWebElement formWebElement) {
+        internal AspNetForm(string requestVirtualPath, string queryString, IWebElement formWebElement) {
             _formWebElement = formWebElement;
             // form's method
             string formMethod = formWebElement.GetAttribute("method");
@@ -36,8 +36,9 @@ namespace Plasma.WebDriver {
 
             // form's action
             string formAction = formWebElement.GetAttribute("action");
+            string requestUrl = string.IsNullOrEmpty(queryString) ? requestVirtualPath : requestVirtualPath + "?" + queryString;
             _action = string.IsNullOrEmpty(formAction)
-                         ? requestVirtualPath
+                         ? requestUrl
                          : VirtualPathUtility.Combine(requestVirtualPath, formAction);
 
             // populate the dictionary with form fields
