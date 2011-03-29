@@ -20,65 +20,65 @@ using OpenQA.Selenium;
 using Plasma.Core;
 
 namespace Plasma.WebDriver {
-    public class HtmlNavigator : ISearchContext {
-        private readonly AspNetResponse _response;
-        private IWebElement _htmlElement;
+	public class HtmlNavigator : ISearchContext {
+		private readonly AspNetResponse _response;
+		private IWebElement _htmlElement;
 
 
-        public HtmlNavigator(AspNetResponse response) {
-            _response = response;
-        }
+		public HtmlNavigator(AspNetResponse response) {
+			_response = response;
+		}
 
-        private IWebElement HtmlElement {
-            get {
-                return _htmlElement ??
-                       (_htmlElement = new HtmlElement(CreateXmlDocument(_response.BodyAsString).DocumentElement));
-            }
-        }
+		private IWebElement HtmlElement {
+			get {
+				return _htmlElement ??
+					   (_htmlElement = new HtmlElement(CreateXmlDocument(_response.BodyAsString).DocumentElement));
+			}
+		}
 
-        public AspNetResponse Response {
-            get { return _response; }
-        }
+		public AspNetResponse Response {
+			get { return _response; }
+		}
 
-        public String Title {
-            get { return FindElement(By.TagName("title")).Text; }
-        }
+		public String Title {
+			get { return FindElement(By.TagName("title")).Text; }
+		}
 
-        public IWebElement FindElement(By mechanism) {
-            return HtmlElement.FindElement(mechanism);
-        }
+		public IWebElement FindElement(By mechanism) {
+			return HtmlElement.FindElement(mechanism);
+		}
 
-        public ReadOnlyCollection<IWebElement> FindElements(By mechanism) {
-            return HtmlElement.FindElements(mechanism);
-        }
+		public ReadOnlyCollection<IWebElement> FindElements(By mechanism) {
+			return HtmlElement.FindElements(mechanism);
+		}
 
-        public AspNetForm GetForm() {
-            IWebElement formNode = HtmlElement.FindElement(By.TagName("form"));
+		public AspNetForm GetForm() {
+			IWebElement formNode = HtmlElement.FindElement(By.TagName("form"));
 
-            return new AspNetForm(_response.RequestVirtualPath, formNode);
-        }
+			return new AspNetForm(_response.Url, formNode);
+		}
 
-        public IEnumerable<AspNetForm> GetForms() {
-            return
-                HtmlElement.FindElements(By.TagName("form")).Select(
-                    x => new AspNetForm(_response.RequestVirtualPath, x));
-        }
+		public IEnumerable<AspNetForm> GetForms() {
+			return
+				HtmlElement.FindElements(By.TagName("form")).Select(
+					x => new AspNetForm(_response.Url, x));
+		}
 
-        private static XmlDocument CreateXmlDocument(string html) {
-            var doc = new XmlDocument();
-            var xmlReaderSettings = new XmlReaderSettings {
-                                                              XmlResolver = new LocalEntityResolver(),
-                                                              ProhibitDtd = false
-                                                          };
+		private static XmlDocument CreateXmlDocument(string html) {
+			var doc = new XmlDocument();
+			var xmlReaderSettings = new XmlReaderSettings {
+															  XmlResolver = new LocalEntityResolver(),
+															  ProhibitDtd = false
+														  };
 
-            try {
-                doc.Load(XmlReader.Create(new StringReader(html), xmlReaderSettings));
-            }
-            catch (XmlException) {
-                Console.Out.WriteLine("Failed to parse response as html:\n{0}", html);
-                throw;
-            }
-            return doc;
-        }
-    }
+			try {
+				doc.Load(XmlReader.Create(new StringReader(html), xmlReaderSettings));
+			}
+			catch (XmlException) {
+				Console.Out.WriteLine("Failed to parse response as html:\n{0}", html);
+				throw;
+			}
+			return doc;
+		}
+	}
 }
