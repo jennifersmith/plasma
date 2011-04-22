@@ -12,26 +12,24 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using Plasma.WebDriver;
 
-namespace Plasma.Core.Test.MasterPages
+namespace Plasma.Test.Functional.Controls
 {
     [TestFixture]
-    public class MasterPage
+    public class LinkButtonTest
     {
         [Test]
-        public void MasterPage_Form()
+        public void LinkButton_Test()
         {
             /////////////////////////////////////////////////////////////////////////////
-            // Test Pushing a Button with a DropDownList within a MasterPage
+            // Test Pushing a LinkButton on LinkButton.aspx
 
-            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/MasterPages/MasterPage1.aspx").Html();
+            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/Controls/LinkButton.aspx").Html();
 
             AspNetForm form = firstHtml.GetForm();
-            form["ctl00$ContentPlaceHolder1$TextBox1"] = "Scott";
-            form["ctl00$ContentPlaceHolder1$DropDownList1"] = "Foo";
 
-            HtmlNavigator secondHtml = WebApplicationFixture.ProcessRequest(Button.Click(form, "ctl00$ContentPlaceHolder1$Button1")).Html();
+            HtmlNavigator secondHtml = WebApplicationFixture.ProcessRequest(LinkButton.Click(form, "LinkButton1")).Html();
 
-            Assert.AreEqual("Hello Scott you selected: Foo", secondHtml.FindElement(By.Id("ctl00_ContentPlaceHolder1_Label1")).InnerHtml());
+            Assert.AreEqual("LinkButton Pushed!", secondHtml.FindElement(By.Id("Label1")).InnerHtml());                
         }
     }
 }

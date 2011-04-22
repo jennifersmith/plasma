@@ -24,7 +24,7 @@ require 'albacore'
 	end
 	
     desc "Build project and run tests"
-    task :build_and_test => ['plasma:all_assembly_info', 'plasma:msbuild', 'plasma:nunit']
+    task :build_and_test => ['plasma:all_assembly_info', 'plasma:msbuild', 'plasma:all_tests']
 		
 	desc "Builds, tests and packages a release"
 	task :package_release =>['plasma:build_and_test', 'plasma:zip']
@@ -70,10 +70,16 @@ require 'albacore'
     assemblyinfo :assemblyinfo do |asm, args|
 		puts args
     end
-	
-	nunit :nunit => [:msbuild, :create_output_folders] do |nunit|
+	desc "All tests"
+	task :all_tests => [:unit_tests, :functional_tests]
+	nunit :functional_tests => [:msbuild, :create_output_folders] do |nunit|
 		nunit.command = "tools/Nunit-2.5.9/nunit-console.exe"
-		nunit.assemblies "src/Plasma.Core.Test/Plasma.Core.Test.csproj"	
-		nunit.options '/xml=build/Results/Plasma.Core.Test.xml'
+		nunit.assemblies "src/Plasma.Test.Functional/Plasma.Test.Functional.csproj"	
+		nunit.options '/xml=build/Results/Plasma.Test.Functional.xml'
+	end
+	nunit :unit_tests => [:msbuild, :create_output_folders] do |nunit|
+		nunit.command = "tools/Nunit-2.5.9/nunit-console.exe"
+		nunit.assemblies "src/Plasma.Test.Unit/Plasma.Test.Unit.csproj"	
+		nunit.options '/xml=build/Results/Plasma.Test.Unit.xml'
 	end
 end

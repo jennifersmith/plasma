@@ -9,22 +9,25 @@
  *
  * **********************************************************************************/
 using NUnit.Framework;
+using OpenQA.Selenium;
 using Plasma.WebDriver;
 
-namespace Plasma.Core.Test.Redirect
+namespace Plasma.Test.Functional.Basic
 {
     [TestFixture]
-    public class Redirect
+    public class QueryString
     {
         [Test]
-        public void Basic_Redirect()
+        public void Basic_QueryString()
         {
             /////////////////////////////////////////////////////////////////////////////
-            // Test Verifying a Redirect on Redirect.aspx
+            // Test passing a QueryString value to QueryString.aspx
 
-            HtmlNavigator html = WebApplicationFixture.ProcessRequest("~/Basic/Redirect.aspx").Html();
+            HtmlNavigator html = WebApplicationFixture.ProcessRequest("~/Basic/Querystring.aspx?test=Hello").Html();
 
-            Assert.AreEqual(html.Response.Status, 302);
+            string message = html.FindElement(By.Id("Label1")).InnerHtml();
+
+            Assert.AreEqual("Hello", message);
         }
     }
 }

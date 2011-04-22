@@ -14,7 +14,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using Plasma.WebDriver;
 
-namespace Plasma.Core.Test.Controls {
+namespace Plasma.Test.Functional.Controls {
     [TestFixture]
     public class FileUpload {
 

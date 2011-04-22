@@ -12,39 +12,25 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using Plasma.WebDriver;
 
-namespace Plasma.Core.Test.Controls
+namespace Plasma.Test.Functional.Controls
 {
     [TestFixture]
-    public class TwoButtons
+    public class BasicForm
     {
         [Test]
-        public void TwoButtons_Test()
+        public void Basic_Form()
         {
             /////////////////////////////////////////////////////////////////////////////
-            // Initial request for TwoButton.aspx page
+            // Test Pushing a Button on BasicForm.aspx
 
-            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/Controls/TwoButton.aspx").Html();
-
-
-            /////////////////////////////////////////////////////////////////////////////
-            // Test Pushing Button1 with value in TextBox
+            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/Controls/BasicForm.aspx").Html();
 
             AspNetForm form = firstHtml.GetForm();
             form["TextBox1"] = "Testing";
-
+            
             HtmlNavigator secondHtml = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button1")).Html();
 
             Assert.AreEqual("Value: Testing", secondHtml.FindElement(By.Id("Label1")).InnerHtml());
-
-
-            /////////////////////////////////////////////////////////////////////////////
-            // Test Pushing Button2 on TwoButton.aspx
-
-            form = secondHtml.GetForm();
-
-            HtmlNavigator thirdHtml = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button2")).Html();
-
-            Assert.AreEqual("Selected", thirdHtml.FindElement(By.Id("Label1")).GetAttribute("class"));
         }
     }
 }

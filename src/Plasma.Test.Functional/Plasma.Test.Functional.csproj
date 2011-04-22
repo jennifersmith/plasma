@@ -8,8 +8,8 @@
     <ProjectGuid>{30A63F7D-03DA-4DCC-8C36-D2F116741548}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Plasma.Core.Test</RootNamespace>
-    <AssemblyName>Plasma.Core.Test</AssemblyName>
+    <RootNamespace>Plasma.Test.Functional</RootNamespace>
+    <AssemblyName>Plasma.Test.Functional</AssemblyName>
     <SccProjectName>
     </SccProjectName>
     <SccLocalPath>

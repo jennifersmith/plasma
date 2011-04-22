@@ -12,25 +12,25 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using Plasma.WebDriver;
 
-namespace Plasma.Core.Test.Controls
+namespace Plasma.Test.Functional.Caching
 {
     [TestFixture]
-    public class BasicForm
+    public class OutputCache
     {
         [Test]
-        public void Basic_Form()
+        public void TimestampCheck()
         {
             /////////////////////////////////////////////////////////////////////////////
-            // Test Pushing a Button on BasicForm.aspx
+            // Test OutputCaching
 
-            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/Controls/BasicForm.aspx").Html();
+            HtmlNavigator htmlFirst = HtmlNavigatorExtensions.Html(WebApplicationFixture.ProcessRequest("~/Caching/OutputCache.aspx"));
+            string timestamp1 = htmlFirst.FindElement(By.Id("Label1")).InnerHtml();
 
-            AspNetForm form = firstHtml.GetForm();
-            form["TextBox1"] = "Testing";
-            
-            HtmlNavigator secondHtml = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button1")).Html();
+            HtmlNavigator htmlSecond = HtmlNavigatorExtensions.Html(WebApplicationFixture.ProcessRequest("~/Caching/OutputCache.aspx"));
+            string timestamp2 = htmlSecond.FindElement(By.Id("Label1")).InnerHtml();
 
-            Assert.AreEqual("Value: Testing", secondHtml.FindElement(By.Id("Label1")).InnerHtml());
+            Assert.AreEqual(timestamp1, timestamp2);
         }
     }
 }
+

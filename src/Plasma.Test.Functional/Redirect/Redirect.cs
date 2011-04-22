@@ -9,27 +9,22 @@
  *
  * **********************************************************************************/
 using NUnit.Framework;
-using OpenQA.Selenium;
 using Plasma.WebDriver;
 
-namespace Plasma.Core.Test.Controls
+namespace Plasma.Test.Functional.Redirect
 {
     [TestFixture]
-    public class LinkButtonTest
+    public class Redirect
     {
         [Test]
-        public void LinkButton_Test()
+        public void Basic_Redirect()
         {
             /////////////////////////////////////////////////////////////////////////////
-            // Test Pushing a LinkButton on LinkButton.aspx
+            // Test Verifying a Redirect on Redirect.aspx
 
-            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/Controls/LinkButton.aspx").Html();
+            HtmlNavigator html = WebApplicationFixture.ProcessRequest("~/Basic/Redirect.aspx").Html();
 
-            AspNetForm form = firstHtml.GetForm();
-
-            HtmlNavigator secondHtml = WebApplicationFixture.ProcessRequest(LinkButton.Click(form, "LinkButton1")).Html();
-
-            Assert.AreEqual("LinkButton Pushed!", secondHtml.FindElement(By.Id("Label1")).InnerHtml());                
+            Assert.AreEqual(html.Response.Status, 302);
         }
     }
 }
