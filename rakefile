@@ -24,7 +24,7 @@ require 'albacore'
 	end
 	
     desc "Build project and run tests"
-    task :build_and_test => ['plasma:all_assembly_info', 'plasma:msbuild', 'plasma:all_tests']
+    task :build_and_test => ['plasma:check_headers', 'plasma:all_assembly_info', 'plasma:msbuild', 'plasma:all_tests']
 		
 	desc "Builds, tests and packages a release"
 	task :package_release =>['plasma:build_and_test', 'plasma:zip']
@@ -82,4 +82,18 @@ require 'albacore'
 		nunit.assemblies "src/Plasma.Test.Unit/Plasma.Test.Unit.csproj"	
 		nunit.options '/xml=build/Results/Plasma.Test.Unit.xml'
 	end
+	task :check_headers do
+		microsoft_header = "Copyright (c) Microsoft Corporation. All rights reserved." 
+		thoughtworks_header = "Copyright 2010 ThoughtWorks, Inc."
+			ignore = [/AssemblyInfo\.cs/, /\.designer\.cs/, /VersionInfo/]
+		need_headers = []
+		all_files =	Dir.glob("src/**/*.cs")
+		all_files.each do |file|
+			if !ignore.any? {|x| file.match x}
+				contents = File.read(file)
+				need_headers.push file unless contents.include?(microsoft_header) || contents.include?(thoughtworks_header)
+			end
+		end
+		fail "Headers required for : " + need_headers.join("\n") if(need_headers.length>0)
+ end
 end
