@@ -55,11 +55,16 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="CookieParserTest.cs" />
+    <Compile Include="WebDriver\Finders\ElementByClassNameFinderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Plasma.Core\Plasma.Core.csproj">
       <Project>{C10B09AA-98AC-4062-AF32-7E0DB602CCCD}</Project>
       <Name>Plasma.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plasma.WebDriver\Plasma.WebDriver.csproj">
+      <Project>{F514E455-98F9-44CA-8CA2-2FAF21E67591}</Project>
+      <Name>Plasma.WebDriver</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

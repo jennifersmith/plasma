@@ -17,6 +17,7 @@ using System.Linq;
 using System.Xml;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Internal;
+using Plasma.WebDriver.Finders;
 
 namespace Plasma.WebDriver
 {
@@ -48,11 +49,7 @@ namespace Plasma.WebDriver
 
         public ReadOnlyCollection<IWebElement> FindElementsByClassName(string className)
         {
-            return FindElementsByXPath(String.Format(
-                                           "descendant::node()[contains( normalize-space( @class ), ' {0} ' ) " +
-                                           "or substring( normalize-space( @class ), 1, string-length( '{0}' ) + 1 ) = '{0} ' " +
-                                           "or substring( normalize-space( @class ), string-length( @class ) - string-length( '{0}' ) ) = ' {0}' " +
-                                           "or @class = '{0}']", className));
+            return new ElementByClassNameFinder(className).FindWithin(_xmlElement).AsReadonlyCollection();
         }
 
 
@@ -269,11 +266,17 @@ namespace Plasma.WebDriver
         
     }
 
+
     public static class WebElementExtensions
     {
           public static string InnerHtml(this IWebElement webElement)
           {
               return ((HtmlElement) webElement).InnerHtml;
           }
+
+        public static ReadOnlyCollection<IWebElement> AsReadonlyCollection(this IEnumerable<XmlElement> xmlElements)
+        {
+            return new ReadOnlyCollection<IWebElement>(xmlElements.Select(x=>new HtmlElement(x)).Cast<IWebElement>().ToList());
+        }
     }
 }
