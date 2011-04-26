@@ -14,6 +14,9 @@ namespace Plasma.Test.Unit.WebDriver.Finders
         [TestCase("foo", "foo bar baz wibble", Description = "Matching one of several class names - at beginning")]
         [TestCase("foo", "bar baz wibble foo", Description = "Matching one of several class names - at end")]
         [TestCase("foo", "bar baz foo wibble", Description = "Matching one of several class names - in middle")]
+        [TestCase("foo", "       foo      ")]
+        [TestCase("foo", "       bar      foo     ")]
+        [TestCase("foo", "       foo      bar     ")]
         public void ShouldFindAnElementThatHasClassNameInClassAttribute(string classToFind, string classAttributeValue)
         {
             string xmlSource = string.Format(@"<html>
@@ -23,7 +26,7 @@ namespace Plasma.Test.Unit.WebDriver.Finders
                                                                 <div id='elementToFind' class='{0}'></div>
                                                             </div>
                                                          </div>
-                                                    </body>
+                                                    </body>N
                                                 </html>", classAttributeValue);
 
             var document = new XmlDocument();
@@ -33,6 +36,31 @@ namespace Plasma.Test.Unit.WebDriver.Finders
 
             Assert.That(xmlElements.Count(), Is.EqualTo(1), "Failed to locate a single element with class name " + classToFind + " within XML Source "+ xmlSource);
             Assert.That(xmlElements.Single().GetAttribute("id"), Is.EqualTo("elementToFind"));
+        }
+
+        [TestCase("foo", "bar")]
+        [TestCase("foo", "foobar")]
+        [TestCase("foo", "barfoo")]
+        [TestCase("foo", "whizz barfoobar")]
+        public void ShouldFindNoMatchesWhereCannotFindElementWithTheClassName(string classNotToFind, string classAttributeValue)
+        {
+
+            string xmlSource = string.Format(@"<html>
+                                                    <body>
+                                                        <div>
+                                                            <div>
+                                                                <div class='{0}'></div>
+                                                            </div>
+                                                         </div>
+                                                    </body>
+                                                </html>", classAttributeValue);
+
+            var document = new XmlDocument();
+            document.LoadXml(xmlSource);
+
+            IEnumerable<XmlElement> xmlElements = new ElementByClassNameFinder(classNotToFind).FindWithin(document.DocumentElement);
+
+            Assert.That(xmlElements.Count(), Is.EqualTo(0), "Should not have found " + classNotToFind + " within XML Source " + xmlSource);
         }
     }
 }

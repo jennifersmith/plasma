@@ -16,14 +16,24 @@ namespace Plasma.WebDriver.Finders
 
         public IEnumerable<XmlElement> FindWithin(XmlElement xmlElement)
         {
-            return FindElementsByXPathTempHack(xmlElement, String.Format(
-                                           "descendant::node()[contains( normalize-space( @class ), ' {0} ' ) " +
-                                           "or substring( normalize-space( @class ), 1, string-length( '{0}' ) + 1 ) = '{0} ' " +
-                                           "or substring( normalize-space( @class ), string-length( @class ) - string-length( '{0}' ) ) = ' {0}' " +
-                                           "or @class = '{0}']", _className));
+            IEnumerable<XmlElement> candidateMatches = GetCandidateMatchesForClassName(xmlElement);
+            return candidateMatches.Where(HasMatchingClassName);
         }
 
-        private IEnumerable<XmlElement> FindElementsByXPathTempHack(XmlElement xmlElement, string xpath)
+        private bool HasMatchingClassName(XmlElement element)
+        {
+            string classAttributeValue = element.GetAttribute("class");
+
+            string[] classes = classAttributeValue.Split(new string[]{}, StringSplitOptions.RemoveEmptyEntries);
+            return classes.Contains(_className);
+        }
+
+        private IEnumerable<XmlElement> GetCandidateMatchesForClassName(XmlElement xmlElement)
+        {
+            return FindElementsByXPathTempHack(xmlElement, String.Format("descendant::node()[contains( normalize-space( @class ), '{0}' )]", _className));
+        }
+
+        private static IEnumerable<XmlElement> FindElementsByXPathTempHack(XmlElement xmlElement, string xpath)
         {
             const string xhtmlNamespacePrefix = "xhtml";
             var namespaceManager = new XmlNamespaceManager(xmlElement.OwnerDocument.NameTable);
