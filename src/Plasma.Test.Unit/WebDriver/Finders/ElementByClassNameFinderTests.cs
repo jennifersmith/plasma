@@ -62,5 +62,11 @@ namespace Plasma.Test.Unit.WebDriver.Finders
 
             Assert.That(xmlElements.Count(), Is.EqualTo(0), "Should not have found " + classNotToFind + " within XML Source " + xmlSource);
         }
+
+        [Test]
+        public void FindSingleShouldThrowExceptionIfCannotFindByClassName()
+        {
+            
+        }
     }
 }

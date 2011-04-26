@@ -39,10 +39,10 @@ namespace Plasma.WebDriver
 
         public IWebElement FindElementByClassName(string className)
         {
-            IEnumerator<IWebElement> enumerator = FindElementsByClassName(className).GetEnumerator();
-            if (enumerator.MoveNext())
+            var elements = FindElementsByClassName(className);
+            if (elements.Any())
             {
-                return enumerator.Current;
+                return elements.First();
             }
             throw new NotFoundException("ClassName: " + className);
         }
@@ -55,33 +55,33 @@ namespace Plasma.WebDriver
 
         public IWebElement FindElementById(string id)
         {
-            IEnumerator<IWebElement> enumerator = FindElementsById(id).GetEnumerator();
-            if (enumerator.MoveNext())
+            var elements = FindElementsById(id);
+            if (elements.Any())
             {
-                return enumerator.Current;
+                return elements.First();
             }
             throw new NotFoundException("Id: " + id);
         }
 
         public ReadOnlyCollection<IWebElement> FindElementsById(string id)
         {
-            return FindElementsByXPath(String.Format("descendant::node()[@id='{0}']", id));
+            return new ElementByIdFinder(id).FindWithin(_xmlElement).AsReadonlyCollection();
         }
 
 
         public IWebElement FindElementByName(string name)
         {
-            IEnumerator<IWebElement> enumerator = FindElementsByName(name).GetEnumerator();
-            if (enumerator.MoveNext())
+            var elements = FindElementsByName(name);
+            if (elements.Any())
             {
-                return enumerator.Current;
+                return elements.First();
             }
             throw new NotFoundException("Name: " + name);
         }
 
         public ReadOnlyCollection<IWebElement> FindElementsByName(string name)
         {
-            return FindElementsByXPath(String.Format("descendant::node()[@name='{0}']", name));
+            return new ElementByNameFinder(name).FindWithin(_xmlElement).AsReadonlyCollection();
         }
 
         public IWebElement FindElementByTagName(string tagName)
@@ -265,6 +265,7 @@ namespace Plasma.WebDriver
         }
         
     }
+
 
 
     public static class WebElementExtensions

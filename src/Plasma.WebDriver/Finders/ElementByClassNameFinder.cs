@@ -5,7 +5,24 @@ using System.Xml;
 
 namespace Plasma.WebDriver.Finders
 {
-    public class ElementByClassNameFinder
+    public class ElementFinder
+    {
+        protected static IEnumerable<XmlElement> FindElementsByXPathTempHack(XmlElement xmlElement, string xpath)
+        { 
+            const string xhtmlNamespacePrefix = "xhtml";
+            var namespaceManager = new XmlNamespaceManager(xmlElement.OwnerDocument.NameTable);
+            namespaceManager.AddNamespace(xhtmlNamespacePrefix, "http://www.w3.org/1999/xhtml");
+
+            var nodes = xmlElement.SelectNodes(xpath, namespaceManager);
+            if(nodes!=null)
+            {
+                return nodes.Cast<XmlElement>();
+            }
+            return new XmlElement[0];
+        }
+    }
+
+    public class ElementByClassNameFinder : ElementFinder
     {
         private readonly string _className;
 
@@ -32,19 +49,37 @@ namespace Plasma.WebDriver.Finders
         {
             return FindElementsByXPathTempHack(xmlElement, String.Format("descendant::node()[contains( normalize-space( @class ), '{0}' )]", _className));
         }
+    }
 
-        private static IEnumerable<XmlElement> FindElementsByXPathTempHack(XmlElement xmlElement, string xpath)
+
+    public class ElementByIdFinder : ElementFinder
+    {
+        private readonly string _id;
+
+        public ElementByIdFinder(string id)
         {
-            const string xhtmlNamespacePrefix = "xhtml";
-            var namespaceManager = new XmlNamespaceManager(xmlElement.OwnerDocument.NameTable);
-            namespaceManager.AddNamespace(xhtmlNamespacePrefix, "http://www.w3.org/1999/xhtml");
+            _id = id;
+        }
 
-            var nodes = xmlElement.SelectNodes(xpath, namespaceManager);
-            if(nodes!=null)
-            {
-                return nodes.Cast<XmlElement>();
-            }
-            return new XmlElement[0];
+        public IEnumerable<XmlElement> FindWithin(XmlElement xmlElement)
+        {
+            return FindElementsByXPathTempHack(xmlElement,String.Format("descendant::node()[@id='{0}']", _id));
+        }
+    }
+
+
+    public class ElementByNameFinder : ElementFinder
+    {
+        private readonly string _name;
+
+        public ElementByNameFinder(string name)
+        {
+            _name = name;
+        }
+
+        public IEnumerable<XmlElement> FindWithin(XmlElement xmlElement)
+        {
+            return FindElementsByXPathTempHack(xmlElement, String.Format("descendant::node()[@name='{0}']", _name));
         }
     }
 }
