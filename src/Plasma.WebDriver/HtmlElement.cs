@@ -21,7 +21,7 @@ using Plasma.WebDriver.Finders;
 
 namespace Plasma.WebDriver
 {
-    public class HtmlElement : IWebElement, IFindsByClassName, IFindsByXPath, IFindsByTagName, IFindsById, IFindsByName
+    public class HtmlElement : IWebElement
     {
         private readonly XmlElement _xmlElement;
 
@@ -36,92 +36,15 @@ namespace Plasma.WebDriver
         }
 
 
-        public IWebElement FindElementByClassName(string className)
-        {
-            var elements = FindElementsByClassName(className);
-            if (elements.Any())
-            {
-                return elements.First();
-            }
-            throw new NotFoundException("ClassName: " + className);
-        }
-
-        public ReadOnlyCollection<IWebElement> FindElementsByClassName(string className)
-        {
-            return new ElementByClassNameFinder(className).FindWithin(_xmlElement).AsReadonlyCollection();
-        }
-
-
-        public IWebElement FindElementById(string id)
-        {
-            var elements = FindElementsById(id);
-            if (elements.Any())
-            {
-                return elements.First();
-            }
-            throw new NotFoundException("Id: " + id);
-        }
-
-        public ReadOnlyCollection<IWebElement> FindElementsById(string id)
-        {
-            return new ElementByIdFinder(id).FindWithin(_xmlElement).AsReadonlyCollection();
-        }
-
-
-        public IWebElement FindElementByName(string name)
-        {
-            var elements = FindElementsByName(name);
-            if (elements.Any())
-            {
-                return elements.First();
-            }
-            throw new NotFoundException("Name: " + name);
-        }
-
-        public ReadOnlyCollection<IWebElement> FindElementsByName(string name)
-        {
-            return new ElementByNameFinder(name).FindWithin(_xmlElement).AsReadonlyCollection();
-        }
-
-        public IWebElement FindElementByTagName(string tagName)
-        {
-            var elements  = FindElementsByTagName(tagName);
-            if (elements.Any())
-            {
-                return elements.First();
-            }
-            throw new NotFoundException("TagName: " + tagName);
-        }
-
-        public ReadOnlyCollection<IWebElement> FindElementsByTagName(string tagName)
-        {
-            return new ElementByTagNameFinder(tagName).FindWithin(_xmlElement).AsReadonlyCollection();
-        }
-
-        public IWebElement FindElementByXPath(string xpath)
-        {
-            IEnumerator<IWebElement> enumerator = FindElementsByXPath(xpath).GetEnumerator();
-            if (enumerator.MoveNext())
-            {
-                return enumerator.Current;
-            }
-            throw new NotFoundException("XPath: " + xpath);
-        }
-
-        public ReadOnlyCollection<IWebElement> FindElementsByXPath(string xpath)
-        {
-            return new ElementByXpathFinder(xpath).FindWithin(_xmlElement).AsReadonlyCollection();
-        }
-
 
         public IWebElement FindElement(By mechanism)
         {
-            return mechanism.FindElement(this);
+            return mechanism.FindElement(new ElementFinderContext(_xmlElement));
         }
 
         public ReadOnlyCollection<IWebElement> FindElements(By mechanism)
         {
-            return mechanism.FindElements(this);
+            return mechanism.FindElements(new ElementFinderContext(_xmlElement));
         }
 
 
@@ -163,7 +86,8 @@ namespace Plasma.WebDriver
             if (!_xmlElement.HasAttribute("checked"))
             {
                 XmlElement documentElement = _xmlElement.OwnerDocument.DocumentElement;
-                IEnumerable<HtmlElement> allElementsWithName = new HtmlElement(documentElement).FindElementsByName(GetAttribute("name")).Cast<HtmlElement>();
+                IEnumerable<IWebElement> allElementsWithName =
+                    new HtmlElement(documentElement).FindElements(By.Name(GetAttribute("name")));
                 foreach (HtmlElement element in allElementsWithName)
                 {
                     element.DeleteAttribute("checked");
@@ -175,9 +99,9 @@ namespace Plasma.WebDriver
         private void SelectOption()
         {
             if (!_xmlElement.HasAttribute("selected"))
-            {                
-                var selectElement = (HtmlElement) FindElementByXPath(string.Format("ancestor::{0}", "select"));
-                IEnumerable<HtmlElement> allOptionElements = selectElement.FindElementsByName("option").Cast<HtmlElement>();
+            {
+                var selectElement = FindElement(By.XPath(string.Format("ancestor::{0}", "select")));
+                var allOptionElements = selectElement.FindElements(By.TagName("option"));
                 foreach (HtmlElement element in allOptionElements)
                 {
                     element.DeleteAttribute("selected");

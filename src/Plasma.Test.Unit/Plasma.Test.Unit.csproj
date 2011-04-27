@@ -46,6 +46,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebDriver.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Plasma.Core\Properties\AssemblyInfo.cs">
@@ -55,7 +56,7 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="CookieParserTest.cs" />
-    <Compile Include="WebDriver\Finders\ElementFinderTests.cs" />
+    <Compile Include="WebDriver\Finders\ElementFinderContextTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Plasma.Core\Plasma.Core.csproj">

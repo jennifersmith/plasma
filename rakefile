@@ -53,6 +53,7 @@ require 'albacore'
     msbuild do |msb|
 		msb.properties :configuration => :Debug, :SkipDefaultVersion => :True
         msb.targets [:Clean, :Build]
+		msb.verbosity = :quiet
         msb.solution = "Plasma.sln"
     end
 	

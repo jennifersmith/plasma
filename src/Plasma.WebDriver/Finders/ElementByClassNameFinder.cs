@@ -19,6 +19,7 @@ namespace Plasma.WebDriver.Finders
 {
     public class ElementFinder
     {
+
         protected static IEnumerable<XmlElement> FindElementsByXPathTempHack(XmlElement xmlElement, string xpath)
         { 
             var nodes = xmlElement.SelectNodes(xpath);
