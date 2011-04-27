@@ -27,7 +27,7 @@ namespace Plasma.WebDriver.Finders
 
         public IEnumerable<XmlElement> FindWithin(XmlElement xmlElement)
         {
-            return FindElementsByXPathTempHack(xmlElement, String.Format("descendant::{0}:{1}", "xhtml", _name));
+            return FindElementsByXPathTempHack(xmlElement, String.Format("descendant::{0}", _name));
         }
     }
 }

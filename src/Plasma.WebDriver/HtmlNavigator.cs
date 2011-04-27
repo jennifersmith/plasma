@@ -78,7 +78,21 @@ namespace Plasma.WebDriver {
 				Console.Out.WriteLine("Failed to parse response as html:\n{0}", html);
 				throw;
 			}
-			return doc;
+			return RemoveNamespaces(doc);
 		}
+
+	    private static XmlDocument RemoveNamespaces(XmlDocument documentWithNamespaces)
+	    {
+	        if (documentWithNamespaces.DocumentElement != null && !string.IsNullOrEmpty(documentWithNamespaces.DocumentElement.NamespaceURI) )
+	        {
+	            documentWithNamespaces.DocumentElement.SetAttribute("xmlns", "");
+	            if (documentWithNamespaces.DocumentType != null)
+	                documentWithNamespaces.RemoveChild(documentWithNamespaces.DocumentType);
+	            XmlDocument result = new XmlDocument();
+                result.LoadXml(documentWithNamespaces.OuterXml);
+	            return result;
+	        }
+	        return documentWithNamespaces;
+	    }
 	}
 }

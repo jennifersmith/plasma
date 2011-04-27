@@ -23,7 +23,6 @@ namespace Plasma.WebDriver
 {
     public class HtmlElement : IWebElement, IFindsByClassName, IFindsByXPath, IFindsByTagName, IFindsById, IFindsByName
     {
-        private const string XhtmlNamespacePrefix = "xhtml";
         private readonly XmlElement _xmlElement;
 
         public HtmlElement(XmlElement xmlElement)
@@ -97,8 +96,6 @@ namespace Plasma.WebDriver
         public ReadOnlyCollection<IWebElement> FindElementsByTagName(string tagName)
         {
             return new ElementByTagNameFinder(tagName).FindWithin(_xmlElement).AsReadonlyCollection();
-
-            return FindElementsByXPath(String.Format("descendant::{0}:{1}", XhtmlNamespacePrefix, tagName));
         }
 
         public IWebElement FindElementByXPath(string xpath)
@@ -114,18 +111,6 @@ namespace Plasma.WebDriver
         public ReadOnlyCollection<IWebElement> FindElementsByXPath(string xpath)
         {
             return new ElementByXpathFinder(xpath).FindWithin(_xmlElement).AsReadonlyCollection();
-            var namespaceManager = new XmlNamespaceManager(_xmlElement.OwnerDocument.NameTable);
-            namespaceManager.AddNamespace(XhtmlNamespacePrefix, "http://www.w3.org/1999/xhtml");
-
-            var elements = new List<IWebElement>();
-            XmlNodeList nodes = _xmlElement.SelectNodes(xpath, namespaceManager);
-
-            if (nodes != null)
-                foreach (object node in nodes)
-                {
-                    elements.Add(new HtmlElement((XmlElement) node));
-                }
-            return new ReadOnlyCollection<IWebElement>(elements);
         }
 
 
@@ -191,7 +176,7 @@ namespace Plasma.WebDriver
         {
             if (!_xmlElement.HasAttribute("selected"))
             {                
-                var selectElement = (HtmlElement) FindElementByXPath(string.Format("ancestor::{0}:{1}", XhtmlNamespacePrefix, "select"));
+                var selectElement = (HtmlElement) FindElementByXPath(string.Format("ancestor::{0}", "select"));
                 IEnumerable<HtmlElement> allOptionElements = selectElement.FindElementsByName("option").Cast<HtmlElement>();
                 foreach (HtmlElement element in allOptionElements)
                 {

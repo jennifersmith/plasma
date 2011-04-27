@@ -21,11 +21,7 @@ namespace Plasma.WebDriver.Finders
     {
         protected static IEnumerable<XmlElement> FindElementsByXPathTempHack(XmlElement xmlElement, string xpath)
         { 
-            const string xhtmlNamespacePrefix = "xhtml";
-            var namespaceManager = new XmlNamespaceManager(xmlElement.OwnerDocument.NameTable);
-            namespaceManager.AddNamespace(xhtmlNamespacePrefix, "http://www.w3.org/1999/xhtml");
-
-            var nodes = xmlElement.SelectNodes(xpath, namespaceManager);
+            var nodes = xmlElement.SelectNodes(xpath);
             if(nodes!=null)
             {
                 return nodes.Cast<XmlElement>();

@@ -24,7 +24,7 @@ namespace Plasma.Test.Unit.WebDriver.Finders
        
         private static XmlDocument MakeXmlDocument(string inner)
         {
-            string xmlSource = @"<html xmlns:xhtml='http://www.w3.org/1999/xhtml'>
+            string xmlSource = @"<html>
                                                     <body>
                                                         <div>
                                                             <div>
@@ -131,7 +131,7 @@ namespace Plasma.Test.Unit.WebDriver.Finders
         [Test]
         public void ByTag_ShouldMatchIfFindsGivenTag()
         {
-            var document = MakeXmlDocument(@"<xhtml:foo>Find this</xhtml:foo>");
+            var document = MakeXmlDocument(@"<foo>Find this</foo>");
 
 
             IEnumerable<XmlElement> xmlElements = new ElementByTagNameFinder("foo").FindWithin(document.DocumentElement);
@@ -143,7 +143,7 @@ namespace Plasma.Test.Unit.WebDriver.Finders
         [Test]
         public void ByTag_ShouldNotMatchIfDoesntFindGivenTag()
         {
-            var document = MakeXmlDocument(@"<xhtml:foo>Don't find this</xhtml:foo>");
+            var document = MakeXmlDocument(@"<foo>Don't find this</foo>");
 
 
             IEnumerable<XmlElement> xmlElements = new ElementByTagNameFinder("bar").FindWithin(document.DocumentElement);
@@ -154,19 +154,19 @@ namespace Plasma.Test.Unit.WebDriver.Finders
         [Test]
         public void ByXpath_ShouldFindByXPath()
         {
-            var document = MakeXmlDocument(@"<xhtml:a>
-                                                <xhtml:b>
-                                                </xhtml:b>
-                                                <xhtml:b attr='foo'>
-                                                  <xhtml:c>Find this</xhtml:c>
-                                                </xhtml:b>
-                                                </xhtml:a>");
+            var document = MakeXmlDocument(@"<a>
+                                                <b>
+                                                </b>
+                                                <b attr='foo'>
+                                                  <c>Find this</c>
+                                                </b>
+                                                </a>");
 
-            var result = new ElementByXpathFinder("//xhtml:a/xhtml:b[@attr='foo']/xhtml:c").FindWithin(document.DocumentElement);
+            var result = new ElementByXpathFinder("//a/b[@attr='foo']/c").FindWithin(document.DocumentElement);
             Assert.That(result.Count(),Is.EqualTo(1));
             Assert.That(result.Single().InnerText, Is.EqualTo("Find this"));
 
-            result = new ElementByXpathFinder("//xhtml:a/xhtml:b[@attr='bar']/xhtml:c").FindWithin(document.DocumentElement);
+            result = new ElementByXpathFinder("//a/b[@attr='bar']/c").FindWithin(document.DocumentElement);
             Assert.That(result.Count(), Is.EqualTo(0));
         }
     
