@@ -86,16 +86,18 @@ namespace Plasma.WebDriver
 
         public IWebElement FindElementByTagName(string tagName)
         {
-            IEnumerator<IWebElement> enumerator = FindElementsByTagName(tagName).GetEnumerator();
-            if (enumerator.MoveNext())
+            var elements  = FindElementsByTagName(tagName);
+            if (elements.Any())
             {
-                return enumerator.Current;
+                return elements.First();
             }
             throw new NotFoundException("TagName: " + tagName);
         }
 
         public ReadOnlyCollection<IWebElement> FindElementsByTagName(string tagName)
         {
+            return new ElementByTagNameFinder(tagName).FindWithin(_xmlElement).AsReadonlyCollection();
+
             return FindElementsByXPath(String.Format("descendant::{0}:{1}", XhtmlNamespacePrefix, tagName));
         }
 

@@ -55,8 +55,7 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="CookieParserTest.cs" />
-    <Compile Include="WebDriver\Finders\ElementByClassNameFinderTests.cs" />
-    <Compile Include="WebDriver\Finders\ElementByIdAndNameFinderTests.cs" />
+    <Compile Include="WebDriver\Finders\ElementFinderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Plasma.Core\Plasma.Core.csproj">
