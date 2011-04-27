@@ -10,16 +10,18 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Xml;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Internal;
 
 namespace Plasma.WebDriver.Finders
 {
-    public class ElementFinderContext : ISearchContext, IFindsByClassName, IFindsByXPath, IFindsByTagName, IFindsById, IFindsByName
+    public class ElementFinderContext : ISearchContext, IFindsByClassName, IFindsByXPath, IFindsByTagName, IFindsById, IFindsByName, IFindsByCssSelector
     {
         private readonly XmlElement _xmlElement;
 
@@ -116,5 +118,34 @@ namespace Plasma.WebDriver.Finders
             return new ElementByXpathFinder(xpath).FindWithin(_xmlElement).AsReadonlyCollection();
         }
 
+        public IWebElement FindElementByCssSelector(string cssSelector)
+        {
+            ReadOnlyCollection<IWebElement> elements = FindElementsByCssSelector(cssSelector);
+            if( elements.Any())
+            {
+                return elements.Single();
+            }
+            throw new NotFoundException("Css selector: " + cssSelector);
+        }
+
+        public ReadOnlyCollection<IWebElement> FindElementsByCssSelector(string cssSelector)
+        {
+            return new ElementByCssSelectorFinder(cssSelector).FindWithin(_xmlElement).AsReadonlyCollection();
+        }
+    }
+
+    public class ElementByCssSelectorFinder
+    {
+        private readonly string _cssSelector;
+
+        public ElementByCssSelectorFinder(string cssSelector)
+        {
+            _cssSelector = cssSelector;
+        }
+
+        public IEnumerable<XmlElement> FindWithin(XmlElement xmlElement)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

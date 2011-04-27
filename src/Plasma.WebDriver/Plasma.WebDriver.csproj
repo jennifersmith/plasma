@@ -57,6 +57,7 @@
     <Compile Include="HtmlNavigatorExtensions.cs" />
     <Compile Include="LocalEntityResolver.cs" />
     <Compile Include="UIControlHelpers.cs" />
+    <Compile Include="WebElementExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Plasma.Core\Plasma.Core.csproj">

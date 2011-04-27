@@ -151,5 +151,14 @@ namespace Plasma.Test.Unit.WebDriver.Finders
             Assert.That(elements.Count(), Is.EqualTo(0));
         }
     
+        [TestCase(".foo")]
+        [Ignore("Not implemented - converting to xdocument first")]
+        public void BySelector_ShouldBeAbleToMatch(string selector)
+        {
+            string innerXml = @"<div class='foo'><p id='bar'><a>selectme</a></p></div>";
+            var document = MakeElementFinderContext(innerXml);
+            IWebElement foundElement = document.FindElement(By.CssSelector(selector));
+            Assert.That(foundElement.Text, Is.EqualTo("selectme"));
+        }
     }
 }

@@ -13,7 +13,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Xml;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Internal;
@@ -176,20 +175,5 @@ namespace Plasma.WebDriver
             _xmlElement.SetAttribute(attributeName, attributeValue);
         }
         
-    }
-
-
-
-    public static class WebElementExtensions
-    {
-          public static string InnerHtml(this IWebElement webElement)
-          {
-              return ((HtmlElement) webElement).InnerHtml;
-          }
-
-        public static ReadOnlyCollection<IWebElement> AsReadonlyCollection(this IEnumerable<XmlElement> xmlElements)
-        {
-            return new ReadOnlyCollection<IWebElement>(xmlElements.Select(x=>new HtmlElement(x)).Cast<IWebElement>().ToList());
-        }
     }
 }
