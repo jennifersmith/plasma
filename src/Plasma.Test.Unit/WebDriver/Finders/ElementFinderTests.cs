@@ -149,7 +149,25 @@ namespace Plasma.Test.Unit.WebDriver.Finders
             IEnumerable<XmlElement> xmlElements = new ElementByTagNameFinder("bar").FindWithin(document.DocumentElement);
 
             Assert.That(xmlElements.Count(), Is.EqualTo(0));
+        }
 
+        [Test]
+        public void ByXpath_ShouldFindByXPath()
+        {
+            var document = MakeXmlDocument(@"<xhtml:a>
+                                                <xhtml:b>
+                                                </xhtml:b>
+                                                <xhtml:b attr='foo'>
+                                                  <xhtml:c>Find this</xhtml:c>
+                                                </xhtml:b>
+                                                </xhtml:a>");
+
+            var result = new ElementByXpathFinder("//xhtml:a/xhtml:b[@attr='foo']/xhtml:c").FindWithin(document.DocumentElement);
+            Assert.That(result.Count(),Is.EqualTo(1));
+            Assert.That(result.Single().InnerText, Is.EqualTo("Find this"));
+
+            result = new ElementByXpathFinder("//xhtml:a/xhtml:b[@attr='bar']/xhtml:c").FindWithin(document.DocumentElement);
+            Assert.That(result.Count(), Is.EqualTo(0));
         }
     
     }

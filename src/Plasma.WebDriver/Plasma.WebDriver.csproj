@@ -50,6 +50,7 @@
     <Compile Include="AspNetForm.cs" />
     <Compile Include="Finders\ElementByClassNameFinder.cs" />
     <Compile Include="Finders\ElementByTagNameFinder.cs" />
+    <Compile Include="Finders\ElementByXpathFinder.cs" />
     <Compile Include="HtmlElement.cs" />
     <Compile Include="HtmlNavigator.cs" />
     <Compile Include="HtmlNavigatorExtensions.cs" />

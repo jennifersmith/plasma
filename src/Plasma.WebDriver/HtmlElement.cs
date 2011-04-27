@@ -113,6 +113,7 @@ namespace Plasma.WebDriver
 
         public ReadOnlyCollection<IWebElement> FindElementsByXPath(string xpath)
         {
+            return new ElementByXpathFinder(xpath).FindWithin(_xmlElement).AsReadonlyCollection();
             var namespaceManager = new XmlNamespaceManager(_xmlElement.OwnerDocument.NameTable);
             namespaceManager.AddNamespace(XhtmlNamespacePrefix, "http://www.w3.org/1999/xhtml");
 
