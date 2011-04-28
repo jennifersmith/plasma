@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.core">
-      <HintPath>..\tools\NUnit-2.5.9\lib\nunit.core.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\tools\NUnit-2.5.9\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -43,7 +40,6 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WebDriver.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
