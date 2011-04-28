@@ -9,6 +9,7 @@
  *
  * **********************************************************************************/
 using NUnit.Framework;
+using Plasma.Core;
 using Plasma.WebDriver;
 
 namespace Plasma.Test.Functional.Redirect
@@ -22,9 +23,10 @@ namespace Plasma.Test.Functional.Redirect
             /////////////////////////////////////////////////////////////////////////////
             // Test Verifying a Redirect on Redirect.aspx
 
-            HtmlNavigator html = WebApplicationFixture.ProcessRequest("~/Basic/Redirect.aspx").Html();
+            AspNetResponse aspNetResponse = WebApplicationFixture.ProcessRequest("~/Basic/Redirect.aspx");
+            HtmlNavigator html = aspNetResponse.Html();
 
-            Assert.AreEqual(html.Response.Status, 302);
+            Assert.AreEqual(aspNetResponse.Status, 302);
         }
     }
 }

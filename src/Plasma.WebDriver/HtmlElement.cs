@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Internal;
@@ -24,9 +23,9 @@ namespace Plasma.WebDriver
 {
     public class HtmlElement : IWebElement
     {
-        private XElement _xElement;
+        private readonly XElement _xElement;
 
-        public HtmlElement(XmlElement xmlElement, XElement xElement)
+        public HtmlElement(XElement xElement)
         {
             _xElement = xElement;
         }
@@ -40,12 +39,12 @@ namespace Plasma.WebDriver
 
         public IWebElement FindElement(By mechanism)
         {
-            return mechanism.FindElement(new ElementFinderContext(null, _xElement));
+            return mechanism.FindElement(new ElementFinderContext(_xElement));
         }
 
         public ReadOnlyCollection<IWebElement> FindElements(By mechanism)
         {
-            return mechanism.FindElements(new ElementFinderContext(null, _xElement));
+            return mechanism.FindElements(new ElementFinderContext(_xElement));
         }
 
 
@@ -88,7 +87,7 @@ namespace Plasma.WebDriver
             {
                 XElement documentElement = _xElement.Document.Root;
                 IEnumerable<IWebElement> allElementsWithName =
-                    new HtmlElement(null, documentElement).FindElements(By.Name(GetAttribute("name")));
+                    new HtmlElement(documentElement).FindElements(By.Name(GetAttribute("name")));
                 foreach (HtmlElement element in allElementsWithName)
                 {
                     element.DeleteAttribute("checked");

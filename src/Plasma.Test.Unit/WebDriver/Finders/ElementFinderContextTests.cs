@@ -11,7 +11,6 @@
  *
  * **********************************************************************************/
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -26,16 +25,16 @@ namespace Plasma.Test.Unit.WebDriver.Finders
         private static ElementFinderContext MakeElementFinderContext(string inner)
         {
             string xmlSource = @"<html>
-                                                    <body>
-                                                        <div>
-                                                            <div>
-                                                                " + inner+ @"
-                                                            </div>
-                                                         </div>
-                                                    </body>
-                                                </html>";
+                                    <body>
+                                        <div>
+                                            <div>
+                                                " + inner+ @"
+                                            </div>
+                                            </div>
+                                    </body>
+                                </html>";
             var document2 = XDocument.Parse(xmlSource);
-            return new ElementFinderContext(null, document2.Root);
+            return new ElementFinderContext(document2.Root);
         }
 
 
@@ -155,7 +154,7 @@ namespace Plasma.Test.Unit.WebDriver.Finders
         [Ignore("Not implemented - converting to xdocument first")]
         public void BySelector_ShouldBeAbleToMatch(string selector)
         {
-            string innerXml = @"<div class='foo'><p id='bar'><a>selectme</a></p></div>";
+            const string innerXml = @"<div class='foo'><p id='bar'><a>selectme</a></p></div>";
             var document = MakeElementFinderContext(innerXml);
             IWebElement foundElement = document.FindElement(By.CssSelector(selector));
             Assert.That(foundElement.Text, Is.EqualTo("selectme"));

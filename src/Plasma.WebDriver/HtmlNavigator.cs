@@ -33,15 +33,11 @@ namespace Plasma.WebDriver {
 		private IWebElement HtmlElement {
 			get {
 				return _htmlElement ??
-					   (_htmlElement = new HtmlElement(null, Parse(_response.BodyAsString)));
+					   (_htmlElement = new HtmlElement(Parse(_response.BodyAsString)));
 			}
 		}
 
-		public AspNetResponse Response {
-			get { return _response; }
-		}
-
-		public String Title {
+	    public String Title {
 			get { return FindElement(By.TagName("title")).Text; }
 		}
 

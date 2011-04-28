@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Internal;
@@ -25,7 +24,7 @@ namespace Plasma.WebDriver.Finders
     {
         private readonly XElement _xElement;
 
-        public ElementFinderContext(XmlElement xmlElement, XElement xElement)
+        public ElementFinderContext(XElement xElement)
         {
             _xElement = xElement;
         }
@@ -130,22 +129,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByCssSelector(string cssSelector)
         {
-            return new ElementByCssSelectorFinder(cssSelector).FindWithin(null).AsReadonlyCollection();
-        }
-    }
-
-    public class ElementByCssSelectorFinder
-    {
-        private readonly string _cssSelector;
-
-        public ElementByCssSelectorFinder(string cssSelector)
-        {
-            _cssSelector = cssSelector;
-        }
-
-        public IEnumerable<XmlElement> FindWithin(XmlElement xmlElement)
-        {
-            throw new NotImplementedException();
+            return new ElementByCssSelectorFinder(cssSelector).FindWithin(_xElement).AsReadonlyCollection();
         }
     }
 }

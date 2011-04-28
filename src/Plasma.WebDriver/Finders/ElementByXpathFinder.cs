@@ -10,15 +10,13 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
 using System.Collections.Generic;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
 namespace Plasma.WebDriver.Finders
 {
-    public class ElementByXpathFinder
+    public class ElementByXpathFinder : IElementFinder
     {
         private readonly string _xpath;
 
