@@ -14,24 +14,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Plasma.WebDriver.Finders
 {
-    public class ElementFinder
-    {
-
-        protected static IEnumerable<XmlElement> FindElementsByXPathTempHack(XmlElement xmlElement, string xpath)
-        { 
-            var nodes = xmlElement.SelectNodes(xpath);
-            if(nodes!=null)
-            {
-                return nodes.Cast<XmlElement>();
-            }
-            return new XmlElement[0];
-        }
-    }
-
-    public class ElementByClassNameFinder : ElementFinder
+    public class ElementByClassNameFinder
     {
         private readonly string _className;
 
@@ -40,28 +27,23 @@ namespace Plasma.WebDriver.Finders
             _className = className;
         }
 
-        public IEnumerable<XmlElement> FindWithin(XmlElement xmlElement)
+        public IEnumerable<XElement> FindWithin(XElement xmlElement)
         {
-            IEnumerable<XmlElement> candidateMatches = GetCandidateMatchesForClassName(xmlElement);
-            return candidateMatches.Where(HasMatchingClassName);
+             return GetElementsWithClassName(xmlElement);
         }
 
-        private bool HasMatchingClassName(XmlElement element)
+        private IEnumerable<XElement> GetElementsWithClassName(XElement xmlElement)
         {
-            string classAttributeValue = element.GetAttribute("class");
-
-            string[] classes = classAttributeValue.Split(new string[]{}, StringSplitOptions.RemoveEmptyEntries);
-            return classes.Contains(_className);
-        }
-
-        private IEnumerable<XmlElement> GetCandidateMatchesForClassName(XmlElement xmlElement)
-        {
-            return FindElementsByXPathTempHack(xmlElement, String.Format("descendant::node()[contains( normalize-space( @class ), '{0}' )]", _className));
+            return
+                xmlElement.Descendants()
+                .Attributes("class")
+                .Where(x => x.Value.Split().Contains(_className))
+                .Select( x => x.Parent);
         }
     }
 
 
-    public class ElementByIdFinder : ElementFinder
+    public class ElementByIdFinder
     {
         private readonly string _id;
 
@@ -70,14 +52,14 @@ namespace Plasma.WebDriver.Finders
             _id = id;
         }
 
-        public IEnumerable<XmlElement> FindWithin(XmlElement xmlElement)
+        public IEnumerable<XElement> FindWithin(XElement xmlElement)
         {
-            return FindElementsByXPathTempHack(xmlElement,String.Format("descendant::node()[@id='{0}']", _id));
+            return xmlElement.Descendants().Attributes("id").Where(x => x.Value == _id).Select(x => x.Parent);
         }
     }
 
 
-    public class ElementByNameFinder : ElementFinder
+    public class ElementByNameFinder
     {
         private readonly string _name;
 
@@ -86,9 +68,9 @@ namespace Plasma.WebDriver.Finders
             _name = name;
         }
 
-        public IEnumerable<XmlElement> FindWithin(XmlElement xmlElement)
+        public IEnumerable<XElement> FindWithin(XElement xmlElement)
         {
-            return FindElementsByXPathTempHack(xmlElement, String.Format("descendant::node()[@name='{0}']", _name));
+            return xmlElement.Descendants().Attributes("name").Where(x => x.Value == _name).Select(x => x.Parent);
         }
     }
 }

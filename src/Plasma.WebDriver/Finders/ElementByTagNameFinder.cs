@@ -12,11 +12,13 @@
  * **********************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Plasma.WebDriver.Finders
 {
-    public class ElementByTagNameFinder : ElementFinder
+    public class ElementByTagNameFinder
     {
         private readonly string _name;
 
@@ -25,9 +27,9 @@ namespace Plasma.WebDriver.Finders
             _name = name;
         }
 
-        public IEnumerable<XmlElement> FindWithin(XmlElement xmlElement)
+        public IEnumerable<XElement> FindWithin(XElement xmlElement)
         {
-            return FindElementsByXPathTempHack(xmlElement, String.Format("descendant::{0}", _name));
+            return xmlElement.Descendants().Where(x => x.Name == _name);
         }
     }
 }

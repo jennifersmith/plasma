@@ -13,10 +13,12 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace Plasma.WebDriver.Finders
 {
-    public class ElementByXpathFinder : ElementFinder
+    public class ElementByXpathFinder
     {
         private readonly string _xpath;
 
@@ -25,9 +27,9 @@ namespace Plasma.WebDriver.Finders
             _xpath = xpath;
         }
 
-        public IEnumerable<XmlElement> FindWithin(XmlElement xmlElement)
+        public IEnumerable<XElement> FindWithin(XElement xmlElement)
         {
-            return FindElementsByXPathTempHack(xmlElement, _xpath);
+            return xmlElement.XPathSelectElements(_xpath);
         }
     }
 }

@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using OpenQA.Selenium;
 using Plasma.Core;
 
@@ -32,7 +33,7 @@ namespace Plasma.WebDriver {
 		private IWebElement HtmlElement {
 			get {
 				return _htmlElement ??
-					   (_htmlElement = new HtmlElement(CreateXmlDocument(_response.BodyAsString).DocumentElement));
+					   (_htmlElement = new HtmlElement(null, Parse(_response.BodyAsString)));
 			}
 		}
 
@@ -64,35 +65,49 @@ namespace Plasma.WebDriver {
                     x => new AspNetForm(_response.RequestVirtualPath, _response.QueryString, x));
 		}
 
-		private static XmlDocument CreateXmlDocument(string html) {
-			var doc = new XmlDocument();
+        private static XElement Parse(string html)
+        {
 			var xmlReaderSettings = new XmlReaderSettings {
 															  XmlResolver = new LocalEntityResolver(),
 															  ProhibitDtd = false
 														  };
 
-			try {
-				doc.Load(XmlReader.Create(new StringReader(html), xmlReaderSettings));
+            XDocument xmlDocument;
+            try
+			{
+			    xmlDocument = XDocument.Load(XmlReader.Create(new StringReader(html), xmlReaderSettings));
 			}
 			catch (XmlException) {
 				Console.Out.WriteLine("Failed to parse response as html:\n{0}", html);
 				throw;
 			}
-			return RemoveNamespaces(doc);
+			return RemoveNamespaces(xmlDocument).Root;
 		}
 
-	    private static XmlDocument RemoveNamespaces(XmlDocument documentWithNamespaces)
+	    private static XDocument RemoveNamespaces(XDocument xDocument)
 	    {
-	        if (documentWithNamespaces.DocumentElement != null && !string.IsNullOrEmpty(documentWithNamespaces.DocumentElement.NamespaceURI) )
+	        IEnumerable<XElement> elementsWithNamespaces = xDocument.Descendants().Where(x => x.Name.Namespace != XNamespace.None);
+	        foreach (var element in elementsWithNamespaces)
 	        {
-	            documentWithNamespaces.DocumentElement.SetAttribute("xmlns", "");
-	            if (documentWithNamespaces.DocumentType != null)
-	                documentWithNamespaces.RemoveChild(documentWithNamespaces.DocumentType);
-	            XmlDocument result = new XmlDocument();
-                result.LoadXml(documentWithNamespaces.OuterXml);
-	            return result;
+	            element.Name = RemoveNamespace(element.Name);
+                element.ReplaceAttributes(element.Attributes().Select(RemoveNamespace));
 	        }
-	        return documentWithNamespaces;
+	        xDocument.Descendants().Attributes().Where(x=>x.IsNamespaceDeclaration).Remove();
+	        return xDocument;
+	    }
+
+	    private static XName RemoveNamespace(XName xName)
+	    {
+	        return XNamespace.None.GetName(xName.LocalName);
+	    }
+
+	    private static XAttribute RemoveNamespace(XAttribute xAttribute)
+	    {
+	        if(xAttribute.Name.Namespace!=XNamespace.None)
+	        {
+	            return new XAttribute(RemoveNamespace(xAttribute.Name), xAttribute.Value);
+	        }
+	        return xAttribute;
 	    }
 	}
 }

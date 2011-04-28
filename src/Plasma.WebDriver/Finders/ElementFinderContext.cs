@@ -14,8 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Xml;
+using System.Xml.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Internal;
 
@@ -23,11 +23,11 @@ namespace Plasma.WebDriver.Finders
 {
     public class ElementFinderContext : ISearchContext, IFindsByClassName, IFindsByXPath, IFindsByTagName, IFindsById, IFindsByName, IFindsByCssSelector
     {
-        private readonly XmlElement _xmlElement;
+        private readonly XElement _xElement;
 
-        public ElementFinderContext(XmlElement xmlElement)
+        public ElementFinderContext(XmlElement xmlElement, XElement xElement)
         {
-            _xmlElement = xmlElement;
+            _xElement = xElement;
         }
 
         public IWebElement FindElement(By by)
@@ -53,7 +53,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByClassName(string className)
         {
-            return new ElementByClassNameFinder(className).FindWithin(_xmlElement).AsReadonlyCollection();
+            return new ElementByClassNameFinder(className).FindWithin(_xElement).AsReadonlyCollection();
         }
 
 
@@ -69,7 +69,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsById(string id)
         {
-            return new ElementByIdFinder(id).FindWithin(_xmlElement).AsReadonlyCollection();
+            return new ElementByIdFinder(id).FindWithin(_xElement).AsReadonlyCollection();
         }
 
 
@@ -85,7 +85,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByName(string name)
         {
-            return new ElementByNameFinder(name).FindWithin(_xmlElement).AsReadonlyCollection();
+            return new ElementByNameFinder(name).FindWithin(_xElement).AsReadonlyCollection();
         }
 
         public IWebElement FindElementByTagName(string tagName)
@@ -100,7 +100,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByTagName(string tagName)
         {
-            return new ElementByTagNameFinder(tagName).FindWithin(_xmlElement).AsReadonlyCollection();
+            return new ElementByTagNameFinder(tagName).FindWithin(_xElement).AsReadonlyCollection();
         }
 
         public IWebElement FindElementByXPath(string xpath)
@@ -115,7 +115,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByXPath(string xpath)
         {
-            return new ElementByXpathFinder(xpath).FindWithin(_xmlElement).AsReadonlyCollection();
+            return new ElementByXpathFinder(xpath).FindWithin(_xElement).AsReadonlyCollection();
         }
 
         public IWebElement FindElementByCssSelector(string cssSelector)
@@ -130,7 +130,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByCssSelector(string cssSelector)
         {
-            return new ElementByCssSelectorFinder(cssSelector).FindWithin(_xmlElement).AsReadonlyCollection();
+            return new ElementByCssSelectorFinder(cssSelector).FindWithin(null).AsReadonlyCollection();
         }
     }
 

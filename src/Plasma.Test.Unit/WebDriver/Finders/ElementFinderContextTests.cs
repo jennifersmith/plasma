@@ -12,6 +12,7 @@
  * **********************************************************************************/
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using Plasma.WebDriver.Finders;
@@ -33,9 +34,8 @@ namespace Plasma.Test.Unit.WebDriver.Finders
                                                          </div>
                                                     </body>
                                                 </html>";
-            var document = new XmlDocument();
-            document.LoadXml(xmlSource);
-            return new ElementFinderContext(document.DocumentElement);
+            var document2 = XDocument.Parse(xmlSource);
+            return new ElementFinderContext(null, document2.Root);
         }
 
 

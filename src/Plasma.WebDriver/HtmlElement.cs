@@ -13,7 +13,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Internal;
 using Plasma.WebDriver.Finders;
@@ -22,28 +24,28 @@ namespace Plasma.WebDriver
 {
     public class HtmlElement : IWebElement
     {
-        private readonly XmlElement _xmlElement;
+        private XElement _xElement;
 
-        public HtmlElement(XmlElement xmlElement)
+        public HtmlElement(XmlElement xmlElement, XElement xElement)
         {
-            _xmlElement = xmlElement;
+            _xElement = xElement;
         }
 
         public string InnerHtml
         {
-            get { return RemoveXhtmlNamespaces(_xmlElement.InnerXml); }
+            get { return _xElement.Nodes().Select(x => x.ToString()).Aggregate(String.Concat); }
         }
 
 
 
         public IWebElement FindElement(By mechanism)
         {
-            return mechanism.FindElement(new ElementFinderContext(_xmlElement));
+            return mechanism.FindElement(new ElementFinderContext(null, _xElement));
         }
 
         public ReadOnlyCollection<IWebElement> FindElements(By mechanism)
         {
-            return mechanism.FindElements(new ElementFinderContext(_xmlElement));
+            return mechanism.FindElements(new ElementFinderContext(null, _xElement));
         }
 
 
@@ -70,7 +72,7 @@ namespace Plasma.WebDriver
 
         public void Select()
         {
-            if (_xmlElement.Name == "option")
+            if (_xElement.Name == "option")
             {
                 SelectOption();
             }
@@ -82,11 +84,11 @@ namespace Plasma.WebDriver
 
         private void SelectCheckBox()
         {
-            if (!_xmlElement.HasAttribute("checked"))
+            if (_xElement.Attribute("checked")!=null)
             {
-                XmlElement documentElement = _xmlElement.OwnerDocument.DocumentElement;
+                XElement documentElement = _xElement.Document.Root;
                 IEnumerable<IWebElement> allElementsWithName =
-                    new HtmlElement(documentElement).FindElements(By.Name(GetAttribute("name")));
+                    new HtmlElement(null, documentElement).FindElements(By.Name(GetAttribute("name")));
                 foreach (HtmlElement element in allElementsWithName)
                 {
                     element.DeleteAttribute("checked");
@@ -97,7 +99,7 @@ namespace Plasma.WebDriver
 
         private void SelectOption()
         {
-            if (!_xmlElement.HasAttribute("selected"))
+            if (!_xElement.Attributes().Any(x=>x.Name=="selected"))
             {
                 var selectElement = FindElement(By.XPath(string.Format("ancestor::{0}", "select")));
                 var allOptionElements = selectElement.FindElements(By.TagName("option"));
@@ -111,7 +113,7 @@ namespace Plasma.WebDriver
 
         public string GetAttribute(string attributeName)
         {
-            return _xmlElement.GetAttribute(attributeName, "");
+            return _xElement.Attributes(attributeName).Select(x => x.Value).FirstOrDefault();
         }
 
         public bool Toggle()
@@ -121,22 +123,22 @@ namespace Plasma.WebDriver
 
         public string TagName
         {
-            get { return _xmlElement.Name; }
+            get { return _xElement.Name.ToString(); }
         }
 
         public string Text
         {
-            get { return _xmlElement.InnerText.Trim(); }
+            get { return _xElement.Value.Trim(); }
         }
 
         public string Value
         {
-            get { return _xmlElement.GetAttribute("value", ""); }
+            get { return GetAttribute("value"); }
         }
 
         public bool Enabled
         {
-            get { return string.IsNullOrEmpty(_xmlElement.GetAttribute("disabled")); }
+            get { return string.IsNullOrEmpty(GetAttribute("disabled")); }
         }
 
         public bool Selected
@@ -155,10 +157,7 @@ namespace Plasma.WebDriver
 
         private void DeleteAttribute(string attributeName)
         {
-            if (_xmlElement.HasAttribute(attributeName))
-            {
-                _xmlElement.RemoveAttribute(attributeName);
-            }
+            _xElement.Attributes(attributeName).Remove();
         }
 
         public void Dispose()
@@ -167,12 +166,12 @@ namespace Plasma.WebDriver
 
         public override string ToString()
         {
-            return RemoveXhtmlNamespaces(_xmlElement.OuterXml);
+            return RemoveXhtmlNamespaces(_xElement.ToString());
         }
 
         private void SetAttribute(string attributeName, string attributeValue)
         {
-            _xmlElement.SetAttribute(attributeName, attributeValue);
+            _xElement.SetAttributeValue(attributeName, attributeValue);
         }
         
     }
