@@ -4,21 +4,22 @@ require 'albacore'
  task :default =>['plasma:build_and_test']
  
  namespace :plasma do
-	$hg_hash = `hg tip --template "{node|short}"`
-	$hg_rev = `hg tip --template "{rev}"`
-	
+
 	def get_version_number
 		(File.read "version.txt").strip
 	end
-	
 	$version = get_version_number
+	
+	def get_readme_file
+		(File.read "readme.txt").gsub("BUILD_VERSION", $version)
+	end
 	
 	def write_assembly_info project_path
 		asm = AssemblyInfo.new
 		asm.output_file = "#{project_path}/Properties/VersionInfo.cs"
 		asm.version = $version
-		asm.file_version = "#{$base_version}.#{$hg_rev}"
-		asm.custom_attributes :AssemblyInformationalVersion =>  "#{$base_version} Alpha (#{$hg_rev} #{$hg_hash})"
+		asm.file_version = "#{$version}.#{$git_hash}"
+		asm.custom_attributes :AssemblyInformationalVersion =>  "#{$version} Alpha"
 		asm.execute
 	end
 	
@@ -29,7 +30,7 @@ require 'albacore'
 	task :package_release =>['plasma:build_and_test', 'plasma:zip']
 	
 	desc "Copies built files to release folder"
-	task :copy_to_release_folder => ['plasma:build_and_test'] do |task|
+	task :copy_to_release_folder  do |task|
 		cp "src/Plasma.Core/bin/Debug/Plasma.Core.dll", "build/Plasma-#{$version}/bin"
 		cp "src/Plasma.Core/bin/Debug/Plasma.Core.pdb", "build/Plasma-#{$version}/bin"
 		cp "src/Plasma.WebDriver/bin/Debug/Plasma.WebDriver.dll", "build/Plasma-#{$version}/bin"
@@ -37,7 +38,9 @@ require 'albacore'
 		cp "lib/WebDriver/WebDriver.Common.dll", "build/Plasma-#{$version}/lib"
 		cp "license.txt", "build/Plasma-#{$version}/"
 		cp "license.htm", "build/Plasma-#{$version}/"
-		cp "readme.txt", "build/Plasma-#{$version}/"
+		f = File.new("build/Plasma-#{$version}/readme.txt", "w" )
+		f.puts get_readme_file
+		f.close
 	end
 	
 	desc "Zip into archive"
@@ -64,7 +67,7 @@ require 'albacore'
 		mkdir_p "build"
 		mkdir_p "build/results"
 		mkdir_p "build/Plasma-#{$version}/bin"
-		mkdir_p "build/Plasma-#{$version}/lib"
+
 	end
     desc "Update assembly info"
     assemblyinfo :assemblyinfo do |asm, args|

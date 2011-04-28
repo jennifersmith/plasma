@@ -2,7 +2,7 @@ Plasma is a web automation framework for ASP.NET.
 
 Current 
 
-build: v1.0.07015
+build: BUILD_VERSION
 
 
 

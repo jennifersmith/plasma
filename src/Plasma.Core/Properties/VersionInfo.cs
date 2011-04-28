@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion(".")]
+[assembly: AssemblyFileVersion("1.1.0.0.")]
 
-[assembly: AssemblyInformationalVersion(" Alpha ( )")]
+[assembly: AssemblyInformationalVersion("1.1.0.0 Alpha")]
 
