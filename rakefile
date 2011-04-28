@@ -11,8 +11,7 @@ require 'albacore'
 		(File.read "version.txt").strip
 	end
 	
-	$base_version = get_version_number
-	$version =  "#{$base_version}.0"
+	$version = get_version_number
 	
 	def write_assembly_info project_path
 		asm = AssemblyInfo.new
