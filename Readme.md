@@ -66,12 +66,91 @@ Submitting forms is just a case of forming a post request with a bunch of key-va
 
             Assert.That(loginResponse.Body, Is.StringContaining("Welcome to my Application, Bob"));
         }
-    } 
- 
+    }  
 
 ## Cookies
 
+Plasma includes some support for adding cookies to requests and evaluating cookies from responses. If you use cookie-based authentication this allows you to test authentication and also automatically log in your user in the setup for a particular test.
+
+In order to persist the cookies, we need to write some extra code to wrap the AspNetApplication and store cookies in the state.
+
+    public class MyProjectTestEnvironment
+    {
+		  private AspNetApplication _aspNetApplication;
+		  private IEnumerable<HttpCookie> _cookies = new HttpCookie[0];
+
+		  public MyProjectTestEnvironment(AspNetApplication aspNetApplication)
+      {
+				_aspNetApplication = aspNetApplication;
+      }
+
+			public AspNetResponse ProcessRequest(string url)
+			{
+				var request = new AspNetRequest(url);
+				request.AddCookies(_cookies);
+				var response = _aspNetApplication.ProcessRequest(request);
+				_cookies = response.Cookies;
+			}
+ 		  
+      public AspNetResponse ProcessRequest(AspNetRequest request)
+			{
+				request.AddCookies(_cookies);
+				var response = _aspNetApplication.ProcessRequest(request);
+				_cookies = response.Cookies;
+			}
+
+			public IEnumerable<HttpCookie> Cookies
+			{
+				get
+				{
+					return _cookies;
+				}
+			}
+
+			public void ClearCookies()
+			{
+				_cookies.Clear();
+			}
+    }
+
+    [TestFixture]
+    public class CookieAuthenticationTests 
+    {
+				
+        [Test]
+        public void ShouldAllowUsersToSeeTheSecretPageOnceTheyAreLoggedIn()
+        {
+						var environment = new MyProjectTestEnvironment(_aspNetApplication);
+            var loginPage = environment.ProcessRequest("/login").Html();
+            AspNetForm aspNetForm = loginPage.GetForm();
+            aspNetForm["username"] = "Bob";
+            aspNetForm["password"] = "password";
+						
+						// Our app uses forms authentication so we should now have a cookie
+            environment.ProcessRequest(aspNetForm.GenerateFormPostRequest());
+						Assert.That(environment.Cookies[0].Name, Is.EqualTo(".ASPXAUTH"));
+
+						// ... meaning we can access the secret page
+						var secretPageResponse = environment.ProcessRequest("/secretPage");
+						Assert.That(secretPageResponse.Status, Is.EqualTo(200));
+	        
+						// Clearing cookies and requesting the secret page will give a 403
+						environment.ClearCookies();
+						secretPageResponse = environment.ProcessRequest("/secretPage");
+						Assert.That(secretPageResponse.Status, Is.EqualTo(403));
+				}
+    }  
+
 ## Changing state on the web server
+
+Plasma sets up an ASP.NET application to run in an AppDomain embedded within the running process (see [http://blog.flair-systems.com/2010/05/c-fastfood-what-appdomain.html](here) for an explanation of AppDomains). Your tests can communicate with the running application via the magic of remoting via a number of helper functions that Plasma provides. You can use this to change state or add things to session.
+
+    [Test]
+    public void ShouldShowDetailsOfTheCurrentCheeseBeingViewed()
+		{
+			// we are using static state here cos it's an example. See later for a better way of doing it when you have an IoC container to hand
+			appDomain	
+		}
 
 
 # Todo list
@@ -82,6 +161,7 @@ We are still actively working on Plasma and plan to extend the library to avoid 
 * Adding a web driver implementation 'PlasmaWebDriver' and requisite interfaces
 * Adding examples for how to override functionality in various IoC containers
 * Adding helpers for dealing with app domain to app domain communication
+* Improve the syntax around submitting forms
 
 # Contributing
 
