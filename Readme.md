@@ -22,7 +22,7 @@ Plasma tests remove the need to use the browser or even a real server in the tes
 
 This fires up the ASP.NET web application at the given path and checks to see if the homepage has the correct title.
 
-    [TestFixture]
+	[TestFixture]
     public class MyFirstPlasmaTest
     {
         [SetUp]
@@ -149,10 +149,27 @@ Plasma sets up an ASP.NET application to run in an AppDomain embedded within the
     public void ShouldShowDetailsOfTheCurrentCheeseBeingViewed()
 		{
 			// we are using static state here cos it's an example. See later for a better way of doing it when you have an IoC container to hand
-			appDomain	
+			aspNetApplication.InvokeInAspAppDomain(()=>{
+				CheeseRepository.AddCheese(new Cheese(){
+					Name = "Stilton",
+				  Region = "Derby, Leicestershire, Nottingham",
+					SourceOfMilk = Milk.Cow
+				});
+			});
+			
+			var stiltonPage = aspNetApplication.ProcessRequest("/cheeses/Stilton").Html();
+			
+			Assert.That(stiltonPage.FindElement(By.Id("region")), Is.StringContaining("Derby, Leicestershire, Nottingham"));
 		}
 
+Obviously this example is not ideal as you must let in static/global state, methods for testing and all manner of evils into your production code. Another technique is to make use of your IoC container. Override dependencies with new stub versions for your tests and set test data on these. This requires a little more work on application setup.
 
+public class ApplicationSetup
+{
+		
+}
+
+# Gotchas with InvokeInAppDomain 
 # Todo list
 
 We are still actively working on Plasma and plan to extend the library to avoid the amount of boiler plate code on the consumer. Our current todo list includes:
@@ -162,10 +179,17 @@ We are still actively working on Plasma and plan to extend the library to avoid 
 * Adding examples for how to override functionality in various IoC containers
 * Adding helpers for dealing with app domain to app domain communication
 * Improve the syntax around submitting forms
+* Events to hook into setup/teardown of app domain?
 
 # Contributing
 
 Happy to receive any pull requests. So if you can fix a bug or have a feature to add please go ahead!
+
+# Contributors
+
+* [http://github.com/aharin](Alex Harin)
+* [http://jennifersmith.co.uk](Jennifer Smith)
+* [http://stevesmithblog.com/](Steve Smith)
 
 # Licence
 
