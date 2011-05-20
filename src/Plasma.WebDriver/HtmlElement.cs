@@ -16,7 +16,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Internal;
 using Plasma.WebDriver.Finders;
 
 namespace Plasma.WebDriver
@@ -142,7 +141,7 @@ namespace Plasma.WebDriver
 
         public bool Selected
         {
-            get { return GetAttribute("checked") != String.Empty || GetAttribute("selected") != String.Empty; }
+            get { return !string.IsNullOrEmpty(GetAttribute("checked")) || !string.IsNullOrEmpty(GetAttribute("selected")); }
         }
 
         private static string RemoveXhtmlNamespaces(string html)
