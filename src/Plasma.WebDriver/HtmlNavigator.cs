@@ -37,6 +37,11 @@ namespace Plasma.WebDriver {
 			}
 		}
 
+        public AspNetResponse Response
+        {
+            get { return _response; }
+        }
+
 	    public String Title {
 			get { return FindElement(By.TagName("title")).Text; }
 		}
