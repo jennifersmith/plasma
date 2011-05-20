@@ -180,7 +180,7 @@ namespace Plasma.WebDriver {
                 } 
                 else if (StringsEqual(type, "checkbox")) {
                     if (NodeHasAttributeWithValue(node, "checked", "checked")) {
-                        AddFieldValue(node, "checked");
+                        AddFieldValue(node, node.GetAttribute("value"));
                     }
                 } 
                 else if (StringsEqual(type, "radio")) {
