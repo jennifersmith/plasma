@@ -77,7 +77,7 @@
 			<ZipFiles Include="Output/**/*.*"/>
 		</ItemGroup>
 		
-		<Zip Files="@(ZipFiles)"
+		<Zip WorkingDirectory="Output" Files="@(ZipFiles)"
 
 			 ZipFileName="Plasma.@(VersionInfo).zip" />
 
