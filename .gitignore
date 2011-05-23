@@ -29,3 +29,5 @@ _ReSharper*/
 build/AutoTest.config
 AutoTest.config
 build/
+Output
+*.zip

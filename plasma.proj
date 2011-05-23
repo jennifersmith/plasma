@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+	<ItemGroup>
+		<DefaultExclude Include="**\.git\**" />
+		<DefaultExclude Include="**\.hg\**" />
+		<DefaultExclude Include="**\bin\**" />
+		<DefaultExclude Include="**\obj\**" />
+		<DefaultExclude Include="**\Release\**" />
+		<DefaultExclude Include="**\_Resharper\**" />
+		<DefaultExclude Include="**\Debug\**" />
+		<DefaultExclude Include="**\*.user" />
+		<DefaultExclude Include="**\*.suo" />
+		<DefaultExclude Include="**\*.zip" />
+	</ItemGroup>
+	<ItemGroup>
+		<LibFilesInclude Include="lib\**\*.*" />
+	</ItemGroup>
+	<ItemGroup>
+		<MiscFilesInclude Include="version.txt"/>
+		<MiscFilesInclude Include="readme.md"/>
+		<MiscFilesInclude Include="license.txt"/>
+	</ItemGroup>
+	<ItemGroup>
+		<BinFilesInclude Include="src/Plasma.WebDriver/bin/**/Plasma.WebDriver.*"/>
+		<BinFilesInclude Include="src/Plasma.WebDriver/bin/**/Plasma.Core.*"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<LibFiles Include="@(LibFilesInclude)" Exclude="@(DefaultExclude)" />
+		<MiscFiles Include="@(MiscFilesInclude)" Exclude="@(DefaultExclude)" />
+		<BinFiles Include="@(BinFilesInclude)" />
+	</ItemGroup>
+
+	<Target Name="CreateReleasePackage">
+		<RemoveDir Directories="Output"/>
+		<MakeDir Directories="Output"/>
+		<MakeDir Directories="Output/lib"/>
+		<MakeDir Directories="Output/bin"/>
+		<Copy SourceFiles="@(LibFiles)" DestinationFiles="@(LibFiles->'Output\Lib\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(MiscFiles)" DestinationFiles="@(MiscFiles->'Output\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(BinFiles)" DestinationFolder="Output\bin" />
+	</Target>
+
+	<Target Name="ReadVersionInfo" Condition="@(VersionInfo)==''" >
+		<Delete Files="version.txt"/>
+		<Exec Command="git describe HEAD --tags >> version.txt" />
+		<ReadLinesFromFile File="version.txt" >
+			<Output ItemName="VersionInfo" TaskParameter="Lines"/>
+		</ReadLinesFromFile>
+		<Message Text="Version: @(VersionInfo)"/>
+	</Target>
+
+	<Target Name="Build" DependsOnTargets="Compile;Zip"/>
+
+	<Target Name="GenerateAssemblyInfo" DependsOnTargets="ReadVersionInfo">
+		
+		<AssemblyInfo CodeLanguage="CS"
+		  OutputFile="src\Plasma.Core\Properties\VersionInfo.cs"
+		  AssemblyVersion="@(VersionInfo)"
+		  AssemblyFileVersion="@(VersionInfo)"
+		  AssemblyInformationalVersion="@(VersionInfo) Alpha"/>
+	</Target>
+
+	<Target Name="Compile" DependsOnTargets="GenerateAssemblyInfo">
+
+		<MSBuild Projects="Plasma.sln"
+				 Properties="Configuration=Debug" />
+		
+	</Target>
+
+
+	<Target Name="Zip" DependsOnTargets="ReadVersionInfo;CreateReleasePackage">
+		
+		<ItemGroup>
+			<ZipFiles Include="Output/**/*.*"/>
+		</ItemGroup>
+		
+		<Zip Files="@(ZipFiles)"
+
+			 ZipFileName="Plasma.@(VersionInfo).zip" />
+
+	</Target>
+
+
+
+	
+
+
+</Project>
+
