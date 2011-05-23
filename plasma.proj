@@ -2,6 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(MSBuildExtensionsPath)\ExtensionPack\MSBuild.ExtensionPack.tasks"/>
 	<ItemGroup>
 		<DefaultExclude Include="**\.git\**" />
 		<DefaultExclude Include="**\.hg\**" />
@@ -48,8 +49,15 @@
 		<Exec Command="git describe HEAD --tags >> version.txt" />
 		<ReadLinesFromFile File="version.txt" >
 			<Output ItemName="VersionInfo" TaskParameter="Lines"/>
-		</ReadLinesFromFile>
+		</ReadLinesFromFile>    
 		<Message Text="Version: @(VersionInfo)"/>
+    <MSBuild.ExtensionPack.Framework.TextString TaskAction="Split" String1="@(VersionInfo)" String2="-">
+      <Output ItemName="OutPutItem" TaskParameter="Strings"/>
+    </MSBuild.ExtensionPack.Framework.TextString>
+    <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="GetItem" InputItems1="@(OutPutItem)" Position="0">
+      <Output TaskParameter="OutputItems" ItemName="Version"/>
+    </MSBuild.ExtensionPack.Framework.MsBuildHelper>
+    <Message Text="The Result: [@(Version)]"/>
 	</Target>
 
 	<Target Name="Build" DependsOnTargets="Compile;Zip"/>
@@ -58,15 +66,15 @@
 		
 		<AssemblyInfo CodeLanguage="CS"
 		  OutputFile="src\Plasma.Core\Properties\VersionInfo.cs"
-		  AssemblyVersion="@(VersionInfo)"
-		  AssemblyFileVersion="@(VersionInfo)"
+		  AssemblyVersion="@(Version)"
+		  AssemblyFileVersion="@(Version)"
 		  AssemblyInformationalVersion="@(VersionInfo) Alpha"/>
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="GenerateAssemblyInfo">
 
 		<MSBuild Projects="Plasma.sln"
-				 Properties="Configuration=Debug" />
+				 Properties="Configuration=Debug;SkipDefaultVersion=true" />
 		
 	</Target>
 

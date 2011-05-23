@@ -33,3 +33,4 @@ Output
 *.zip
 
 /version.txt
+/src/Plasma.Core/Properties/VersionInfo.cs
