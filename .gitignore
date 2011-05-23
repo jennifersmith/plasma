@@ -31,3 +31,5 @@ AutoTest.config
 build/
 Output
 *.zip
+
+/version.txt
