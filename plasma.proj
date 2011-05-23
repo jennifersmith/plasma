@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+	<PropertyGroup>
+		
+	</PropertyGroup>
+
+
+
+	<ItemGroup>
+		<DefaultExclude Include="**\.git\**" />
+		<DefaultExclude Include="**\.hg\**" />
+		<DefaultExclude Include="**\bin\**" />
+		<DefaultExclude Include="**\obj\**" />
+		<DefaultExclude Include="**\Release\**" />
+		<DefaultExclude Include="**\Debug\**" />
+		<DefaultExclude Include="**\*.user" />
+		<DefaultExclude Include="**\*.suo" />
+		<DefaultExclude Include="**\*.zip" />
+		<DefaultExclude Include="**\*.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ZipFiles Include="**\*.*" Exclude="@(DefaultExclude)" />
+	</ItemGroup>
+
+	<Target Name="Build" DependsOnTargets="GenerateAssemblyInfo"/>
+
+	<!--asm = AssemblyInfo.new
+	asm.output_file = "#{project_path}/Properties/VersionInfo.cs"
+	asm.version = $version
+	asm.file_version = "#{$version}.#{$git_hash}"
+	asm.custom_attributes :AssemblyInformationalVersion =>  "#{$version} Alpha"
+	asm.execute-->
+	
+	<Target Name="GenerateAssemblyInfo">
+		<Delete Files="version.txt"/>
+		<Exec Command="git describe HEAD --tags >> version.txt" />
+
+		<ReadLinesFromFile File="version.txt" >
+			<Output ItemName="VersionInfo" TaskParameter="Lines"/>
+		</ReadLinesFromFile>
+		<Message Text="Version: @(VersionInfo)"/>
+		
+		<AssemblyInfo CodeLanguage="CS"
+		  OutputFile="src\Plasma.Core\Properties\VersionInfo.cs"
+		  AssemblyVersion="@(VersionInfo)"
+		  AssemblyFileVersion="@(VersionInfo)"
+		  AssemblyInformationalVersion="$(VersionInfo) Alpha"/>
+
+	</Target>
+
+
+
+	<Target Name="Compile" DependsOnTargets="Version">
+
+		<MSBuild Projects="Source\MSBuild.Community.Tasks.sln"
+
+				 Properties="Configuration=Release" />
+
+	</Target>
+
+
+
+	<Target Name="Documentation" DependsOnTargets="Compile">
+
+		<NDoc Documenter="MSDN"
+
+			  ProjectFilePath="Documentation\MSBuild.Community.Tasks.ndoc" />
+
+
+
+		<Copy SourceFiles="doc\MSBuild Community Tasks.chm"
+
+			  DestinationFiles="Documentation\MSBuild.Community.Tasks.chm" />
+
+
+
+		<RemoveDir Directories="doc" />
+
+
+
+	</Target>
+
+
+
+	<Target Name="Zip" DependsOnTargets="Documentation">
+
+		<Zip Files="@(ZipFiles)"
+
+			 ZipFileName="MSBuild.Community.Tasks.v$(Major).$(Minor).$(Build).$(Revision).zip" />
+
+	</Target>
+
+
+
+	
+
+
+</Project>
+
