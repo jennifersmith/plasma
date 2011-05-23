@@ -50,10 +50,10 @@ namespace Plasma.Core {
             const string headerTemplate = "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\nContent-Type: {2}\r\n\r\n";
             foreach (var fileControl in fileControls) {
                 var filePath = fields[fileControl];
+                if (string.IsNullOrEmpty(filePath)) continue;
                 string header = String.Format(headerTemplate, fileControl, Path.GetFileName(filePath), ContentTypeMapper.MimeType(filePath));
                 byte[] headerbytes = Encoding.UTF8.GetBytes(header);
-                rs.Write(headerbytes, 0, headerbytes.Length);
-                if (string.IsNullOrEmpty(filePath)) continue;
+                rs.Write(headerbytes, 0, headerbytes.Length);                
                 using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read)) {
                     var buffer = new byte[4096];
                     int bytesRead;
