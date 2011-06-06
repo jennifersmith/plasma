@@ -19,7 +19,6 @@
 		<LibFilesInclude Include="lib\**\*.*" />
 	</ItemGroup>
 	<ItemGroup>
-		<MiscFilesInclude Include="version.txt"/>
 		<MiscFilesInclude Include="readme.md"/>
 		<MiscFilesInclude Include="license.txt"/>
 	</ItemGroup>
@@ -50,20 +49,17 @@
 		<ReadLinesFromFile File="version.txt" >
 			<Output ItemName="VersionInfo" TaskParameter="Lines"/>
 		</ReadLinesFromFile>    
-		<Message Text="Version: @(VersionInfo)"/>
     <MSBuild.ExtensionPack.Framework.TextString TaskAction="Split" String1="@(VersionInfo)" String2="-">
       <Output ItemName="OutPutItem" TaskParameter="Strings"/>
     </MSBuild.ExtensionPack.Framework.TextString>
     <MSBuild.ExtensionPack.Framework.MsBuildHelper TaskAction="GetItem" InputItems1="@(OutPutItem)" Position="0">
       <Output TaskParameter="OutputItems" ItemName="Version"/>
     </MSBuild.ExtensionPack.Framework.MsBuildHelper>
-    <Message Text="The Result: [@(Version)]"/>
 	</Target>
 
 	<Target Name="Build" DependsOnTargets="Compile;Zip"/>
 
 	<Target Name="GenerateAssemblyInfo" DependsOnTargets="ReadVersionInfo">
-		
 		<AssemblyInfo CodeLanguage="CS"
 		  OutputFile="src\Plasma.Core\Properties\VersionInfo.cs"
 		  AssemblyVersion="@(Version)"
@@ -72,25 +68,15 @@
 	</Target>
 
 	<Target Name="Compile" DependsOnTargets="GenerateAssemblyInfo">
-
 		<MSBuild Projects="Plasma.sln"
 				 Properties="Configuration=Debug;SkipDefaultVersion=true" />
-		
 	</Target>
 
-
 	<Target Name="Zip" DependsOnTargets="ReadVersionInfo;CreateReleasePackage">
-		
 		<ItemGroup>
 			<ZipFiles Include="Output/**/*.*"/>
 		</ItemGroup>
-		
-		<Zip WorkingDirectory="Output" Files="@(ZipFiles)"
-
-			 ZipFileName="Plasma.@(VersionInfo).zip" />
-
+		<Zip WorkingDirectory="Output" Files="@(ZipFiles)" ZipFileName="Plasma.@(VersionInfo).zip" />
 	</Target>
 
-
 </Project>
-
