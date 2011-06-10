@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using System.Xml.Linq;
 using OpenQA.Selenium;
@@ -119,6 +120,10 @@ namespace Plasma.WebDriver
             throw new NotImplementedException();
         }
 
+        public string GetCssValue(string propertyName) {
+            throw new NotImplementedException();
+        }
+
         public string TagName
         {
             get { return _xElement.Name.ToString(); }
@@ -142,6 +147,18 @@ namespace Plasma.WebDriver
         public bool Selected
         {
             get { return !string.IsNullOrEmpty(GetAttribute("checked")) || !string.IsNullOrEmpty(GetAttribute("selected")); }
+        }
+
+        public Point Location {
+            get { throw new NotImplementedException(); }
+        }
+
+        public Size Size {
+            get { throw new NotImplementedException(); }
+        }
+
+        public bool Displayed {
+            get { throw new NotImplementedException(); }
         }
 
         private static string RemoveXhtmlNamespaces(string html)
