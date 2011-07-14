@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://www.opensource.org/licenses/MS-PL</licenseUrl>
+    <projectUrl>https://github.com/dansweeting/plasma</projectUrl>
+    <iconUrl>https://github.com/dansweeting/plasma</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <tags>plasma selenium webdriver</tags>
+  </metadata>
+  <files>
+    <file src="bin\debug\Plasma.Core.dll" target="lib\net35"/>
+  </files>
+</package>
