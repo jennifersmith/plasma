@@ -76,7 +76,7 @@ namespace Plasma.Core {
 
         public string ContentLength
         {
-            get { return _formBodyData.ToString(); }
+            get { return _formBodyData.Length.ToString(); }
         }
     }
 }
