@@ -151,14 +151,15 @@ namespace Plasma.Test.Unit.WebDriver.Finders
         }
     
         [TestCase(".foo")]
-        [TestCase("div")]
+        [TestCase("span")]
         [TestCase("p a")]
         [TestCase(".foo p")]
         [TestCase("div.foo p#bar")]
         public void BySelector_ShouldBeAbleToMatch(string selector)
         {
-            const string innerXml = @"<div class='foo'><p id='bar'><a>selectme</a></p></div>";
+            const string innerXml = @"<div class='foo'><p id='bar'><span><a>selectme</a></span></p></div>";
             var document = MakeElementFinderContext(innerXml);
+
             IWebElement foundElement = document.FindElement(By.CssSelector(selector));
             Assert.That(foundElement.Text, Is.EqualTo("selectme"));
         }
