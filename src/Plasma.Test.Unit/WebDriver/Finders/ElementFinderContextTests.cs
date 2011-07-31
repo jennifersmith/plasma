@@ -151,7 +151,10 @@ namespace Plasma.Test.Unit.WebDriver.Finders
         }
     
         [TestCase(".foo")]
-        [Ignore("Not implemented - converting to xdocument first")]
+        [TestCase("div")]
+        [TestCase("p a")]
+        [TestCase(".foo p")]
+        [TestCase("div.foo p#bar")]
         public void BySelector_ShouldBeAbleToMatch(string selector)
         {
             const string innerXml = @"<div class='foo'><p id='bar'><a>selectme</a></p></div>";
