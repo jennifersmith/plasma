@@ -14,5 +14,8 @@
   </metadata>
   <files>
     <file src="bin\debug\Plasma.Core.dll" target="lib\net35"/>
+    <file src="bin\debug\Fizzler.dll" target="lib\net35"/>
+    <file src="bin\debug\Fizzler.Systems.HtmlAgilityPack.dll" target="lib\net35"/>
+    <file src="bin\debug\HtmlAgilityPack.dll" target="lib\net35"/>
   </files>
 </package>

@@ -12,7 +12,12 @@
  * **********************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml;
 using System.Xml.Linq;
+using HtmlAgilityPack;
+using Fizzler.Systems.HtmlAgilityPack;
+using System.Linq;
 
 namespace Plasma.WebDriver.Finders
 {
@@ -27,7 +32,12 @@ namespace Plasma.WebDriver.Finders
 
         public IEnumerable<XElement> FindWithin(XElement xmlElement)
         {
-            throw new NotImplementedException("We have not yet implemented CSS selectors - coming soon");
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(xmlElement.ToString(SaveOptions.DisableFormatting));
+
+            IEnumerable<HtmlNode> nodes = htmlDocument.DocumentNode.QuerySelectorAll(_cssSelector);
+
+            return nodes.Select(x => XElement.Parse(x.OuterHtml));
         }
     }
 }
