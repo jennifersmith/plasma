@@ -32,17 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>..\..\packages\Castle.Core.2.5.2\lib\NET35\Castle.Core.dll</HintPath>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\..\packages\DotNetZip.1.9\lib\Ionic.Zip.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip.Reduced">
-      <HintPath>..\..\packages\SeleniumDotNet-2.0RC.3.0.0.0\lib\Ionic.Zip.Reduced.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\packages\SeleniumDotNet-2.0RC.3.0.0.0\lib\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Selenium.WebDriverBackedSelenium">
-      <HintPath>..\..\packages\SeleniumDotNet-2.0RC.3.0.0.0\lib\Selenium.WebDriverBackedSelenium.dll</HintPath>
+    <Reference Include="Newtonsoft.Json.Net35">
+      <HintPath>..\..\packages\Newtonsoft.Json.4.0.2\lib\net35\Newtonsoft.Json.Net35.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,14 +44,8 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="ThoughtWorks.Selenium.Core">
-      <HintPath>..\..\packages\SeleniumDotNet-2.0RC.3.0.0.0\lib\ThoughtWorks.Selenium.Core.dll</HintPath>
-    </Reference>
     <Reference Include="WebDriver">
-      <HintPath>..\..\packages\SeleniumDotNet-2.0RC.3.0.0.0\lib\WebDriver.dll</HintPath>
-    </Reference>
-    <Reference Include="Webdriver.Support">
-      <HintPath>..\..\packages\SeleniumDotNet-2.0RC.3.0.0.0\lib\Webdriver.Support.dll</HintPath>
+      <HintPath>..\..\packages\Selenium.WebDriver.2.3.0\lib\WebDriver.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
