@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ionic.Zip">
-      <HintPath>..\..\packages\DotNetZip.1.9\lib\Ionic.Zip.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json.Net35">
       <HintPath>..\..\packages\Newtonsoft.Json.4.0.2\lib\net35\Newtonsoft.Json.Net35.dll</HintPath>
     </Reference>
@@ -45,7 +42,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WebDriver">
-      <HintPath>..\..\packages\Selenium.WebDriver.2.3.0\lib\WebDriver.dll</HintPath>
+      <HintPath>..\..\packages\Selenium.WebDriver.2.4.0\lib\WebDriver.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

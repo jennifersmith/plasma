@@ -2141,6 +2141,11 @@
             The coordinates of the element are invalid.
             </summary>
         </member>
+        <member name="F:OpenQA.Selenium.WebDriverResult.InvalidSelector">
+            <summary>
+            The selector used (CSS/XPath) was invalid.
+            </summary>
+        </member>
         <member name="T:OpenQA.Selenium.XPathLookupException">
             <summary>
             The exception that is thrown when an error occurs during an XPath lookup.
