@@ -69,8 +69,9 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WebDriver.Common">
-      <HintPath>..\..\lib\WebDriver\WebDriver.Common.dll</HintPath>
+    <Reference Include="WebDriver, Version=2.11.0.0, Culture=neutral, PublicKeyToken=1c2bd1631853048f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\WebDriver\WebDriver.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
