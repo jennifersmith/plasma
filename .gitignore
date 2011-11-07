@@ -23,6 +23,7 @@ Thumbs.db
 *.lib
 *.sbr
 obj/
+reports/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
