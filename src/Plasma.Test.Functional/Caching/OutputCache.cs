@@ -23,11 +23,13 @@ namespace Plasma.Test.Functional.Caching
             /////////////////////////////////////////////////////////////////////////////
             // Test OutputCaching
 
-            HtmlNavigator htmlFirst = HtmlNavigatorExtensions.Html(WebApplicationFixture.ProcessRequest("~/Caching/OutputCache.aspx"));
-            string timestamp1 = htmlFirst.FindElement(By.Id("Label1")).InnerHtml();
+            var driver = new PlasmaDriver(WebApplicationFixture.AppInstance);
 
-            HtmlNavigator htmlSecond = HtmlNavigatorExtensions.Html(WebApplicationFixture.ProcessRequest("~/Caching/OutputCache.aspx"));
-            string timestamp2 = htmlSecond.FindElement(By.Id("Label1")).InnerHtml();
+            driver.Navigate().GoToUrl("~/Caching/OutputCache.aspx");
+            string timestamp1 = driver.FindElement(By.Id("Label1")).InnerHtml();
+
+            driver.Navigate().GoToUrl("~/Caching/OutputCache.aspx");
+            string timestamp2 = driver.FindElement(By.Id("Label1")).InnerHtml();
 
             Assert.AreEqual(timestamp1, timestamp2);
         }

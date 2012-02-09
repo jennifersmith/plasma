@@ -23,9 +23,10 @@ namespace Plasma.Test.Functional.Basic
             /////////////////////////////////////////////////////////////////////////////
             // Test passing a QueryString value to QueryString.aspx
 
-            HtmlNavigator html = WebApplicationFixture.ProcessRequest("~/Basic/Querystring.aspx?test=Hello").Html();
+            var driver = new PlasmaDriver(WebApplicationFixture.AppInstance);
+            driver.Navigate().GoToUrl("~/Basic/Querystring.aspx?test=Hello");
 
-            string message = html.FindElement(By.Id("Label1")).InnerHtml();
+            var message = driver.FindElement(By.Id("Label1")).InnerHtml();
 
             Assert.AreEqual("Hello", message);
         }

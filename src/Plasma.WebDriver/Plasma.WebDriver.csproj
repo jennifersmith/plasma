@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Plasma.WebDriver</RootNamespace>
     <AssemblyName>Plasma.WebDriver</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -38,8 +38,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="WebDriver, Version=2.11.0.0, Culture=neutral, PublicKeyToken=1c2bd1631853048f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="WebDriver">
       <HintPath>..\..\lib\WebDriver\WebDriver.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -58,10 +57,13 @@
     <Compile Include="Finders\ElementFinderContext.cs" />
     <Compile Include="Finders\IElementFinder.cs" />
     <Compile Include="HtmlElement.cs" />
-    <Compile Include="HtmlNavigator.cs" />
-    <Compile Include="HtmlNavigatorExtensions.cs" />
     <Compile Include="LocalEntityResolver.cs" />
+    <Compile Include="PlasmaCookieJar.cs" />
+    <Compile Include="PlasmaDriver.cs" />
+    <Compile Include="PlasmaNavigation.cs" />
+    <Compile Include="PlasmaOptions.cs" />
     <Compile Include="UIControlHelpers.cs" />
+    <Compile Include="WebBrowser.cs" />
     <Compile Include="WebElementExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

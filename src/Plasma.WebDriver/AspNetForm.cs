@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
 using System.Web;
+using System.Xml.Linq;
 using OpenQA.Selenium;
 using Plasma.Core;
 
@@ -27,9 +28,11 @@ namespace Plasma.WebDriver {
         private readonly HashSet<string> _fileControls = new HashSet<string>(); 
         private string _action;
         private string _method;
+        private XElement clickedElement;
 
-        internal AspNetForm(string requestVirtualPath, string queryString, IWebElement formWebElement) {
+        internal AspNetForm(string requestVirtualPath, string queryString, IWebElement formWebElement, XElement clickedElement) {
             _formWebElement = formWebElement;
+            this.clickedElement = clickedElement;
             // form's method
             string formMethod = formWebElement.GetAttribute("method");
             _method = string.IsNullOrEmpty(formMethod) ? "POST" : formMethod;
@@ -175,7 +178,8 @@ namespace Plasma.WebDriver {
             if (NodeNameIs(node, "input")) {
                 string type = node.GetAttribute("type");
 
-                if (StringsEqual(type, "text") || StringsEqual(type, "hidden")) {
+                if (StringsEqual(type, "text") || StringsEqual(type, "password") || StringsEqual(type, "hidden"))
+                {
                     AddFieldValue(node, node.GetAttribute("value"));
                 } 
                 else if (StringsEqual(type, "checkbox")) {
@@ -191,9 +195,10 @@ namespace Plasma.WebDriver {
                 else if (StringsEqual(type, "file")) {
                     _fileControls.Add(node.GetAttribute("name"));
                     AddFieldValue(node, node.GetAttribute("value"));
-                }  
-                else if (StringsEqual(type, "submit")) {
-                    //                    AddFieldValue(node, node.GetAttribute("value"));
+                }
+                else if (StringsEqual(type, "submit") && node.GetAttribute("name") == GetClickedElementAttribute("name"))
+                {
+                    AddFieldValue(node, node.GetAttribute("value"));
                 }
             }
             else if (NodeNameIs(node, "textarea")) {
@@ -206,6 +211,14 @@ namespace Plasma.WebDriver {
                     }
                 }
             }
+            else if (NodeNameIs(node, "button"))
+            {
+                var type = node.GetAttribute("type");
+                if (StringsEqual(type, "submit") && node.GetAttribute("name") == GetClickedElementAttribute("name"))
+                {
+                    AddFieldValue(node, node.GetAttribute("value"));
+                }
+            }
             else {
                 // not a field
                 return false;
@@ -213,6 +226,12 @@ namespace Plasma.WebDriver {
 
             // field processed
             return true;
+        }
+
+        private string GetClickedElementAttribute(string name)
+        {
+            var xAttribute = clickedElement.Attribute(name);
+            return xAttribute == null ? string.Empty : xAttribute.Value;
         }
 
         private void AddFieldValue(IWebElement node, string fieldValue) {

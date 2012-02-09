@@ -10,7 +10,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -22,11 +22,13 @@ namespace Plasma.WebDriver.Finders
 {
     public class ElementFinderContext : ISearchContext, IFindsByClassName, IFindsByXPath, IFindsByTagName, IFindsById, IFindsByName, IFindsByCssSelector
     {
-        private readonly XElement _xElement;
+        private readonly XElement xElement;
+        private readonly WebBrowser webBrowser;
 
-        public ElementFinderContext(XElement xElement)
+        public ElementFinderContext(XElement xElement, WebBrowser webBrowser)
         {
-            _xElement = xElement;
+            this.xElement = xElement;
+            this.webBrowser = webBrowser;
         }
 
         public IWebElement FindElement(By by)
@@ -38,7 +40,6 @@ namespace Plasma.WebDriver.Finders
         {
             return  by.FindElements(this);
         }
-
 
         public IWebElement FindElementByClassName(string className)
         {
@@ -52,9 +53,8 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByClassName(string className)
         {
-            return new ElementByClassNameFinder(className).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByClassNameFinder(className).FindWithin(xElement));
         }
-
 
         public IWebElement FindElementById(string id)
         {
@@ -68,9 +68,8 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsById(string id)
         {
-            return new ElementByIdFinder(id).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByIdFinder(id).FindWithin(xElement));
         }
-
 
         public IWebElement FindElementByName(string name)
         {
@@ -84,7 +83,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByName(string name)
         {
-            return new ElementByNameFinder(name).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByNameFinder(name).FindWithin(xElement));
         }
 
         public IWebElement FindElementByTagName(string tagName)
@@ -99,7 +98,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByTagName(string tagName)
         {
-            return new ElementByTagNameFinder(tagName).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByTagNameFinder(tagName).FindWithin(xElement));
         }
 
         public IWebElement FindElementByXPath(string xpath)
@@ -114,7 +113,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByXPath(string xpath)
         {
-            return new ElementByXpathFinder(xpath).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByXpathFinder(xpath).FindWithin(xElement));
         }
 
         public IWebElement FindElementByCssSelector(string cssSelector)
@@ -129,7 +128,12 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByCssSelector(string cssSelector)
         {
-            return new ElementByCssSelectorFinder(cssSelector).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByCssSelectorFinder(cssSelector).FindWithin(xElement));
+        }
+
+        private ReadOnlyCollection<IWebElement> AsReadonlyCollection(IEnumerable<XElement> xmlElements)
+        {
+            return new ReadOnlyCollection<IWebElement>(xmlElements.Select(x => new HtmlElement(x, webBrowser)).Cast<IWebElement>().ToList());
         }
     }
 }

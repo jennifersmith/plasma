@@ -8,6 +8,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+
 using NUnit.Framework;
 using OpenQA.Selenium;
 using Plasma.WebDriver;
@@ -23,14 +24,14 @@ namespace Plasma.Test.Functional.Controls
             /////////////////////////////////////////////////////////////////////////////
             // Test Pushing a Button on BasicForm.aspx
 
-            HtmlNavigator firstHtml = WebApplicationFixture.ProcessRequest("~/Controls/BasicForm.aspx").Html();
+            var plasmaDriver = new PlasmaDriver(WebApplicationFixture.AppInstance);
 
-            AspNetForm form = firstHtml.GetForm();
-            form["TextBox1"] = "Testing";
-            
-            HtmlNavigator secondHtml = WebApplicationFixture.ProcessRequest(Button.Click(form, "Button1")).Html();
+            plasmaDriver.Navigate().GoToUrl("~/Controls/BasicForm.aspx");
 
-            Assert.AreEqual("Value: Testing", secondHtml.FindElement(By.Id("Label1")).InnerHtml());
+            plasmaDriver.FindElement(By.Id("TextBox1")).SendKeys("Testing");
+            plasmaDriver.FindElement(By.Id("Button1")).Click();
+
+            Assert.AreEqual("Value: Testing", plasmaDriver.FindElement(By.Id("Label1")).Text, plasmaDriver.PageSource);
         }
     }
 }

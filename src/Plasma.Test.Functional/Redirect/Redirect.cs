@@ -9,7 +9,7 @@
  *
  * **********************************************************************************/
 using NUnit.Framework;
-using Plasma.Core;
+using OpenQA.Selenium;
 using Plasma.WebDriver;
 
 namespace Plasma.Test.Functional.Redirect
@@ -22,11 +22,12 @@ namespace Plasma.Test.Functional.Redirect
         {
             /////////////////////////////////////////////////////////////////////////////
             // Test Verifying a Redirect on Redirect.aspx
+            var driver = new PlasmaDriver(WebApplicationFixture.AppInstance);
+            driver.Navigate().GoToUrl("~/Basic/Redirect.aspx");
+            
+            var titleElement = driver.FindElement(By.TagName("title"));
 
-            AspNetResponse aspNetResponse = WebApplicationFixture.ProcessRequest("~/Basic/Redirect.aspx");
-            HtmlNavigator html = aspNetResponse.Html();
-
-            Assert.AreEqual(aspNetResponse.Status, 302);
+            Assert.AreEqual("Query String", titleElement.Text);
         }
     }
 }

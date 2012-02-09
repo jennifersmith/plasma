@@ -11,7 +11,6 @@
  *
  * **********************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
@@ -23,40 +22,52 @@ namespace Plasma.WebDriver
 {
     public class HtmlElement : IWebElement
     {
-        private readonly XElement _xElement;
+        private readonly XElement xElement;
+        private readonly WebBrowser webBrowser;
 
-        public HtmlElement(XElement xElement)
+        public HtmlElement(XElement xElement, WebBrowser webBrowser)
         {
-            _xElement = xElement;
+            this.xElement = xElement;
+            this.webBrowser = webBrowser;
         }
 
         public string InnerHtml
         {
-            get { return _xElement.Nodes().Select(x => x.ToString()).Aggregate(String.Concat); }
+            get { return xElement.Nodes().Select(x => x.ToString()).Aggregate(String.Concat); }
         }
-
-
 
         public IWebElement FindElement(By mechanism)
         {
-            return mechanism.FindElement(new ElementFinderContext(_xElement));
+            return mechanism.FindElement(new ElementFinderContext(xElement, webBrowser));
         }
 
         public ReadOnlyCollection<IWebElement> FindElements(By mechanism)
         {
-            return mechanism.FindElements(new ElementFinderContext(_xElement));
+            return mechanism.FindElements(new ElementFinderContext(xElement, webBrowser));
         }
-
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            if ((TagName == "textarea"))
+            {
+                xElement.SetValue(string.Empty);
+            }
+            else
+            {
+                SetAttribute("value", string.Empty);
+            }
         }
-
 
         public void SendKeys(string text)
         {
-            SetAttribute("value", text);
+            if ((TagName == "textarea"))
+            {
+                xElement.SetValue(text);
+            }
+            else
+            {
+                SetAttribute("value", text);
+            }
         }
 
         public void Submit()
@@ -66,12 +77,72 @@ namespace Plasma.WebDriver
 
         public void Click()
         {
-            throw new NotImplementedException();
+            switch (TagName)
+            {
+                case "a":
+                    HandleClickOnAnchorElement();
+                    break;
+
+                case "option":
+                    HandleSelectingOptionElement();
+                    break;
+
+                default: //handles input type = "button" and "checkbox" for now
+                    HandleClickOnInputElement();
+                    break;
+            }
+        }
+
+        private void HandleClickOnAnchorElement()
+        {
+            webBrowser.Get(GetAttribute("href"));
+        }
+
+        private void HandleClickOnInputElement()
+        {
+            var inputType = GetAttribute("type");
+            if ("checkbox".Equals(inputType))
+            {
+                SelectCheckBox();
+                return;
+            }
+            if ("radio".Equals(inputType))
+            {
+                Toggle();
+                return;
+            }
+
+            webBrowser.Post(GetParentForm());
+        }
+
+        private AspNetForm GetParentForm()
+        {
+            var parentFormElement = webBrowser.GetParentFormElement(xElement);
+            return new AspNetForm(webBrowser.RequestVirtualPath, webBrowser.QueryString, parentFormElement, xElement);
+        }
+
+        private void HandleSelectingOptionElement()
+        {
+            if (ElementIsNotSelected())
+            {
+                var selectElement = new HtmlElement(xElement.Parent, webBrowser);
+                var allOptionElements = selectElement.FindElements(By.TagName("option")).Cast<HtmlElement>();
+                foreach (var element in allOptionElements)
+                {
+                    element.DeleteAttribute("selected");
+                }
+                SetAttribute("selected", "selected");
+            }
+        }
+
+        private bool ElementIsNotSelected()
+        {
+            return !xElement.Attributes().Any(x => x.Name == "selected");
         }
 
         public void Select()
         {
-            if (_xElement.Name == "option")
+            if (xElement.Name == "option")
             {
                 SelectOption();
             }
@@ -83,22 +154,15 @@ namespace Plasma.WebDriver
 
         private void SelectCheckBox()
         {
-            if (_xElement.Attribute("checked")!=null)
+            if (xElement.Attribute("checked") == null)
             {
-                XElement documentElement = _xElement.Document.Root;
-                IEnumerable<IWebElement> allElementsWithName =
-                    new HtmlElement(documentElement).FindElements(By.Name(GetAttribute("name")));
-                foreach (HtmlElement element in allElementsWithName)
-                {
-                    element.DeleteAttribute("checked");
-                }
                 SetAttribute("checked", "checked");
             }
         }
 
         private void SelectOption()
         {
-            if (!_xElement.Attributes().Any(x=>x.Name=="selected"))
+            if (!xElement.Attributes().Any(x=>x.Name=="selected"))
             {
                 var selectElement = FindElement(By.XPath(string.Format("ancestor::{0}", "select")));
                 var allOptionElements = selectElement.FindElements(By.TagName("option"));
@@ -112,12 +176,19 @@ namespace Plasma.WebDriver
 
         public string GetAttribute(string attributeName)
         {
-            return _xElement.Attributes(attributeName).Select(x => x.Value).FirstOrDefault();
+            var xAttribute = xElement.Attribute(attributeName);
+            return xAttribute == null ? string.Empty : xAttribute.Value;
         }
 
-        public bool Toggle()
+        public void Toggle()
         {
-            throw new NotImplementedException();
+            var checkedState = xElement.Attributes("checked").FirstOrDefault();
+            if (checkedState==null || string.IsNullOrEmpty(checkedState.Value))
+            {
+                SetAttribute("checked", "checked");
+                return;
+            }
+            SetAttribute("checked", null);
         }
 
         public string GetCssValue(string propertyName) {
@@ -126,12 +197,12 @@ namespace Plasma.WebDriver
 
         public string TagName
         {
-            get { return _xElement.Name.ToString(); }
+            get { return xElement.Name.ToString(); }
         }
 
         public string Text
         {
-            get { return _xElement.Value.Trim(); }
+            get { return xElement.Value.Trim(); }
         }
 
         public string Value
@@ -157,8 +228,13 @@ namespace Plasma.WebDriver
             get { throw new NotImplementedException(); }
         }
 
-        public bool Displayed {
-            get { throw new NotImplementedException(); }
+        public bool Displayed
+        {
+            get
+            {
+                //assuming you are just waiting for it so return true
+                return true;
+            }   
         }
 
         private static string RemoveXhtmlNamespaces(string html)
@@ -172,7 +248,7 @@ namespace Plasma.WebDriver
 
         private void DeleteAttribute(string attributeName)
         {
-            _xElement.Attributes(attributeName).Remove();
+            xElement.Attributes(attributeName).Remove();
         }
 
         public void Dispose()
@@ -181,12 +257,12 @@ namespace Plasma.WebDriver
 
         public override string ToString()
         {
-            return RemoveXhtmlNamespaces(_xElement.ToString());
+            return RemoveXhtmlNamespaces(xElement.ToString());
         }
 
         private void SetAttribute(string attributeName, string attributeValue)
         {
-            _xElement.SetAttributeValue(attributeName, attributeValue);
+            xElement.SetAttributeValue(attributeName, attributeValue);
         }
         
     }

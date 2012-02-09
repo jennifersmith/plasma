@@ -14,6 +14,7 @@ using System.Linq;
 using System.Xml.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using Plasma.WebDriver;
 using Plasma.WebDriver.Finders;
 
 namespace Plasma.Test.Unit.WebDriver.Finders
@@ -34,7 +35,7 @@ namespace Plasma.Test.Unit.WebDriver.Finders
                                     </body>
                                 </html>";
             var document2 = XDocument.Parse(xmlSource);
-            return new ElementFinderContext(document2.Root);
+            return new ElementFinderContext(document2.Root, new WebBrowser(null));
         }
 
 
