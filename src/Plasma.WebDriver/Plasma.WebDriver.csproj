@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\lib\HtmlAgilityPack\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -52,6 +55,8 @@
     <Compile Include="AspNetForm.cs" />
     <Compile Include="Finders\ElementByClassNameFinder.cs" />
     <Compile Include="Finders\ElementByCssSelectorFinder.cs" />
+    <Compile Include="Finders\ElementByIdFinder.cs" />
+    <Compile Include="Finders\ElementByNameFinder.cs" />
     <Compile Include="Finders\ElementByTagNameFinder.cs" />
     <Compile Include="Finders\ElementByXpathFinder.cs" />
     <Compile Include="Finders\ElementFinderContext.cs" />

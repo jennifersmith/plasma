@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
 using System.Web;
-using System.Xml.Linq;
+using HtmlAgilityPack;
 using OpenQA.Selenium;
 using Plasma.Core;
 
@@ -28,9 +28,9 @@ namespace Plasma.WebDriver {
         private readonly HashSet<string> _fileControls = new HashSet<string>(); 
         private string _action;
         private string _method;
-        private XElement clickedElement;
+        private HtmlNode clickedElement;
 
-        internal AspNetForm(string requestVirtualPath, string queryString, IWebElement formWebElement, XElement clickedElement) {
+        internal AspNetForm(string requestVirtualPath, string queryString, IWebElement formWebElement, HtmlNode clickedElement) {
             _formWebElement = formWebElement;
             this.clickedElement = clickedElement;
             // form's method
@@ -230,8 +230,7 @@ namespace Plasma.WebDriver {
 
         private string GetClickedElementAttribute(string name)
         {
-            var xAttribute = clickedElement.Attribute(name);
-            return xAttribute == null ? string.Empty : xAttribute.Value;
+            return clickedElement.GetAttributeValue(name, string.Empty);
         }
 
         private void AddFieldValue(IWebElement node, string fieldValue) {

@@ -14,7 +14,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
-using System.Xml.Linq;
+using System.Net;
+using HtmlAgilityPack;
 using OpenQA.Selenium;
 using Plasma.WebDriver.Finders;
 
@@ -22,35 +23,35 @@ namespace Plasma.WebDriver
 {
     public class HtmlElement : IWebElement
     {
-        private readonly XElement xElement;
+        private readonly HtmlNode currentNode;
         private readonly WebBrowser webBrowser;
 
-        public HtmlElement(XElement xElement, WebBrowser webBrowser)
+        public HtmlElement(HtmlNode currentNode, WebBrowser webBrowser)
         {
-            this.xElement = xElement;
+            this.currentNode = currentNode;
             this.webBrowser = webBrowser;
         }
 
         public string InnerHtml
         {
-            get { return xElement.Nodes().Select(x => x.ToString()).Aggregate(String.Concat); }
+            get { return currentNode.InnerHtml; }
         }
 
         public IWebElement FindElement(By mechanism)
         {
-            return mechanism.FindElement(new ElementFinderContext(xElement, webBrowser));
+            return mechanism.FindElement(new ElementFinderContext(currentNode, webBrowser));
         }
 
         public ReadOnlyCollection<IWebElement> FindElements(By mechanism)
         {
-            return mechanism.FindElements(new ElementFinderContext(xElement, webBrowser));
+            return mechanism.FindElements(new ElementFinderContext(currentNode, webBrowser));
         }
 
         public void Clear()
         {
             if ((TagName == "textarea"))
             {
-                xElement.SetValue(string.Empty);
+                currentNode.InnerHtml = string.Empty;
             }
             else
             {
@@ -62,7 +63,7 @@ namespace Plasma.WebDriver
         {
             if ((TagName == "textarea"))
             {
-                xElement.SetValue(text);
+                currentNode.InnerHtml = text;
             }
             else
             {
@@ -117,15 +118,15 @@ namespace Plasma.WebDriver
 
         private AspNetForm GetParentForm()
         {
-            var parentFormElement = webBrowser.GetParentFormElement(xElement);
-            return new AspNetForm(webBrowser.RequestVirtualPath, webBrowser.QueryString, parentFormElement, xElement);
+            var parentFormElement = webBrowser.GetParentFormElement(currentNode);
+            return new AspNetForm(webBrowser.RequestVirtualPath, webBrowser.QueryString, parentFormElement, currentNode);
         }
 
         private void HandleSelectingOptionElement()
         {
             if (ElementIsNotSelected())
             {
-                var selectElement = new HtmlElement(xElement.Parent, webBrowser);
+                var selectElement = new HtmlElement(currentNode.ParentNode, webBrowser);
                 var allOptionElements = selectElement.FindElements(By.TagName("option")).Cast<HtmlElement>();
                 foreach (var element in allOptionElements)
                 {
@@ -137,12 +138,12 @@ namespace Plasma.WebDriver
 
         private bool ElementIsNotSelected()
         {
-            return !xElement.Attributes().Any(x => x.Name == "selected");
+            return currentNode.GetAttributeValue("selected", null) == null;
         }
 
         public void Select()
         {
-            if (xElement.Name == "option")
+            if (currentNode.Name == "option")
             {
                 SelectOption();
             }
@@ -154,7 +155,7 @@ namespace Plasma.WebDriver
 
         private void SelectCheckBox()
         {
-            if (xElement.Attribute("checked") == null)
+            if (currentNode.GetAttributeValue("checked", null) == null)
             {
                 SetAttribute("checked", "checked");
             }
@@ -162,7 +163,7 @@ namespace Plasma.WebDriver
 
         private void SelectOption()
         {
-            if (!xElement.Attributes().Any(x=>x.Name=="selected"))
+            if (currentNode.GetAttributeValue("selected", null) == null)
             {
                 var selectElement = FindElement(By.XPath(string.Format("ancestor::{0}", "select")));
                 var allOptionElements = selectElement.FindElements(By.TagName("option"));
@@ -176,33 +177,40 @@ namespace Plasma.WebDriver
 
         public string GetAttribute(string attributeName)
         {
-            var xAttribute = xElement.Attribute(attributeName);
-            return xAttribute == null ? string.Empty : xAttribute.Value;
+            return WebUtility.HtmlDecode(currentNode.GetAttributeValue(attributeName, string.Empty));
         }
 
         public void Toggle()
         {
-            var checkedState = xElement.Attributes("checked").FirstOrDefault();
-            if (checkedState==null || string.IsNullOrEmpty(checkedState.Value))
+            var checkedState = currentNode.GetAttributeValue("checked", null);
+            if (string.IsNullOrEmpty(checkedState))
             {
+                var documentNode = new HtmlElement(currentNode.OwnerDocument.DocumentNode, webBrowser);
+                var allRadioButtons = documentNode.FindElements(By.Name(GetAttribute("name")));
+                foreach (HtmlElement element in allRadioButtons)
+                {
+                    element.DeleteAttribute("checked");
+                }
+
                 SetAttribute("checked", "checked");
                 return;
             }
-            SetAttribute("checked", null);
+            DeleteAttribute("checked");
         }
 
-        public string GetCssValue(string propertyName) {
+        public string GetCssValue(string propertyName)
+        {
             throw new NotImplementedException();
         }
 
         public string TagName
         {
-            get { return xElement.Name.ToString(); }
+            get { return currentNode.Name; }
         }
 
         public string Text
         {
-            get { return xElement.Value.Trim(); }
+            get { return WebUtility.HtmlDecode(currentNode.InnerText.Trim(Environment.NewLine.ToCharArray()).Trim()); }
         }
 
         public string Value
@@ -220,11 +228,13 @@ namespace Plasma.WebDriver
             get { return !string.IsNullOrEmpty(GetAttribute("checked")) || !string.IsNullOrEmpty(GetAttribute("selected")); }
         }
 
-        public Point Location {
+        public Point Location
+        {
             get { throw new NotImplementedException(); }
         }
 
-        public Size Size {
+        public Size Size
+        {
             get { throw new NotImplementedException(); }
         }
 
@@ -234,7 +244,7 @@ namespace Plasma.WebDriver
             {
                 //assuming you are just waiting for it so return true
                 return true;
-            }   
+            }
         }
 
         private static string RemoveXhtmlNamespaces(string html)
@@ -248,7 +258,7 @@ namespace Plasma.WebDriver
 
         private void DeleteAttribute(string attributeName)
         {
-            xElement.Attributes(attributeName).Remove();
+            currentNode.Attributes.Remove(attributeName);
         }
 
         public void Dispose()
@@ -257,13 +267,13 @@ namespace Plasma.WebDriver
 
         public override string ToString()
         {
-            return RemoveXhtmlNamespaces(xElement.ToString());
+            return RemoveXhtmlNamespaces(currentNode.ToString());
         }
 
         private void SetAttribute(string attributeName, string attributeValue)
         {
-            xElement.SetAttributeValue(attributeName, attributeValue);
+            currentNode.SetAttributeValue(attributeName, attributeValue);
         }
-        
+
     }
 }

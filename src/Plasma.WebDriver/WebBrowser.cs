@@ -13,11 +13,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Web;
-using System.Xml;
-using System.Xml.Linq;
+using HtmlAgilityPack;
 using OpenQA.Selenium;
 using Plasma.Core;
 
@@ -99,22 +97,22 @@ namespace Plasma.WebDriver
             return htmlElement.FindElements(mechanism);
         }
 
-        public HtmlElement GetParentFormElement(XElement node)
+        public HtmlElement GetParentFormElement(HtmlNode node)
         {
-            if (node.Parent == null)
+            if (node.ParentNode == null)
             {
                 throw new ArgumentException("Tried to click on an input submit button that is not contained within a form. ");
             }
-            if (node.Name.ToString().ToLower() == "form")
+            if (node.Name.ToLower() == "form")
             {
                 return new HtmlElement(node, this);
             }
-            if (node.Parent.Name.ToString().ToLower() == "form")
+            if (node.ParentNode.Name.ToLower() == "form")
             {
-                return new HtmlElement(node.Parent, this);
+                return new HtmlElement(node.ParentNode, this);
             }
 
-            return GetParentFormElement(node.Parent);
+            return GetParentFormElement(node.ParentNode);
         }
 
         private void CheckWebBrowserHasADocument()
@@ -196,59 +194,18 @@ namespace Plasma.WebDriver
 
         private void ParseHtmlBody()
         {
-            htmlElement = IsHtml() ? new HtmlElement(Parse(response.BodyAsString), this) : null;
-        }
-
-        private bool IsHtml()
-        {
-            return response.BodyAsString.Contains("<html");
-        }
-
-        private static XElement Parse(string html)
-        {
-            var xmlReaderSettings = new XmlReaderSettings
-            {
-                XmlResolver = new LocalEntityResolver(),
-                ProhibitDtd = false
-            };
-
-            XDocument xmlDocument;
+            HtmlNode.ElementsFlags.Remove("form");
+            HtmlNode.ElementsFlags.Remove("option");
+            var document = new HtmlDocument();
             try
             {
-                xmlDocument = XDocument.Load(XmlReader.Create(new StringReader(html), xmlReaderSettings));
-                return RemoveNamespaces(xmlDocument).Root;
+                document.LoadHtml(response.BodyAsString);
+                htmlElement = new HtmlElement(document.DocumentNode, this);
             }
-            catch (XmlException)
+            catch (Exception)
             {
-                Console.Out.WriteLine("Failed to parse response as html:\n{0}", html);
+                htmlElement = null;
             }
-            return new XElement("empty");
-        }
-
-        private static XDocument RemoveNamespaces(XDocument xDocument)
-        {
-            IEnumerable<XElement> elementsWithNamespaces = xDocument.Descendants().Where(x => x.Name.Namespace != XNamespace.None);
-            foreach (var element in elementsWithNamespaces)
-            {
-                element.Name = RemoveNamespace(element.Name);
-                element.ReplaceAttributes(element.Attributes().Select(RemoveNamespace));
-            }
-            xDocument.Descendants().Attributes().Where(x => x.IsNamespaceDeclaration).Remove();
-            return xDocument;
-        }
-
-        private static XName RemoveNamespace(XName xName)
-        {
-            return XNamespace.None.GetName(xName.LocalName);
-        }
-
-        private static XAttribute RemoveNamespace(XAttribute xAttribute)
-        {
-            if (xAttribute.Name.Namespace != XNamespace.None)
-            {
-                return new XAttribute(RemoveNamespace(xAttribute.Name), xAttribute.Value);
-            }
-            return xAttribute;
         }
     }
 }
