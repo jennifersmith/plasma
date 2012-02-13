@@ -17,7 +17,7 @@ namespace Plasma.Test.Functional.Controls
     [TestFixture]
     public class LinkButtonTest
     {
-        [Test, Ignore]
+        [Test, Ignore("This is an ASPNET Forms test that is not supported with this version of Plasma")]
         public void LinkButton_Test()
         {
             /////////////////////////////////////////////////////////////////////////////

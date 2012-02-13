@@ -11,7 +11,6 @@
  *
  * **********************************************************************************/
 using System.Linq;
-using System.Xml.Linq;
 using HtmlAgilityPack;
 using NUnit.Framework;
 using OpenQA.Selenium;

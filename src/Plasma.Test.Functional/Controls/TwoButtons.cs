@@ -17,7 +17,7 @@ namespace Plasma.Test.Functional.Controls
     [TestFixture]
     public class TwoButtons
     {
-        [Test, Ignore]
+        [Test]
         public void TwoButtons_Test()
         {
             /////////////////////////////////////////////////////////////////////////////

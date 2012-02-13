@@ -20,7 +20,7 @@ namespace Plasma.Test.Functional.Controls
     [TestFixture]
     public class FileUpload
     {
-        [Test, Ignore]
+        [Test]
         public void File_Upload()
         {
             const int contentLength = 8192;

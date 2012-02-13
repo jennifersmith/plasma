@@ -10,6 +10,7 @@
  * **********************************************************************************/
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using Plasma.WebDriver;
 
 namespace Plasma.Test.Functional.MasterPages
@@ -17,7 +18,7 @@ namespace Plasma.Test.Functional.MasterPages
     [TestFixture]
     public class MasterPage
     {
-        [Test, Ignore]
+        [Test]
         public void MasterPage_Form()
         {
             /////////////////////////////////////////////////////////////////////////////
@@ -28,7 +29,8 @@ namespace Plasma.Test.Functional.MasterPages
 
             driver.FindElement(By.Name("ctl00$ContentPlaceHolder1$TextBox1")).SendKeys("Scott");
 
-            driver.FindElement(By.Name("ctl00$ContentPlaceHolder1$DropDownList1")).SendKeys("Foo");
+            new SelectElement(driver.FindElement(By.Name("ctl00$ContentPlaceHolder1$DropDownList1"))).SelectByText("Foo");
+
 
             driver.FindElement(By.Name("ctl00$ContentPlaceHolder1$Button1")).Click();
             
