@@ -1,7 +1,2 @@
-﻿<%@ Page Language="C#"  Inherits="System.Web.Mvc.ViewPage" %>
+﻿<%@ Page Language="C#"  Inherits="System.Web.Mvc.ViewPage" MasterPageFile="~/Views/Shared/Site.Master"%>
 
-<html>
-    <body>
-    <h2 id="query_string"><%= ViewData["Message"] %></h2>
-    </body>
-</html>

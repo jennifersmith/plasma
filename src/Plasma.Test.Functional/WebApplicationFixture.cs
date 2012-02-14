@@ -30,7 +30,7 @@ namespace Plasma.Test.Functional
         [SetUp]
         public void SetUp() 
         {
-            _appInstance = new AspNetApplication("/", Path.GetFullPath(@".\..\..\..\web\Plasma.Sample.Web"));
+            _appInstance = new AspNetApplication("/", Path.GetFullPath(@".\..\..\..\web\Plasma.Sample.Web.Mvc"));
         }
 
         [TearDown]

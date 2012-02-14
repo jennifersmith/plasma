@@ -80,7 +80,7 @@ namespace Plasma.WebDriver
 
         public string Url
         {
-            get { throw new NotImplementedException(); }
+            get { return browser.RequestVirtualPath; }
             set { throw new NotImplementedException(); }
         }
 
