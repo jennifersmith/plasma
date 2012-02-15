@@ -73,67 +73,13 @@ namespace Plasma.WebDriver
 
         public void Submit()
         {
-            throw new NotImplementedException();
+            HandleFormSubmit();
         }
 
         public void Click()
         {
-            switch (TagName)
-            {
-                case "a":
-                    HandleClickOnAnchorElement();
-                    break;
-
-                case "option":
-                    HandleSelectingOptionElement();
-                    break;
-
-                default: //handles input type = "button" and "checkbox" for now
-                    HandleClickOnInputElement();
-                    break;
-            }
-        }
-
-        private void HandleClickOnAnchorElement()
-        {
-            webBrowser.Get(GetAttribute("href"));
-        }
-
-        private void HandleClickOnInputElement()
-        {
-            var inputType = GetAttribute("type");
-            if ("checkbox".Equals(inputType))
-            {
-                SelectCheckBox();
-                return;
-            }
-            if ("radio".Equals(inputType))
-            {
-                Toggle();
-                return;
-            }
-
-            webBrowser.Post(GetParentForm());
-        }
-
-        private AspNetForm GetParentForm()
-        {
-            var parentFormElement = webBrowser.GetParentFormElement(currentNode);
-            return new AspNetForm(webBrowser.RequestVirtualPath, webBrowser.QueryString, parentFormElement, currentNode);
-        }
-
-        private void HandleSelectingOptionElement()
-        {
-            if (ElementIsNotSelected())
-            {
-                var selectElement = new HtmlElement(currentNode.ParentNode, webBrowser);
-                var allOptionElements = selectElement.FindElements(By.TagName("option")).Cast<HtmlElement>();
-                foreach (var element in allOptionElements)
-                {
-                    element.DeleteAttribute("selected");
-                }
-                SetAttribute("selected", "selected");
-            }
+            HandleSelectingElements();
+            HandleClickingElements();
         }
 
         private bool ElementIsNotSelected()
@@ -143,59 +89,12 @@ namespace Plasma.WebDriver
 
         public void Select()
         {
-            if (currentNode.Name == "option")
-            {
-                SelectOption();
-            }
-            else
-            {
-                SelectCheckBox();
-            }
-        }
-
-        private void SelectCheckBox()
-        {
-            if (currentNode.GetAttributeValue("checked", null) == null)
-            {
-                SetAttribute("checked", "checked");
-            }
-        }
-
-        private void SelectOption()
-        {
-            if (currentNode.GetAttributeValue("selected", null) == null)
-            {
-                var selectElement = FindElement(By.XPath(string.Format("ancestor::{0}", "select")));
-                var allOptionElements = selectElement.FindElements(By.TagName("option"));
-                foreach (HtmlElement element in allOptionElements)
-                {
-                    element.DeleteAttribute("selected");
-                }
-                SetAttribute("selected", "selected");
-            }
+            HandleSelectingElements();
         }
 
         public string GetAttribute(string attributeName)
         {
             return WebUtility.HtmlDecode(currentNode.GetAttributeValue(attributeName, string.Empty));
-        }
-
-        public void Toggle()
-        {
-            var checkedState = currentNode.GetAttributeValue("checked", null);
-            if (string.IsNullOrEmpty(checkedState))
-            {
-                var documentNode = new HtmlElement(currentNode.OwnerDocument.DocumentNode, webBrowser);
-                var allRadioButtons = documentNode.FindElements(By.Name(GetAttribute("name")));
-                foreach (HtmlElement element in allRadioButtons)
-                {
-                    element.DeleteAttribute("checked");
-                }
-
-                SetAttribute("checked", "checked");
-                return;
-            }
-            DeleteAttribute("checked");
         }
 
         public string GetCssValue(string propertyName)
@@ -242,9 +141,118 @@ namespace Plasma.WebDriver
         {
             get
             {
-                //assuming you are just waiting for it so return true
                 return true;
             }
+        }
+
+        private void HandleClickingElements()
+        {
+            switch (TagName)
+            {
+                case "a":
+                    HandleClickOnAnchorElement();
+                    break;
+                case "input":
+                    HandleClickOnInputButtonElements();
+                    break;
+            }
+        }
+
+        private void HandleClickOnAnchorElement()
+        {
+            webBrowser.Get(GetAttribute("href"));
+        }
+
+        private void HandleSelectingElements()
+        {
+            switch (TagName)
+            {
+                case "option":
+                    HandleSelectingOptionElement();
+                    break;
+                case "input":
+                    HandleSelecingInputElements();
+                    break;
+            }
+        }
+
+        private void HandleClickOnInputButtonElements()
+        {
+            var inputType = GetAttribute("type");
+            switch (inputType)
+            {
+                case "submit":
+                    HandleFormSubmit();
+                    break;
+                case "button":
+                    HandleFormSubmit();
+                    break;
+            }
+        }
+
+        private void HandleSelecingInputElements()
+        {
+            var inputType = GetAttribute("type");
+            switch (inputType)
+            {
+                case "checkbox":
+                    HandleSelectingCheckBoxElement();
+                    break;
+                case "radio":
+                    SelectRadioButton();
+                    break;
+            }
+        }
+
+        private void HandleFormSubmit()
+        {
+            webBrowser.Post(GetParentForm());
+        }
+
+        private void HandleSelectingOptionElement()
+        {
+            if (ElementIsNotSelected())
+            {
+                var selectElement = new HtmlElement(currentNode.ParentNode, webBrowser);
+                var allOptionElements = selectElement.FindElements(By.TagName("option")).Cast<HtmlElement>();
+                foreach (var element in allOptionElements)
+                {
+                    element.DeleteAttribute("selected");
+                }
+                SetAttribute("selected", "selected");
+            }
+        }
+
+        private void SelectRadioButton()
+        {
+            var checkedState = currentNode.GetAttributeValue("checked", null);
+            if (string.IsNullOrEmpty(checkedState))
+            {
+                var documentNode = new HtmlElement(currentNode.OwnerDocument.DocumentNode, webBrowser);
+                var allRadioButtons = documentNode.FindElements(By.Name(GetAttribute("name")));
+                foreach (HtmlElement element in allRadioButtons)
+                {
+                    element.DeleteAttribute("checked");
+                }
+
+                SetAttribute("checked", "checked");
+                return;
+            }
+            DeleteAttribute("checked");
+        }
+
+        private void HandleSelectingCheckBoxElement()
+        {
+            if (currentNode.GetAttributeValue("checked", null) == null)
+            {
+                SetAttribute("checked", "checked");
+            }
+        }
+
+        private AspNetForm GetParentForm()
+        {
+            var parentFormElement = webBrowser.GetParentFormElement(currentNode);
+            return new AspNetForm(webBrowser.RequestVirtualPath, webBrowser.QueryString, parentFormElement, currentNode);
         }
 
         private static string RemoveXhtmlNamespaces(string html)

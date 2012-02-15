@@ -1,6 +1,9 @@
 ﻿* Currently Url property on PlasmaDriver returns only the path and ignores query string. Write tests to drive out functionality.
-* Test find by Name
-* Test find by XPath
 * Test modifying form elements
 * Test submitting forms
 * What should happen when FindElement gets multiple things. should it error or return the first thing ?
+* Testing cookies
+* Viewing Html of an Element
+* Clicking on links
+* Clicking on an options element
+* Selecting and Options

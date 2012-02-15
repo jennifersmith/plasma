@@ -84,11 +84,13 @@
     <Compile Include="..\Plasma.Core\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="FindingElements\FindElementByNameTests.cs" />
     <Compile Include="FindingElements\FindElementsByTagNameTests.cs" />
+    <Compile Include="FindingElements\FindElementsbyXPathTests.cs" />
     <Compile Include="FindingElements\FindingElementsByClassTests.cs" />
     <Compile Include="FindingElements\FindingElementsByIdTests.cs" />
     <Compile Include="Navigation\GotoPageTests.cs" />
-    <Compile Include="WebApplicationFixture.cs" />
+    <Compile Include="TestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Plasma.Core\Plasma.Core.csproj">

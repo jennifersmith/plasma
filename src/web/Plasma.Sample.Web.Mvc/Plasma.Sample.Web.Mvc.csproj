@@ -59,7 +59,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\FindElementsByClassController.cs" />
     <Compile Include="Controllers\FindElementsByIdController.cs" />
+    <Compile Include="Controllers\FindElementsByNameController.cs" />
     <Compile Include="Controllers\FindElementsByTagNameController.cs" />
+    <Compile Include="Controllers\FindElementsByXPathController.cs" />
     <Compile Include="Controllers\GotoPageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -72,7 +74,9 @@
     <Content Include="Global.asax" />
     <Content Include="Views\FindElementsByClass\Index.aspx" />
     <Content Include="Views\FindElementsById\Index.aspx" />
+    <Content Include="Views\FindElementsByName\Index.aspx" />
     <Content Include="Views\FindElementsByTagName\Index.aspx" />
+    <Content Include="Views\FindElementsByXPath\Index.aspx" />
     <Content Include="Views\GotoPage\Index.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
