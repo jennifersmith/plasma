@@ -152,6 +152,9 @@ namespace Plasma.WebDriver
                 case "a":
                     HandleClickOnAnchorElement();
                     break;
+                case "button":
+                    HandleClickOnInputButtonElements();
+                    break;
                 case "input":
                     HandleClickOnInputButtonElements();
                     break;
