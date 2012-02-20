@@ -62,6 +62,8 @@
     <Compile Include="Controllers\FindElementsByNameController.cs" />
     <Compile Include="Controllers\FindElementsByTagNameController.cs" />
     <Compile Include="Controllers\FindElementsByXPathController.cs" />
+    <Compile Include="Controllers\FormWithCheckBoxController.cs" />
+    <Compile Include="Controllers\FormWithTextBoxController.cs" />
     <Compile Include="Controllers\GotoPageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -77,6 +79,8 @@
     <Content Include="Views\FindElementsByName\Index.aspx" />
     <Content Include="Views\FindElementsByTagName\Index.aspx" />
     <Content Include="Views\FindElementsByXPath\Index.aspx" />
+    <Content Include="Views\FormWithCheckBox\Index.aspx" />
+    <Content Include="Views\FormWithTextBox\Index.aspx" />
     <Content Include="Views\GotoPage\Index.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

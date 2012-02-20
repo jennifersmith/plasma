@@ -87,11 +87,6 @@ namespace Plasma.WebDriver
             return currentNode.GetAttributeValue("selected", null) == null;
         }
 
-        public void Select()
-        {
-            HandleSelectingElements();
-        }
-
         public string GetAttribute(string attributeName)
         {
             return WebUtility.HtmlDecode(currentNode.GetAttributeValue(attributeName, string.Empty));
