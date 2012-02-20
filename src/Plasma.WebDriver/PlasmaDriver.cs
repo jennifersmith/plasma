@@ -86,7 +86,7 @@ namespace Plasma.WebDriver
 
         public string Title
         {
-            get { throw new NotImplementedException(); }
+            get {  return browser.Title; }
         }
 
         public string PageSource
