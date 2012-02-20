@@ -11,23 +11,27 @@
  *
  * **********************************************************************************/
 using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Xml.XPath;
+using HtmlAgilityPack;
 
 namespace Plasma.WebDriver.Finders
 {
     public class ElementByXpathFinder : IElementFinder
     {
-        private readonly string _xpath;
+        private readonly string xpath;
 
         public ElementByXpathFinder(string xpath)
         {
-            _xpath = xpath;
+            this.xpath = xpath;
         }
 
-        public IEnumerable<XElement> FindWithin(XElement xmlElement)
+        public IEnumerable<HtmlNode> FindWithin(HtmlNode xmlElement)
         {
-            return xmlElement.XPathSelectElements(_xpath);
+            var nodes = xmlElement.SelectNodes(xpath);
+            if(nodes == null)
+            {
+                return new List<HtmlNode>();
+            }
+            return nodes;
         }
     }
 }

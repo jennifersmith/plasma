@@ -13,62 +13,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using HtmlAgilityPack;
 
 namespace Plasma.WebDriver.Finders
 {
     public class ElementByClassNameFinder : IElementFinder
     {
-        private readonly string _className;
+        private readonly string className;
 
         public ElementByClassNameFinder(string className)
         {
-            _className = className;
+            this.className = className;
         }
 
-        public IEnumerable<XElement> FindWithin(XElement xmlElement)
+        public IEnumerable<HtmlNode> FindWithin(HtmlNode htmlNodes)
         {
-             return GetElementsWithClassName(xmlElement);
+             return GetElementsWithClassName(htmlNodes);
         }
 
-        private IEnumerable<XElement> GetElementsWithClassName(XElement xmlElement)
+        private IEnumerable<HtmlNode> GetElementsWithClassName(HtmlNode htmlNodes)
         {
-            return
-                xmlElement.Descendants()
-                .Attributes("class")
-                .Where(x => x.Value.Split().Contains(_className))
-                .Select( x => x.Parent);
-        }
-    }
-
-
-    public class ElementByIdFinder
-    {
-        private readonly string _id;
-
-        public ElementByIdFinder(string id)
-        {
-            _id = id;
-        }
-
-        public IEnumerable<XElement> FindWithin(XElement xmlElement)
-        {
-            return xmlElement.Descendants().Attributes("id").Where(x => x.Value == _id).Select(x => x.Parent);
-        }
-    }
-
-
-    public class ElementByNameFinder
-    {
-        private readonly string _name;
-
-        public ElementByNameFinder(string name)
-        {
-            _name = name;
-        }
-
-        public IEnumerable<XElement> FindWithin(XElement xmlElement)
-        {
-            return xmlElement.Descendants().Attributes("name").Where(x => x.Value == _name).Select(x => x.Parent);
+            return htmlNodes.Descendants().Where(x => x.GetAttributeValue("class", string.Empty).Split().Contains(className));
         }
     }
 }

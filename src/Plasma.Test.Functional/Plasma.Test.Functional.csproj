@@ -18,7 +18,7 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>2.0</OldToolsVersion>
@@ -73,6 +73,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\WebDriver\WebDriver.dll</HintPath>
     </Reference>
+    <Reference Include="WebDriver.Support">
+      <HintPath>..\..\lib\WebDriver\WebDriver.Support.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Plasma.Core\Properties\AssemblyInfo.cs">
@@ -81,15 +84,15 @@
     <Compile Include="..\Plasma.Core\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="Basic\QueryString.cs" />
-    <Compile Include="Caching\OutputCache.cs" />
-    <Compile Include="Controls\BasicForm.cs" />
-    <Compile Include="Controls\FileUpload.cs" />
-    <Compile Include="Controls\LinkButton.cs" />
-    <Compile Include="Controls\TwoButtons.cs" />
-    <Compile Include="MasterPages\MasterPage.cs" />
-    <Compile Include="Redirect\Redirect.cs" />
-    <Compile Include="WebApplicationFixture.cs" />
+    <Compile Include="FindingElements\FindElementByNameTests.cs" />
+    <Compile Include="FindingElements\FindElementsByTagNameTests.cs" />
+    <Compile Include="FindingElements\FindElementsbyXPathTests.cs" />
+    <Compile Include="FindingElements\FindingElementsByClassTests.cs" />
+    <Compile Include="FindingElements\FindingElementsByIdTests.cs" />
+    <Compile Include="Forms\CheckBoxTests.cs" />
+    <Compile Include="Forms\TextBoxTests.cs" />
+    <Compile Include="Navigation\GotoPageTests.cs" />
+    <Compile Include="TestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Plasma.Core\Plasma.Core.csproj">
@@ -99,6 +102,10 @@
     <ProjectReference Include="..\Plasma.WebDriver\Plasma.WebDriver.csproj">
       <Project>{F514E455-98F9-44CA-8CA2-2FAF21E67591}</Project>
       <Name>Plasma.WebDriver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\web\Plasma.Sample.Web.Mvc\Plasma.Sample.Web.Mvc.csproj">
+      <Project>{EFDB142E-4D47-4370-830A-9F964DFD2042}</Project>
+      <Name>Plasma.Sample.Web.Mvc</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +124,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

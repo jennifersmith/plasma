@@ -10,11 +10,12 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
+using HtmlAgilityPack;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Internal;
 
@@ -22,11 +23,13 @@ namespace Plasma.WebDriver.Finders
 {
     public class ElementFinderContext : ISearchContext, IFindsByClassName, IFindsByXPath, IFindsByTagName, IFindsById, IFindsByName, IFindsByCssSelector
     {
-        private readonly XElement _xElement;
+        private readonly HtmlNode currentNode;
+        private readonly WebBrowser webBrowser;
 
-        public ElementFinderContext(XElement xElement)
+        public ElementFinderContext(HtmlNode currentNode, WebBrowser webBrowser)
         {
-            _xElement = xElement;
+            this.currentNode = currentNode;
+            this.webBrowser = webBrowser;
         }
 
         public IWebElement FindElement(By by)
@@ -38,7 +41,6 @@ namespace Plasma.WebDriver.Finders
         {
             return  by.FindElements(this);
         }
-
 
         public IWebElement FindElementByClassName(string className)
         {
@@ -52,9 +54,8 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByClassName(string className)
         {
-            return new ElementByClassNameFinder(className).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByClassNameFinder(className).FindWithin(currentNode));
         }
-
 
         public IWebElement FindElementById(string id)
         {
@@ -68,9 +69,8 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsById(string id)
         {
-            return new ElementByIdFinder(id).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByIdFinder(id).FindWithin(currentNode));
         }
-
 
         public IWebElement FindElementByName(string name)
         {
@@ -84,7 +84,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByName(string name)
         {
-            return new ElementByNameFinder(name).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByNameFinder(name).FindWithin(currentNode));
         }
 
         public IWebElement FindElementByTagName(string tagName)
@@ -99,7 +99,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByTagName(string tagName)
         {
-            return new ElementByTagNameFinder(tagName).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByTagNameFinder(tagName).FindWithin(currentNode));
         }
 
         public IWebElement FindElementByXPath(string xpath)
@@ -114,7 +114,7 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByXPath(string xpath)
         {
-            return new ElementByXpathFinder(xpath).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByXpathFinder(xpath).FindWithin(currentNode));
         }
 
         public IWebElement FindElementByCssSelector(string cssSelector)
@@ -129,7 +129,12 @@ namespace Plasma.WebDriver.Finders
 
         public ReadOnlyCollection<IWebElement> FindElementsByCssSelector(string cssSelector)
         {
-            return new ElementByCssSelectorFinder(cssSelector).FindWithin(_xElement).AsReadonlyCollection();
+            return AsReadonlyCollection(new ElementByCssSelectorFinder(cssSelector).FindWithin(currentNode));
+        }
+
+        private ReadOnlyCollection<IWebElement> AsReadonlyCollection(IEnumerable<HtmlNode> htmlNodes)
+        {
+            return new ReadOnlyCollection<IWebElement>(htmlNodes.Select(x => new HtmlElement(x, webBrowser)).Cast<IWebElement>().ToList());
         }
     }
 }
