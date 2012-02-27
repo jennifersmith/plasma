@@ -67,7 +67,6 @@
     <Compile Include="PlasmaDriver.cs" />
     <Compile Include="PlasmaNavigation.cs" />
     <Compile Include="PlasmaOptions.cs" />
-    <Compile Include="UIControlHelpers.cs" />
     <Compile Include="WebBrowser.cs" />
     <Compile Include="WebElementExtensions.cs" />
   </ItemGroup>
@@ -75,6 +74,10 @@
     <ProjectReference Include="..\Plasma.Core\Plasma.Core.csproj">
       <Project>{C10B09AA-98AC-4062-AF32-7E0DB602CCCD}</Project>
       <Name>Plasma.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plasma.Http\Plasma.Http.csproj">
+      <Project>{C6D24739-DDED-4AC3-BA28-03F4DE1699DB}</Project>
+      <Name>Plasma.Http</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

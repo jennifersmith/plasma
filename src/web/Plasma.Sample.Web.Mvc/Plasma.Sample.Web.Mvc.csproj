@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CookiesController.cs" />
     <Compile Include="Controllers\FindElementsByClassController.cs" />
     <Compile Include="Controllers\FindElementsByIdController.cs" />
     <Compile Include="Controllers\FindElementsByNameController.cs" />
@@ -74,6 +75,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Views\Cookies\Expire.aspx" />
+    <Content Include="Views\Cookies\Set.aspx" />
+    <Content Include="Views\Cookies\SetMany.aspx" />
+    <Content Include="Views\Cookies\Show.aspx" />
     <Content Include="Views\FindElementsByClass\Index.aspx" />
     <Content Include="Views\FindElementsById\Index.aspx" />
     <Content Include="Views\FindElementsByName\Index.aspx" />

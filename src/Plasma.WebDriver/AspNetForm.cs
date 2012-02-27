@@ -16,11 +16,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Net;
 using System.Text;
 using System.Web;
 using HtmlAgilityPack;
 using OpenQA.Selenium;
 using Plasma.Core;
+using Plasma.Http;
 
 namespace Plasma.WebDriver {
     public class AspNetForm : NameValueCollection {
@@ -62,13 +64,14 @@ namespace Plasma.WebDriver {
             set { _action = value; }
         }
 
-        public AspNetRequest GenerateFormPostRequest() {
+        public HttpPlasmaResponse GenerateFormPostRequest(HttpPlasmaClient client)
+        {
             // path and query string
-
+            var headers = new WebHeaderCollection();
             string path;
             string query;
 
-            int iQuery = _action.IndexOf('?');
+            var iQuery = _action.IndexOf('?');
 
             if (iQuery >= 0) {
                 path = _action.Substring(0, iQuery);
@@ -78,44 +81,27 @@ namespace Plasma.WebDriver {
                 path = _action;
                 query = null;
             }
-            
-            var headers = new List<KeyValuePair<string, string>>();
-
+           
             if (_fileControls.Count > 0)
             {
                 var multipartFormBody = new MultipartFormBody(this, _fileControls);
-                headers.Add(new KeyValuePair<string, string>("Content-Length", multipartFormBody.ContentLength));
-                headers.Add(new KeyValuePair<string, string>("Content-Type", multipartFormBody.ContentType));
-                return new AspNetRequest(path, null, query, "POST", headers, multipartFormBody.FormBodyData());
+                
+                headers.Add(HttpRequestHeader.ContentLength, multipartFormBody.ContentLength);
+                headers.Add(HttpRequestHeader.ContentType, multipartFormBody.ContentType);
+                var body = multipartFormBody.FormBodyData();
+                return client.Post(path, query, body, headers);
             }
 
-            // form collection as string
-
-            string formData = GenerateFormDataAsString();
-
-            // form data as query string or body (depending on method)
-
-            string verb;
-            byte[] formBody = null;
-
+            var formData = GenerateFormDataAsString();
+            
             if (string.Compare(_method, "GET", StringComparison.OrdinalIgnoreCase) == 0) {
-                verb = "GET";
-
-                // for GET requests form goes into query string
-                query = formData;
-            } 
-            else {
-                verb = "POST";
-
-                // for POST requests form goes into request body
-                formBody = Encoding.UTF8.GetBytes(formData);
-                headers.Add(new KeyValuePair<string, string>("Content-Length", formBody.Length.ToString()));
-                headers.Add(new KeyValuePair<string, string>("Content-Type", "application/x-www-form-urlencoded"));
+                return client.Get(path, formData);
             }
 
-            // create the request based on the above
-
-            return new AspNetRequest(path, null, query, verb, headers, formBody);
+            var formBody = Encoding.UTF8.GetBytes(formData);
+            headers.Add(HttpRequestHeader.ContentLength, formBody.Length.ToString());
+            headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
+            return client.Post(path, query, formBody, headers);
         }
 
         private string GenerateFormDataAsString() {

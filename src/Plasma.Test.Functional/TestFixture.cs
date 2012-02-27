@@ -21,12 +21,14 @@ namespace Plasma.Test.Functional
         private static AspNetApplication _appInstance;
         private static PlasmaDriver _driver;
 
+        public static AspNetApplication Application
+        {
+            get { return _appInstance; }
+        }
+
         public static PlasmaDriver Driver 
         {
-            get
-            {
-                return _driver;
-            }
+            get { return _driver; }
         }
 
         [SetUp]

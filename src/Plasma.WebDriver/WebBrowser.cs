@@ -11,63 +11,62 @@
  *
  * **********************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Web;
 using HtmlAgilityPack;
 using OpenQA.Selenium;
 using Plasma.Core;
+using Plasma.Http;
+using Cookie = OpenQA.Selenium.Cookie;
 
 namespace Plasma.WebDriver
 {
     public class WebBrowser : ISearchContext
     {
-        private IList<HttpCookie> httpCookies;
-        private readonly AspNetApplication aspNetApplication;
-        private AspNetResponse response;
+        private readonly HttpPlasmaClient httpClient;
+        private HttpPlasmaResponse response;
         private IWebElement htmlElement;
+        
 
         public WebBrowser(AspNetApplication aspNetApplication)
         {
-            this.aspNetApplication = aspNetApplication;
-            httpCookies = new List<HttpCookie>();
+            httpClient = new HttpPlasmaClient(aspNetApplication);
         }
 
         public string PageSource()
         {
-            return response.ToEntireResponseString();
+            return response.GetBody();
         }
 
         public void AddCookie(Cookie cookie)
         {
-            httpCookies.Add(new HttpCookie(cookie.Name, cookie.Value));
+            httpClient.AddCookie(new System.Net.Cookie(cookie.Name, cookie.Value));
         }
 
         public void DeleteAllCookies()
         {
-            httpCookies = new List<HttpCookie>();
+            httpClient.ClearCookies();
         }
 
         public void Get(string url)
         {
-            ProcessRequest(url);
-            ExtractCookies();
-            FollowAnyRedirect();
+            response = httpClient.Get(url);
             ParseHtmlBody();
         }
 
         public void Post(AspNetForm form)
         {
-            ProcessRequest(form.GenerateFormPostRequest());
-            ExtractCookies();
-            FollowAnyRedirect();
+            response = form.GenerateFormPostRequest(httpClient);
             ParseHtmlBody();
         }
 
         public ReadOnlyCollection<Cookie> GetAllCookies()
         {
-            return httpCookies.Select(x => new Cookie(x.Name, x.Value, x.Path, x.Expires)).ToList().AsReadOnly();
+            return httpClient
+                .GetAllCookies()
+                .Select(x => new Cookie(x.Name, x.Value, x.Path, x.Expires))
+                .ToList()
+                .AsReadOnly();
         }
 
         public String Title
@@ -77,7 +76,7 @@ namespace Plasma.WebDriver
 
         public string RequestVirtualPath
         {
-            get { return response.RequestVirtualPath; }
+            get { return response.VirtualPath; }
         }
 
         public string QueryString
@@ -121,75 +120,8 @@ namespace Plasma.WebDriver
             {
                 throw new ApplicationException(
                     string.Format("Page {0}?{1} contained no body and you attempted to find an element in it.",
-                                  response.RequestVirtualPath, response.QueryString));
+                                  response.VirtualPath, response.QueryString));
             }
-        }
-
-        private void ExtractCookies()
-        {
-            if (response.Cookies == null) return;
-
-            foreach (var cookie in response.Cookies)
-            {
-                if (!httpCookies.Any(x => x.Name == cookie.Name))
-                {
-                    httpCookies.Add(cookie);
-                }
-                else
-                {
-                    httpCookies = httpCookies.Where(x => x.Name != cookie.Name).ToList();
-
-                    if (cookie.Expires > DateTime.Now)
-                    {
-                        httpCookies.Add(cookie);
-                    }
-                }
-            }
-        }
-
-        private void FollowAnyRedirect()
-        {
-            while (response.Status == 302 || response.Status == 301)
-            {
-                FollowRedirectInResponse();
-                ExtractCookies();
-            }
-        }
-
-        private void FollowRedirectInResponse()
-        {
-            if (response.Status != 302 && response.Status != 301) 
-            {
-                throw new Exception("Expected Redirect status (302), Got " + response.Status);
-            }
-
-            var location = response.Headers.Where(x => x.Key == "Location").First().Value;
-            var locationUri = new Uri(location, UriKind.RelativeOrAbsolute);
-            var relativeLocation = locationUri.IsAbsoluteUri ? locationUri.PathAndQuery : location;
-            ProcessRequest(relativeLocation);
-        }
-
-        private void ProcessRequest(string url)
-        {
-            var request = new AspNetRequest(url);
-            ProcessRequest(request);
-        }
-
-        private void ProcessRequest(AspNetRequest request)
-        {
-            AddHostHeaderToRequest(request);
-            AddCookiesToRequest(request);
-            response = aspNetApplication.ProcessRequest(request);
-        }
-
-        private void AddCookiesToRequest(AspNetRequest request)
-        {
-            if (httpCookies != null) request.AddCookies(httpCookies);
-        }
-
-        private static void AddHostHeaderToRequest(AspNetRequest request)
-        {
-            request.Headers.Add(new KeyValuePair<string, string>("Host", "localhost"));
         }
 
         private void ParseHtmlBody()
@@ -199,7 +131,7 @@ namespace Plasma.WebDriver
             var document = new HtmlDocument();
             try
             {
-                document.LoadHtml(response.BodyAsString);
+                document.LoadHtml(response.GetBody());
                 htmlElement = new HtmlElement(document.DocumentNode, this);
             }
             catch (Exception)

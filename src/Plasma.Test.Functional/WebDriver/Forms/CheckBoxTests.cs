@@ -2,7 +2,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using Plasma.WebDriver;
 
-namespace Plasma.Test.Functional.Forms
+namespace Plasma.Test.Functional.WebDriver.Forms
 {
     [TestFixture]
     public class CheckBoxTests

@@ -1,4 +1,4 @@
-﻿/* **********************************************************************************
+/* **********************************************************************************
  *
  * Copyright 2010 ThoughtWorks, Inc.  
  * ThoughtWorks provides the software "as is" without warranty of any kind, either express or implied, including but not limited to, 
@@ -10,12 +10,13 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+
 using System.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using Plasma.WebDriver;
 
-namespace Plasma.Test.Functional.FindingElements
+namespace Plasma.Test.Functional.WebDriver.FindingElements
 {
     [TestFixture]
     public class FindingElementsByIdTests

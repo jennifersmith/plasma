@@ -84,20 +84,26 @@
     <Compile Include="..\Plasma.Core\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="FindingElements\FindElementByNameTests.cs" />
-    <Compile Include="FindingElements\FindElementsByTagNameTests.cs" />
-    <Compile Include="FindingElements\FindElementsbyXPathTests.cs" />
-    <Compile Include="FindingElements\FindingElementsByClassTests.cs" />
-    <Compile Include="FindingElements\FindingElementsByIdTests.cs" />
-    <Compile Include="Forms\CheckBoxTests.cs" />
-    <Compile Include="Forms\TextBoxTests.cs" />
-    <Compile Include="Navigation\GotoPageTests.cs" />
+    <Compile Include="Http\CookieTest.cs" />
+    <Compile Include="Http\GetRequestTest.cs" />
     <Compile Include="TestFixture.cs" />
+    <Compile Include="WebDriver\FindingElements\FindElementByNameTests.cs" />
+    <Compile Include="WebDriver\FindingElements\FindElementsByTagNameTests.cs" />
+    <Compile Include="WebDriver\FindingElements\FindElementsbyXPathTests.cs" />
+    <Compile Include="WebDriver\FindingElements\FindingElementsByClassTests.cs" />
+    <Compile Include="WebDriver\FindingElements\FindingElementsByIdTests.cs" />
+    <Compile Include="WebDriver\Forms\CheckBoxTests.cs" />
+    <Compile Include="WebDriver\Forms\TextBoxTests.cs" />
+    <Compile Include="WebDriver\Navigation\GotoPageTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Plasma.Core\Plasma.Core.csproj">
       <Project>{C10B09AA-98AC-4062-AF32-7E0DB602CCCD}</Project>
       <Name>Plasma.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plasma.Http\Plasma.Http.csproj">
+      <Project>{C6D24739-DDED-4AC3-BA28-03F4DE1699DB}</Project>
+      <Name>Plasma.Http</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plasma.WebDriver\Plasma.WebDriver.csproj">
       <Project>{F514E455-98F9-44CA-8CA2-2FAF21E67591}</Project>
