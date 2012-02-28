@@ -95,6 +95,7 @@
     <Compile Include="WebDriver\Forms\CheckBoxTests.cs" />
     <Compile Include="WebDriver\Forms\RadioButtonTests.cs" />
     <Compile Include="WebDriver\Forms\TextBoxTests.cs" />
+    <Compile Include="WebDriver\Navigation\FollowingLinkTests.cs" />
     <Compile Include="WebDriver\Navigation\GotoPageTests.cs" />
     <Compile Include="WebDriver\Navigation\TitleTests.cs" />
   </ItemGroup>

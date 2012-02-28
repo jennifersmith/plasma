@@ -23,6 +23,11 @@ namespace Plasma.Sample.Web.Mvc.Controllers
             return View();
         }
 
+        public ActionResult OtherPage()
+        {
+            return View();
+        }
+
         public ActionResult ThreeOhOne()
         {
             return new ThreeOhOneRedirectResult("Default", new RouteValueDictionary {{"Controller", "GotoPage"}, {"Action", "Index"}});

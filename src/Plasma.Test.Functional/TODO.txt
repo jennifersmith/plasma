@@ -1,7 +1,6 @@
 ﻿* Currently Url property on PlasmaDriver returns only the path and ignores query string. Write tests to drive out functionality.
 * What should happen when FindElement gets multiple things. should it error or return the first thing ?
 * Viewing Html of an Element
-* Clicking on links
 * Clicking on an options element
 * Getting the title of a page
 
