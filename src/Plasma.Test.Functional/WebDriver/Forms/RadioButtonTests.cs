@@ -1,4 +1,4 @@
-/* **********************************************************************************
+﻿/* **********************************************************************************
  *
  * Copyright 2010 ThoughtWorks, Inc.  
  * ThoughtWorks provides the software "as is" without warranty of any kind, either express or implied, including but not limited to, 
@@ -17,7 +17,7 @@ using Plasma.WebDriver;
 namespace Plasma.Test.Functional.WebDriver.Forms
 {
     [TestFixture]
-    public class CheckBoxTests
+    public class RadioButtonTests
     {
         private PlasmaDriver driver;
 
@@ -25,23 +25,26 @@ namespace Plasma.Test.Functional.WebDriver.Forms
         public void Setup()
         {
             driver = TestFixture.Driver;
-            driver.Navigate().GoToUrl("/FormWithCheckBox/");
+            driver.Navigate().GoToUrl("/FormWithRadioButton/");
         }
 
         [Test]
-        public void ShouldBeAbleToCheckACheckBox()
+        public void ShouldBeAbleToCheckARadioButton()
         {
-            driver.FindElement(By.Name("checkBox")).Click();
+            driver.FindElement(By.Id("radioButton1")).Click();
             driver.FindElement(By.TagName("form")).Submit();
-            Assert.That(driver.FindElement(By.Id("checkBoxValue")).Text, Is.StringContaining("True"), driver.PageSource);
+            Assert.That(driver.FindElement(By.Id("radioButtonValue")).Text, Is.StringContaining("One"), driver.PageSource);
         }
 
-        [Test, Ignore("This is yet to be implemented. Found this edge case while writing tests.")]
-        public void ShouldBeAbleToClearTheValue()
+        [Test]
+        public void ShouldBeAbletoCheckASecondRadioButtonWhenOneIsAlreadyChecked()
         {
-            driver.FindElement(By.Name("checkBox")).Click();
-            driver.FindElement(By.Name("checkBox")).Clear();
-            Assert.That(driver.FindElement(By.Name("checkBox")).Selected, Is.False, driver.PageSource);            
+            driver.FindElement(By.Id("radioButton1")).Click();
+            driver.FindElement(By.Id("radioButton2")).Click();
+            driver.FindElement(By.TagName("form")).Submit();
+
+            Assert.That(driver.FindElement(By.Id("radioButton1")).Selected, Is.False);
+            Assert.That(driver.FindElement(By.Id("radioButtonValue")).Text, Is.StringContaining("Two"), driver.PageSource);
         }
     }
 }

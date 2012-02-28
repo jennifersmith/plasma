@@ -10,20 +10,18 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using NUnit.Framework;
 
-using System.Web.Mvc;
-
-namespace Plasma.Sample.Web.Mvc.Controllers
+namespace Plasma.Test.Functional.WebDriver.Navigation
 {
-    public class FindElementsByNameController : Controller
+    [TestFixture]
+    public class TitleTests
     {
-        //
-        // GET: /FindElementsByName/
-
-        public ActionResult Index()
+        [Test]
+        public void ShouldBeAbleToGetTheTitleOfThePage()
         {
-            return View();
+            TestFixture.Driver.Navigate().GoToUrl("/GotoPage");
+            Assert.That(TestFixture.Driver.Title, Is.StringContaining("GotoPage"));
         }
-
     }
 }

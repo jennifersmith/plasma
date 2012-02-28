@@ -10,20 +10,24 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-
 using System.Web.Mvc;
 
 namespace Plasma.Sample.Web.Mvc.Controllers
 {
-    public class FindElementsByNameController : Controller
+    public class FormWithRadioButtonController : Controller
     {
         //
-        // GET: /FindElementsByName/
+        // GET: /FormWithRadioButton/
 
         public ActionResult Index()
         {
             return View();
         }
 
+        public ActionResult Show(string radioButton)
+        {
+            ViewData["value"] = radioButton;
+            return View("Index");
+        }
     }
 }
