@@ -16,10 +16,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Net;
 using System.Text;
 using System.Web;
+using HtmlAgilityPack;
 using OpenQA.Selenium;
 using Plasma.Core;
+using Plasma.Http;
 
 namespace Plasma.WebDriver {
     public class AspNetForm : NameValueCollection {
@@ -27,9 +30,11 @@ namespace Plasma.WebDriver {
         private readonly HashSet<string> _fileControls = new HashSet<string>(); 
         private string _action;
         private string _method;
+        private HtmlNode clickedElement;
 
-        internal AspNetForm(string requestVirtualPath, string queryString, IWebElement formWebElement) {
+        internal AspNetForm(string requestVirtualPath, string queryString, IWebElement formWebElement, HtmlNode clickedElement) {
             _formWebElement = formWebElement;
+            this.clickedElement = clickedElement;
             // form's method
             string formMethod = formWebElement.GetAttribute("method");
             _method = string.IsNullOrEmpty(formMethod) ? "POST" : formMethod;
@@ -59,13 +64,14 @@ namespace Plasma.WebDriver {
             set { _action = value; }
         }
 
-        public AspNetRequest GenerateFormPostRequest() {
+        public HttpPlasmaResponse GenerateFormPostRequest(HttpPlasmaClient client)
+        {
             // path and query string
-
+            var headers = new WebHeaderCollection();
             string path;
             string query;
 
-            int iQuery = _action.IndexOf('?');
+            var iQuery = _action.IndexOf('?');
 
             if (iQuery >= 0) {
                 path = _action.Substring(0, iQuery);
@@ -75,44 +81,27 @@ namespace Plasma.WebDriver {
                 path = _action;
                 query = null;
             }
-            
-            var headers = new List<KeyValuePair<string, string>>();
-
+           
             if (_fileControls.Count > 0)
             {
                 var multipartFormBody = new MultipartFormBody(this, _fileControls);
-                headers.Add(new KeyValuePair<string, string>("Content-Length", multipartFormBody.ContentLength));
-                headers.Add(new KeyValuePair<string, string>("Content-Type", multipartFormBody.ContentType));
-                return new AspNetRequest(path, null, query, "POST", headers, multipartFormBody.FormBodyData());
+                
+                headers.Add(HttpRequestHeader.ContentLength, multipartFormBody.ContentLength);
+                headers.Add(HttpRequestHeader.ContentType, multipartFormBody.ContentType);
+                var body = multipartFormBody.FormBodyData();
+                return client.Post(path, query, body, headers);
             }
 
-            // form collection as string
-
-            string formData = GenerateFormDataAsString();
-
-            // form data as query string or body (depending on method)
-
-            string verb;
-            byte[] formBody = null;
-
+            var formData = GenerateFormDataAsString();
+            
             if (string.Compare(_method, "GET", StringComparison.OrdinalIgnoreCase) == 0) {
-                verb = "GET";
-
-                // for GET requests form goes into query string
-                query = formData;
-            } 
-            else {
-                verb = "POST";
-
-                // for POST requests form goes into request body
-                formBody = Encoding.UTF8.GetBytes(formData);
-                headers.Add(new KeyValuePair<string, string>("Content-Length", formBody.Length.ToString()));
-                headers.Add(new KeyValuePair<string, string>("Content-Type", "application/x-www-form-urlencoded"));
+                return client.Get(path, formData);
             }
 
-            // create the request based on the above
-
-            return new AspNetRequest(path, null, query, verb, headers, formBody);
+            var formBody = Encoding.UTF8.GetBytes(formData);
+            headers.Add(HttpRequestHeader.ContentLength, formBody.Length.ToString());
+            headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
+            return client.Post(path, query, formBody, headers);
         }
 
         private string GenerateFormDataAsString() {
@@ -175,7 +164,8 @@ namespace Plasma.WebDriver {
             if (NodeNameIs(node, "input")) {
                 string type = node.GetAttribute("type");
 
-                if (StringsEqual(type, "text") || StringsEqual(type, "hidden")) {
+                if (StringsEqual(type, "text") || StringsEqual(type, "password") || StringsEqual(type, "hidden"))
+                {
                     AddFieldValue(node, node.GetAttribute("value"));
                 } 
                 else if (StringsEqual(type, "checkbox")) {
@@ -191,9 +181,10 @@ namespace Plasma.WebDriver {
                 else if (StringsEqual(type, "file")) {
                     _fileControls.Add(node.GetAttribute("name"));
                     AddFieldValue(node, node.GetAttribute("value"));
-                }  
-                else if (StringsEqual(type, "submit")) {
-                    //                    AddFieldValue(node, node.GetAttribute("value"));
+                }
+                else if (StringsEqual(type, "submit") && node.GetAttribute("name") == GetClickedElementAttribute("name"))
+                {
+                    AddFieldValue(node, node.GetAttribute("value"));
                 }
             }
             else if (NodeNameIs(node, "textarea")) {
@@ -206,6 +197,14 @@ namespace Plasma.WebDriver {
                     }
                 }
             }
+            else if (NodeNameIs(node, "button"))
+            {
+                var type = node.GetAttribute("type");
+                if (StringsEqual(type, "submit") && node.GetAttribute("name") == GetClickedElementAttribute("name"))
+                {
+                    AddFieldValue(node, node.GetAttribute("value"));
+                }
+            }
             else {
                 // not a field
                 return false;
@@ -213,6 +212,11 @@ namespace Plasma.WebDriver {
 
             // field processed
             return true;
+        }
+
+        private string GetClickedElementAttribute(string name)
+        {
+            return clickedElement.GetAttributeValue(name, string.Empty);
         }
 
         private void AddFieldValue(IWebElement node, string fieldValue) {

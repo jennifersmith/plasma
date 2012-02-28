@@ -10,10 +10,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Xml.Linq;
+
 using OpenQA.Selenium;
 
 namespace Plasma.WebDriver
@@ -24,11 +21,6 @@ namespace Plasma.WebDriver
         public static string InnerHtml(this IWebElement webElement)
         {
             return ((HtmlElement) webElement).InnerHtml;
-        }
-
-        public static ReadOnlyCollection<IWebElement> AsReadonlyCollection(this IEnumerable<XElement> xmlElements)
-        {
-            return new ReadOnlyCollection<IWebElement>(xmlElements.Select(x => new HtmlElement(x)).Cast<IWebElement>().ToList());
         }
     }
 }

@@ -66,6 +66,14 @@ namespace Plasma.Core
             }
         }
 
+        public IEnumerable<string> CookieHeader
+        {
+            get
+            {
+                return _headers.Where(x => x.Key == "Set-Cookie").Select(x => x.Value);
+            }
+        }
+
         public byte[] Body {
             get { return _body; }
         }

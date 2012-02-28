@@ -12,22 +12,22 @@
  * **********************************************************************************/
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
+using HtmlAgilityPack;
 
 namespace Plasma.WebDriver.Finders
 {
     public class ElementByTagNameFinder : IElementFinder
     {
-        private readonly string _name;
+        private readonly string name;
 
         public ElementByTagNameFinder(string name)
         {
-            _name = name;
+            this.name = name;
         }
 
-        public IEnumerable<XElement> FindWithin(XElement xmlElement)
+        public IEnumerable<HtmlNode> FindWithin(HtmlNode xmlElement)
         {
-            return xmlElement.Descendants().Where(x => x.Name == _name);
+            return xmlElement.Descendants().Where(x => x.Name.ToLower() == name.ToLower());
         }
     }
 }

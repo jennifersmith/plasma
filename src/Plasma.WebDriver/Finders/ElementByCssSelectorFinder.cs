@@ -13,19 +13,17 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using HtmlAgilityPack;
 
 namespace Plasma.WebDriver.Finders
 {
     public class ElementByCssSelectorFinder : IElementFinder
     {
-        private readonly string _cssSelector;
-
         public ElementByCssSelectorFinder(string cssSelector)
         {
-            _cssSelector = cssSelector;
         }
 
-        public IEnumerable<XElement> FindWithin(XElement xmlElement)
+        public IEnumerable<HtmlNode> FindWithin(HtmlNode htmlNode)
         {
             throw new NotImplementedException("We have not yet implemented CSS selectors - coming soon");
         }

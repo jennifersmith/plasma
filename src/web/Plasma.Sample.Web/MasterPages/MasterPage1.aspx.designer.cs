@@ -7,8 +7,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-
-
 public partial class MasterPages_MasterPage1 {
     
     /// <summary>
