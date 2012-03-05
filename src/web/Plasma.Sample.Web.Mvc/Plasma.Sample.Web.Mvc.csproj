@@ -15,6 +15,7 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +57,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CookiesController.cs" />
+    <Compile Include="Controllers\FindElementsByClassController.cs" />
+    <Compile Include="Controllers\FindElementsByIdController.cs" />
+    <Compile Include="Controllers\FindElementsByNameController.cs" />
+    <Compile Include="Controllers\FindElementsByTagNameController.cs" />
+    <Compile Include="Controllers\FindElementsByXPathController.cs" />
+    <Compile Include="Controllers\FormWithCheckBoxController.cs" />
+    <Compile Include="Controllers\FormWithRadioButtonController.cs" />
+    <Compile Include="Controllers\FormWithTextBoxController.cs" />
+    <Compile Include="Controllers\GotoPageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -65,6 +76,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Views\Cookies\Expire.aspx" />
+    <Content Include="Views\Cookies\Set.aspx" />
+    <Content Include="Views\Cookies\SetMany.aspx" />
+    <Content Include="Views\Cookies\Show.aspx" />
+    <Content Include="Views\FindElementsByClass\Index.aspx" />
+    <Content Include="Views\FindElementsById\Index.aspx" />
+    <Content Include="Views\FindElementsByName\Index.aspx" />
+    <Content Include="Views\FindElementsByTagName\Index.aspx" />
+    <Content Include="Views\FindElementsByXPath\Index.aspx" />
+    <Content Include="Views\FormWithCheckBox\Index.aspx" />
+    <Content Include="Views\FormWithRadioButton\Index.aspx" />
+    <Content Include="Views\FormWithTextBox\Index.aspx" />
+    <Content Include="Views\GotoPage\Index.aspx" />
+    <Content Include="Views\GotoPage\OtherPage.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -85,14 +110,8 @@
     <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
-    <Content Include="Views\Account\ChangePassword.aspx" />
-    <Content Include="Views\Account\ChangePasswordSuccess.aspx" />
-    <Content Include="Views\Account\LogOn.aspx" />
-    <Content Include="Views\Account\Register.aspx" />
-    <Content Include="Views\Home\About.aspx" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Shared\Error.aspx" />
-    <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Shared\Site.Master" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

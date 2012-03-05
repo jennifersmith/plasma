@@ -11,11 +11,11 @@
  *
  * **********************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
-using System.Xml.Linq;
+using System.Net;
+using HtmlAgilityPack;
 using OpenQA.Selenium;
 using Plasma.WebDriver.Finders;
 
@@ -23,115 +23,88 @@ namespace Plasma.WebDriver
 {
     public class HtmlElement : IWebElement
     {
-        private readonly XElement _xElement;
+        private readonly HtmlNode currentNode;
+        private readonly WebBrowser webBrowser;
 
-        public HtmlElement(XElement xElement)
+        public HtmlElement(HtmlNode currentNode, WebBrowser webBrowser)
         {
-            _xElement = xElement;
+            this.currentNode = currentNode;
+            this.webBrowser = webBrowser;
         }
 
         public string InnerHtml
         {
-            get { return _xElement.Nodes().Select(x => x.ToString()).Aggregate(String.Concat); }
+            get { return currentNode.InnerHtml; }
         }
-
-
 
         public IWebElement FindElement(By mechanism)
         {
-            return mechanism.FindElement(new ElementFinderContext(_xElement));
+            return mechanism.FindElement(new ElementFinderContext(currentNode, webBrowser));
         }
 
         public ReadOnlyCollection<IWebElement> FindElements(By mechanism)
         {
-            return mechanism.FindElements(new ElementFinderContext(_xElement));
+            return mechanism.FindElements(new ElementFinderContext(currentNode, webBrowser));
         }
-
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            if ((TagName == "textarea"))
+            {
+                currentNode.InnerHtml = string.Empty;
+            }
+            else
+            {
+                SetAttribute("value", string.Empty);
+            }
         }
-
 
         public void SendKeys(string text)
         {
-            SetAttribute("value", text);
+            if ((TagName == "textarea"))
+            {
+                currentNode.InnerHtml = text;
+            }
+            else
+            {
+                SetAttribute("value", text);
+            }
         }
 
         public void Submit()
         {
-            throw new NotImplementedException();
+            HandleFormSubmit();
         }
 
         public void Click()
         {
-            throw new NotImplementedException();
+            HandleSelectingElements();
+            HandleClickingElements();
         }
 
-        public void Select()
+        private bool ElementIsNotSelected()
         {
-            if (_xElement.Name == "option")
-            {
-                SelectOption();
-            }
-            else
-            {
-                SelectCheckBox();
-            }
-        }
-
-        private void SelectCheckBox()
-        {
-            if (_xElement.Attribute("checked")!=null)
-            {
-                XElement documentElement = _xElement.Document.Root;
-                IEnumerable<IWebElement> allElementsWithName =
-                    new HtmlElement(documentElement).FindElements(By.Name(GetAttribute("name")));
-                foreach (HtmlElement element in allElementsWithName)
-                {
-                    element.DeleteAttribute("checked");
-                }
-                SetAttribute("checked", "checked");
-            }
-        }
-
-        private void SelectOption()
-        {
-            if (!_xElement.Attributes().Any(x=>x.Name=="selected"))
-            {
-                var selectElement = FindElement(By.XPath(string.Format("ancestor::{0}", "select")));
-                var allOptionElements = selectElement.FindElements(By.TagName("option"));
-                foreach (HtmlElement element in allOptionElements)
-                {
-                    element.DeleteAttribute("selected");
-                }
-                SetAttribute("selected", "selected");
-            }
+            return currentNode.GetAttributeValue("selected", null) == null;
         }
 
         public string GetAttribute(string attributeName)
         {
-            return _xElement.Attributes(attributeName).Select(x => x.Value).FirstOrDefault();
+            return WebUtility.HtmlDecode(currentNode.GetAttributeValue(attributeName, string.Empty));
         }
 
-        public bool Toggle()
+        public string GetCssValue(string propertyName)
         {
-            throw new NotImplementedException();
-        }
-
-        public string GetCssValue(string propertyName) {
             throw new NotImplementedException();
         }
 
         public string TagName
         {
-            get { return _xElement.Name.ToString(); }
+            get { return currentNode.Name; }
         }
 
         public string Text
         {
-            get { return _xElement.Value.Trim(); }
+            get { return WebUtility.HtmlDecode(currentNode.InnerText.Trim(Environment.NewLine.ToCharArray()).Trim()); }
         }
 
         public string Value
@@ -149,16 +122,135 @@ namespace Plasma.WebDriver
             get { return !string.IsNullOrEmpty(GetAttribute("checked")) || !string.IsNullOrEmpty(GetAttribute("selected")); }
         }
 
-        public Point Location {
+        public Point Location
+        {
             get { throw new NotImplementedException(); }
         }
 
-        public Size Size {
+        public Size Size
+        {
             get { throw new NotImplementedException(); }
         }
 
-        public bool Displayed {
-            get { throw new NotImplementedException(); }
+        public bool Displayed
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        private void HandleClickingElements()
+        {
+            switch (TagName)
+            {
+                case "a":
+                    HandleClickOnAnchorElement();
+                    break;
+                case "button":
+                    HandleClickOnInputButtonElements();
+                    break;
+                case "input":
+                    HandleClickOnInputButtonElements();
+                    break;
+            }
+        }
+
+        private void HandleClickOnAnchorElement()
+        {
+            webBrowser.Get(GetAttribute("href"));
+        }
+
+        private void HandleSelectingElements()
+        {
+            switch (TagName)
+            {
+                case "option":
+                    HandleSelectingOptionElement();
+                    break;
+                case "input":
+                    HandleSelecingInputElements();
+                    break;
+            }
+        }
+
+        private void HandleClickOnInputButtonElements()
+        {
+            var inputType = GetAttribute("type");
+            switch (inputType)
+            {
+                case "submit":
+                    HandleFormSubmit();
+                    break;
+                case "button":
+                    HandleFormSubmit();
+                    break;
+            }
+        }
+
+        private void HandleSelecingInputElements()
+        {
+            var inputType = GetAttribute("type");
+            switch (inputType)
+            {
+                case "checkbox":
+                    HandleSelectingCheckBoxElement();
+                    break;
+                case "radio":
+                    SelectRadioButton();
+                    break;
+            }
+        }
+
+        private void HandleFormSubmit()
+        {
+            webBrowser.Post(GetParentForm());
+        }
+
+        private void HandleSelectingOptionElement()
+        {
+            if (ElementIsNotSelected())
+            {
+                var selectElement = new HtmlElement(currentNode.ParentNode, webBrowser);
+                var allOptionElements = selectElement.FindElements(By.TagName("option")).Cast<HtmlElement>();
+                foreach (var element in allOptionElements)
+                {
+                    element.DeleteAttribute("selected");
+                }
+                SetAttribute("selected", "selected");
+            }
+        }
+
+        private void SelectRadioButton()
+        {
+            var checkedState = currentNode.GetAttributeValue("checked", null);
+            if (string.IsNullOrEmpty(checkedState))
+            {
+                var documentNode = new HtmlElement(currentNode.OwnerDocument.DocumentNode, webBrowser);
+                var allRadioButtons = documentNode.FindElements(By.Name(GetAttribute("name")));
+                foreach (HtmlElement element in allRadioButtons)
+                {
+                    element.DeleteAttribute("checked");
+                }
+
+                SetAttribute("checked", "checked");
+                return;
+            }
+            DeleteAttribute("checked");
+        }
+
+        private void HandleSelectingCheckBoxElement()
+        {
+            if (currentNode.GetAttributeValue("checked", null) == null)
+            {
+                SetAttribute("checked", "checked");
+            }
+        }
+
+        private AspNetForm GetParentForm()
+        {
+            var parentFormElement = webBrowser.GetParentFormElement(currentNode);
+            return new AspNetForm(webBrowser.RequestVirtualPath, webBrowser.QueryString, parentFormElement, currentNode);
         }
 
         private static string RemoveXhtmlNamespaces(string html)
@@ -172,7 +264,7 @@ namespace Plasma.WebDriver
 
         private void DeleteAttribute(string attributeName)
         {
-            _xElement.Attributes(attributeName).Remove();
+            currentNode.Attributes.Remove(attributeName);
         }
 
         public void Dispose()
@@ -181,13 +273,13 @@ namespace Plasma.WebDriver
 
         public override string ToString()
         {
-            return RemoveXhtmlNamespaces(_xElement.ToString());
+            return RemoveXhtmlNamespaces(currentNode.ToString());
         }
 
         private void SetAttribute(string attributeName, string attributeValue)
         {
-            _xElement.SetAttributeValue(attributeName, attributeValue);
+            currentNode.SetAttributeValue(attributeName, attributeValue);
         }
-        
+
     }
 }

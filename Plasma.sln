@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Sample.Web.Mvc", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Test.Functional", "src\Plasma.Test.Functional\Plasma.Test.Functional.csproj", "{30A63F7D-03DA-4DCC-8C36-D2F116741548}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Http", "src\Plasma.Http\Plasma.Http.csproj", "{C6D24739-DDED-4AC3-BA28-03F4DE1699DB}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Plasma.vsmdi
@@ -51,6 +53,10 @@ Global
 		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30A63F7D-03DA-4DCC-8C36-D2F116741548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6D24739-DDED-4AC3-BA28-03F4DE1699DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6D24739-DDED-4AC3-BA28-03F4DE1699DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6D24739-DDED-4AC3-BA28-03F4DE1699DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6D24739-DDED-4AC3-BA28-03F4DE1699DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

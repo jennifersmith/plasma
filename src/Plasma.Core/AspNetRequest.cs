@@ -64,8 +64,12 @@ namespace Plasma.Core
             {
                 stringBuilder.Append(string.Format("{0}={1}; ", cookie.Name, cookie.Value));
             }
+            AddCookieHeader(stringBuilder.ToString());
+        }
 
-            Headers.Add(new KeyValuePair<string, string>("Cookie", stringBuilder.ToString()));
+        public void AddCookieHeader(string value)
+        {
+            Headers.Add(new KeyValuePair<string, string>("Cookie", value));
         }
     }
 }

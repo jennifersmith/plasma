@@ -12,11 +12,12 @@
  * **********************************************************************************/
 using System.Collections.Generic;
 using System.Xml.Linq;
+using HtmlAgilityPack;
 
 namespace Plasma.WebDriver.Finders
 {
     public interface IElementFinder
     {
-        IEnumerable<XElement> FindWithin(XElement xmlElement);
+        IEnumerable<HtmlNode> FindWithin(HtmlNode htmlNodes);
     }
 }
