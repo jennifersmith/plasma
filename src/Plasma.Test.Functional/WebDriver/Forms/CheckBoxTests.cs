@@ -36,6 +36,14 @@ namespace Plasma.Test.Functional.WebDriver.Forms
             Assert.That(driver.FindElement(By.Id("checkBoxValue")).Text, Is.StringContaining("True"), driver.PageSource);
         }
 
+        [Test]
+        public void ShouldBeAbleToUnselect()
+        {
+            driver.FindElement(By.Name("checkBox")).Click();
+            driver.FindElement(By.Name("checkBox")).Click();
+            Assert.That(driver.FindElement(By.Name("checkBox")).Selected, Is.False, driver.PageSource);
+        }
+
         [Test, Ignore("This is yet to be implemented. Found this edge case while writing tests.")]
         public void ShouldBeAbleToClearTheValue()
         {
