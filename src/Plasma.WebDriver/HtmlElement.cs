@@ -241,9 +241,14 @@ namespace Plasma.WebDriver
 
         private void HandleSelectingCheckBoxElement()
         {
-            if (currentNode.GetAttributeValue("checked", null) == null)
+            var attributeValue = currentNode.GetAttributeValue("checked", null);
+            if (attributeValue == null)
             {
                 SetAttribute("checked", "checked");
+            }
+            else
+            {
+                DeleteAttribute("checked");    
             }
         }
 
