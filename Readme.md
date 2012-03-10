@@ -171,17 +171,9 @@ Plasma is a standalone library that does not depend on any particular testing fr
 
 Plasma tests remove the need to use the browser or even a real server in the tests. While this makes the tests very reliable and lightening-fast, you cannot test any JavaScript behaviour. A browser automation library such as Selenium/Webdriver's Firefox/Chrome driver or additional coverage with JavaScript unit tests are both good options here. 
 
+## Road map
 
-## Todo list
-
-We are still actively working on Plasma and plan to extend the library to avoid the amount of boiler plate code on the consumer. Our current todo list includes:
-
-* Implementing FindElement(By.CssSelector( ... which currently does not work
-* Adding a web driver implementation 'PlasmaWebDriver' and requisite interfaces
-* Adding examples for how to override functionality in various IoC containers
-* Adding helpers for dealing with app domain to app domain communication
-* Improve the syntax around submitting forms
-* Events to hook into setup/teardown of app domain?
+We have a [road map](https://github.com/jennifersmith/plasma/wiki/Roadmap) listing the features we want to 
 
 ## Contributing
 
@@ -189,9 +181,13 @@ Happy to receive any pull requests. So if you can fix a bug or have a feature to
 
 ## Contributors
 
-* [http://github.com/aharin](Alex Harin)
-* [http://jennifersmith.co.uk](Jennifer Smith)
-* [http://stevesmithblog.com/](Steve Smith)
+In no particular order:
+
+* [Alex Harin](http://github.com/aharin)
+* [Jennifer Smith](http://jennifersmith.co.uk)
+* [Steve Smith](http://stevesmithblog.com/)
+* [Chris Bird](http://www.christopherbird.co.uk)
+* [Tom Scott](https://github.com/tomwscott)
 
 ## Licence
 
