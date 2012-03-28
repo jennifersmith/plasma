@@ -31,7 +31,7 @@ Happy to receive any pull requests. So if you can fix a bug or have a feature to
 In no particular order:
 
 * [Alex Harin](http://github.com/aharin)
-* [Jennifer Smith](http://jennifersmith.co.uk)
+* [Jennifer Smith](http://www.jennifersmith.co.uk)
 * [Steve Smith](http://stevesmithblog.com/)
 * [Chris Bird](http://www.christopherbird.co.uk)
 * [Tom Scott](https://github.com/tomwscott)
