@@ -27,7 +27,7 @@ namespace Plasma.Test.Functional.WebDriver.FindingElements
         public void Setup()
         {
             driver = TestFixture.Driver;
-            TestFixture.Driver.Navigate().GoToUrl("/FindElementsById/");
+            TestFixture.Driver.Navigate().GoToUrl("/FindElementsById/#someRandomAnchor");
         }
 
         [Test]
