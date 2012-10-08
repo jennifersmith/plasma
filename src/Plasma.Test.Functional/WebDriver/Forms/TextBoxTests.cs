@@ -45,5 +45,8 @@ namespace Plasma.Test.Functional.WebDriver.Forms
             driver.FindElement(By.Name("textBox")).Clear();
             Assert.That(driver.FindElement(By.Name("textBox")).GetAttribute("value"), Is.Empty, driver.PageSource);
         }
+
+        
+
     }
 }
