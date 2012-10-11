@@ -33,7 +33,14 @@ namespace Plasma.Core
 
             // BugBug: End Hack
 
+            var positionOfAnchor = requestFilePath.IndexOf('#');
             FilePath = requestFilePath;
+            if (positionOfAnchor > 0)
+            {
+                FilePath = requestFilePath.Substring(0, positionOfAnchor);
+                HashUri = requestFilePath.Substring(positionOfAnchor, requestFilePath.Length - positionOfAnchor);
+            }
+
             PathInfo = requestPathInfo;
             QueryString = requestQueryString;
             Method = requestMethod;
@@ -44,6 +51,8 @@ namespace Plasma.Core
         public AspNetRequest(string requestPath)
             : this(requestPath, null, null, "GET", null, null) {
         }
+
+        public string HashUri { get; set; }
 
         public string FilePath { get; set; }
 

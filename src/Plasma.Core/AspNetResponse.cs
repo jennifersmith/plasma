@@ -28,11 +28,13 @@ namespace Plasma.Core
         private readonly string _queryString;
         private readonly int _status;
         private string _bodyAsString;
+        private readonly string _hashUri;
 
-        internal AspNetResponse(string requestVirtualPath, string queryString,
+        internal AspNetResponse(string requestVirtualPath, string queryString, string hashUri,
                                 int status, IEnumerable<KeyValuePair<string, string>> headers, byte[] body) {
             _requestVirtualPath = requestVirtualPath;
             _queryString = queryString;
+            _hashUri = hashUri;
 
             _status = status;
             _headers = headers ?? new Dictionary<string, string>();
@@ -47,10 +49,16 @@ namespace Plasma.Core
             get { return _queryString; }
         }
 
-        public string Url {
-            get { return string.IsNullOrEmpty(_queryString) ? _requestVirtualPath : _requestVirtualPath + "?" + _queryString; }
-        }
+        public string BaseUrlWithHash { get { return _requestVirtualPath + (_hashUri ?? string.Empty); } }
 
+        public string Url
+        {
+            get
+            {
+                return string.IsNullOrEmpty(_queryString) ?
+                BaseUrlWithHash : BaseUrlWithHash + "?" + _queryString;
+            }
+        }
         public int Status {
             get { return _status; }
         }

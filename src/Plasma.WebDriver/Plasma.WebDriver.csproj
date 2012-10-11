@@ -81,6 +81,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+
     <EmbeddedResource Include="Resources\xhtml-lat1.ent" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +95,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\xhtml1-transitional.dtd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Plasma.Core\Plasma.Core.csproj">
+      <Project>{C10B09AA-98AC-4062-AF32-7E0DB602CCCD}</Project>
+      <Name>Plasma.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

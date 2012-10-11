@@ -74,7 +74,7 @@ namespace Plasma.Core {
                                         request.Method, request.Headers, request.Body,
                                         out responseHeaders, out responseBody);
 
-            return new AspNetResponse(requestVirtualPath, request.QueryString, status, responseHeaders, responseBody);
+            return new AspNetResponse(requestVirtualPath, request.QueryString, request.HashUri, status, responseHeaders, responseBody);
         }
 
         public AspNetResponse ProcessRequest(string requestPath) {
