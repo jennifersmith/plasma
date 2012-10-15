@@ -24,17 +24,20 @@ using OpenQA.Selenium;
 using Plasma.Core;
 using Plasma.Http;
 
-namespace Plasma.WebDriver {
-    public class AspNetForm : NameValueCollection {
+namespace Plasma.WebDriver
+{
+    public class AspNetForm : NameValueCollection
+    {
         private readonly IWebElement _formWebElement;
-        private readonly HashSet<string> _fileControls = new HashSet<string>(); 
+        private readonly HashSet<string> _fileControls = new HashSet<string>();
         private string _action;
         private string _method;
-        private HtmlNode clickedElement;
+        private readonly HtmlNode _clickedElement;
 
-        internal AspNetForm(string requestVirtualPath, string queryString, IWebElement formWebElement, HtmlNode clickedElement) {
+        internal AspNetForm(string requestVirtualPath, string queryString, IWebElement formWebElement, HtmlNode clickedElement)
+        {
             _formWebElement = formWebElement;
-            this.clickedElement = clickedElement;
+            _clickedElement = clickedElement;
             // form's method
             string formMethod = formWebElement.GetAttribute("method");
             _method = string.IsNullOrEmpty(formMethod) ? "POST" : formMethod;
@@ -50,16 +53,19 @@ namespace Plasma.WebDriver {
             RetrieveFormFields(formWebElement);
         }
 
-        public IWebElement FormWebElement {
+        public IWebElement FormWebElement
+        {
             get { return _formWebElement; }
         }
 
-        public string Method {
+        public string Method
+        {
             get { return _method; }
             set { _method = value; }
         }
 
-        public string Action {
+        public string Action
+        {
             get { return _action; }
             set { _action = value; }
         }
@@ -73,19 +79,21 @@ namespace Plasma.WebDriver {
 
             var iQuery = _action.IndexOf('?');
 
-            if (iQuery >= 0) {
+            if (iQuery >= 0)
+            {
                 path = _action.Substring(0, iQuery);
                 query = _action.Substring(iQuery + 1);
-            } 
-            else {
+            }
+            else
+            {
                 path = _action;
                 query = null;
             }
-           
+
             if (_fileControls.Count > 0)
             {
                 var multipartFormBody = new MultipartFormBody(this, _fileControls);
-                
+
                 headers.Add(HttpRequestHeader.ContentLength, multipartFormBody.ContentLength);
                 headers.Add(HttpRequestHeader.ContentType, multipartFormBody.ContentType);
                 var body = multipartFormBody.FormBodyData();
@@ -93,8 +101,9 @@ namespace Plasma.WebDriver {
             }
 
             var formData = GenerateFormDataAsString();
-            
-            if (string.Compare(_method, "GET", StringComparison.OrdinalIgnoreCase) == 0) {
+
+            if (string.Compare(_method, "GET", StringComparison.OrdinalIgnoreCase) == 0)
+            {
                 return client.Get(path, formData);
             }
 
@@ -104,37 +113,48 @@ namespace Plasma.WebDriver {
             return client.Post(path, query, formBody, headers);
         }
 
-        private string GenerateFormDataAsString() {
+        private string GenerateFormDataAsString()
+        {
             int n = Count;
 
-            if (n == 0) {
+            if (n == 0)
+            {
                 return string.Empty;
             }
 
             var s = new StringBuilder();
 
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < n; i++)
+            {
                 string key = HttpUtility.UrlEncodeUnicode(GetKey(i));
 
-                if (!string.IsNullOrEmpty(key)) {
+                if (!string.IsNullOrEmpty(key))
+                {
                     key += "=";
                 }
 
-                if (i > 0) {
+                if (i > 0)
+                {
                     s.Append('&');
                 }
 
                 var values = (ArrayList)BaseGet(i);
 
-                if (values == null || values.Count == 0) {
+                if (values == null || values.Count == 0)
+                {
                     s.Append(key);
-                } else if (values.Count == 1) {
+                }
+                else if (values.Count == 1)
+                {
                     s.Append(key);
                     s.Append(HttpUtility.UrlEncodeUnicode((string)values[0]));
                 }
-                else {
-                    for (int j = 0; j < values.Count; j++) {
-                        if (j > 0) {
+                else
+                {
+                    for (int j = 0; j < values.Count; j++)
+                    {
+                        if (j > 0)
+                        {
                             s.Append('&');
                         }
 
@@ -147,10 +167,12 @@ namespace Plasma.WebDriver {
             return s.ToString();
         }
 
-        private void RetrieveFormFields(IWebElement node) {
+        private void RetrieveFormFields(IWebElement node)
+        {
             foreach (IWebElement childNode in node.FindElements(By.XPath("./*")))
             {
-                if (AddFormField(childNode)) {
+                if (AddFormField(childNode))
+                {
                     // if this a form field already no need to recurse
                     continue;
                 }
@@ -160,25 +182,32 @@ namespace Plasma.WebDriver {
             }
         }
 
-        private bool AddFormField(IWebElement node) {
-            if (NodeNameIs(node, "input")) {
+         private bool AddFormField(IWebElement node)
+        {
+            if (NodeNameIs(node, "input"))
+            {
                 string type = node.GetAttribute("type");
 
-                if (StringsEqual(type, "text") || StringsEqual(type, "password") || StringsEqual(type, "hidden"))
+                if (IsASupportedTextInput(type))
                 {
                     AddFieldValue(node, node.GetAttribute("value"));
-                } 
-                else if (StringsEqual(type, "checkbox")) {
-                    if (NodeHasAttributeWithValue(node, "checked", "checked")) {
-                        AddFieldValue(node, node.GetAttribute("value"));
-                    }
-                } 
-                else if (StringsEqual(type, "radio")) {
-                    if (NodeHasAttributeWithValue(node, "checked", "checked")) {
+                }
+                else if (StringsEqual(type, "checkbox"))
+                {
+                    if (NodeHasAttributeWithValue(node, "checked", "checked"))
+                    {
                         AddFieldValue(node, node.GetAttribute("value"));
                     }
                 }
-                else if (StringsEqual(type, "file")) {
+                else if (StringsEqual(type, "radio"))
+                {
+                    if (NodeHasAttributeWithValue(node, "checked", "checked"))
+                    {
+                        AddFieldValue(node, node.GetAttribute("value"));
+                    }
+                }
+                else if (StringsEqual(type, "file"))
+                {
                     _fileControls.Add(node.GetAttribute("name"));
                     AddFieldValue(node, node.GetAttribute("value"));
                 }
@@ -187,12 +216,16 @@ namespace Plasma.WebDriver {
                     AddFieldValue(node, node.GetAttribute("value"));
                 }
             }
-            else if (NodeNameIs(node, "textarea")) {
+            else if (NodeNameIs(node, "textarea"))
+            {
                 AddFieldValue(node, node.Text);
             }
-            else if (NodeNameIs(node, "select")) {
-                foreach (IWebElement optionNode in node.FindElements(By.TagName("option"))) {
-                    if (NodeHasAttributeWithValue(optionNode, "selected", "selected")) {
+            else if (NodeNameIs(node, "select"))
+            {
+                foreach (IWebElement optionNode in node.FindElements(By.TagName("option")))
+                {
+                    if (NodeHasAttributeWithValue(optionNode, "selected", "selected"))
+                    {
                         AddFieldValue(node, optionNode.GetAttribute("value"));
                     }
                 }
@@ -205,7 +238,8 @@ namespace Plasma.WebDriver {
                     AddFieldValue(node, node.GetAttribute("value"));
                 }
             }
-            else {
+            else
+            {
                 // not a field
                 return false;
             }
@@ -214,28 +248,39 @@ namespace Plasma.WebDriver {
             return true;
         }
 
-        private string GetClickedElementAttribute(string name)
+        private static bool IsASupportedTextInput(string type)
         {
-            return clickedElement.GetAttributeValue(name, string.Empty);
+            var inputTypes = new List<string> { "text", "password", "hidden", "email", "number", "week", "month", "date", "time", "datetime", "range", "tel","url" };
+            return inputTypes.Contains(type.ToLower());
         }
 
-        private void AddFieldValue(IWebElement node, string fieldValue) {
+        private string GetClickedElementAttribute(string name)
+        {
+            return _clickedElement.GetAttributeValue(name, string.Empty);
+        }
+
+        private void AddFieldValue(IWebElement node, string fieldValue)
+        {
             string fieldName = node.GetAttribute("name");
 
-            if (!string.IsNullOrEmpty(fieldName)) {
+            if (!string.IsNullOrEmpty(fieldName))
+            {
                 Add(fieldName, fieldValue);
             }
         }
 
-        private static bool NodeNameIs(IWebElement node, string name) {
+        private static bool NodeNameIs(IWebElement node, string name)
+        {
             return StringsEqual(node.TagName, name);
         }
 
-        private static bool NodeHasAttributeWithValue(IWebElement node, string attributeName, string attributeValue) {
+        private static bool NodeHasAttributeWithValue(IWebElement node, string attributeName, string attributeValue)
+        {
             return StringsEqual(node.GetAttribute(attributeName), attributeValue);
         }
 
-        private static bool StringsEqual(string s1, string s2) {
+        private static bool StringsEqual(string s1, string s2)
+        {
             return (string.Compare(s1, s2, StringComparison.OrdinalIgnoreCase) == 0);
         }
     }
