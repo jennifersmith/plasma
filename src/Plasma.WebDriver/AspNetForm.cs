@@ -32,12 +32,12 @@ namespace Plasma.WebDriver
         private readonly HashSet<string> _fileControls = new HashSet<string>();
         private string _action;
         private string _method;
-        private HtmlNode clickedElement;
+        private readonly HtmlNode _clickedElement;
 
         internal AspNetForm(string requestVirtualPath, string queryString, IWebElement formWebElement, HtmlNode clickedElement)
         {
             _formWebElement = formWebElement;
-            this.clickedElement = clickedElement;
+            _clickedElement = clickedElement;
             // form's method
             string formMethod = formWebElement.GetAttribute("method");
             _method = string.IsNullOrEmpty(formMethod) ? "POST" : formMethod;
@@ -188,7 +188,7 @@ namespace Plasma.WebDriver
             {
                 string type = node.GetAttribute("type");
 
-                if (IsSupportedInput(type))
+                if (IsASupportedTextInput(type))
                 {
                     AddFieldValue(node, node.GetAttribute("value"));
                 }
@@ -248,16 +248,15 @@ namespace Plasma.WebDriver
             return true;
         }
 
-        private static bool IsSupportedInput(string type)
+        private static bool IsASupportedTextInput(string type)
         {
             var inputTypes = new List<string> { "text", "password", "hidden", "email", "number", "week", "month", "date", "time", "datetime", "range", "tel","url" };
             return inputTypes.Contains(type.ToLower());
-            //return StringsEqual(type, "text") || StringsEqual(type, "password") || StringsEqual(type, "hidden");
         }
 
         private string GetClickedElementAttribute(string name)
         {
-            return clickedElement.GetAttributeValue(name, string.Empty);
+            return _clickedElement.GetAttributeValue(name, string.Empty);
         }
 
         private void AddFieldValue(IWebElement node, string fieldValue)
