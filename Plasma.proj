@@ -9,7 +9,7 @@
         <ExtensionTasksPath>$(ToolsDir)\MSBuild.Extension.Pack\</ExtensionTasksPath>
         <ToolsDir>$(MSBuildProjectDirectory)\tools</ToolsDir>
         <Reports>$(MSBuildProjectDirectory)\reports</Reports>
-        <NUnitDir>$(ToolsDir)\NUnit-2.5.9</NUnitDir>
+        <NUnitDir>$(ToolsDir)\NUnit</NUnitDir>
         <UnitTestDir>$(MSBuildProjectDirectory)\src\Plasma.Test.Unit\bin\$(Configuration)\</UnitTestDir>
         <FunctionalTestDir>$(MSBuildProjectDirectory)\src\Plasma.Test.Functional\bin\$(Configuration)\</FunctionalTestDir>
     </PropertyGroup>
