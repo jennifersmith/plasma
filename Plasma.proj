@@ -9,7 +9,7 @@
         <ExtensionTasksPath>$(ToolsDir)\MSBuild.Extension.Pack\</ExtensionTasksPath>
         <ToolsDir>$(MSBuildProjectDirectory)\tools</ToolsDir>
         <Reports>$(MSBuildProjectDirectory)\reports</Reports>
-        <NUnitDir>$(ToolsDir)\NUnit-2.5.9</NUnitDir>
+        <NUnitDir>$(ToolsDir)\NUnit</NUnitDir>
         <UnitTestDir>$(MSBuildProjectDirectory)\src\Plasma.Test.Unit\bin\$(Configuration)\</UnitTestDir>
         <FunctionalTestDir>$(MSBuildProjectDirectory)\src\Plasma.Test.Functional\bin\$(Configuration)\</FunctionalTestDir>
     </PropertyGroup>
@@ -38,6 +38,7 @@
     <ItemGroup>
         <BinFilesInclude Include="src/Plasma.WebDriver/bin/**/Plasma.WebDriver.*"/>
         <BinFilesInclude Include="src/Plasma.WebDriver/bin/**/Plasma.Core.*"/>
+        <BinFilesInclude Include="src/Plasma.Http/bin/**/Plasma.Http.*"/>
     </ItemGroup>
 
     <ItemGroup>
