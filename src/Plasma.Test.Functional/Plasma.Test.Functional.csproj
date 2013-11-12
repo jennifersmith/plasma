@@ -88,6 +88,7 @@
     <Compile Include="WebDriver\FindingElements\FindingElementsByClassTests.cs" />
     <Compile Include="WebDriver\FindingElements\FindingElementsByIdTests.cs" />
     <Compile Include="WebDriver\Forms\CheckBoxTests.cs" />
+    <Compile Include="WebDriver\Forms\Html5ElementsTests.cs" />
     <Compile Include="WebDriver\Forms\RadioButtonTests.cs" />
     <Compile Include="WebDriver\Forms\TextBoxTests.cs" />
     <Compile Include="WebDriver\Navigation\FollowingLinkTests.cs" />

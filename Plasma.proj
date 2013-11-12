@@ -38,6 +38,7 @@
     <ItemGroup>
         <BinFilesInclude Include="src/Plasma.WebDriver/bin/**/Plasma.WebDriver.*"/>
         <BinFilesInclude Include="src/Plasma.WebDriver/bin/**/Plasma.Core.*"/>
+        <BinFilesInclude Include="src/Plasma.Http/bin/**/Plasma.Http.*"/>
     </ItemGroup>
 
     <ItemGroup>
