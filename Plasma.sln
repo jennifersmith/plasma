@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7A952D25-3B2A-4A17-93FC-8B3C52513F5E}"
 	ProjectSection(SolutionItems) = preProject
 		Plasma.proj = Plasma.proj
+		run.bat = run.bat
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Core", "src\Plasma.Core\Plasma.Core.csproj", "{C10B09AA-98AC-4062-AF32-7E0DB602CCCD}"
