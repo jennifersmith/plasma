@@ -11,8 +11,5 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <tags>plasma selenium webdriver</tags>
-  </metadata>
-  <files>
-    <file src="bin\debug\Plasma.Core.dll" target="lib\net35"/>
-  </files>
+  </metadata>  
 </package>

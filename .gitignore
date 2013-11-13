@@ -33,5 +33,6 @@ build/
 Output
 *.zip
 
+/Plasma.WebDriver.*.nupkg
 /version.txt
 /src/Plasma.Core/Properties/VersionInfo.cs

@@ -103,7 +103,7 @@
   <Target Name="NuGet" DependsOnTargets="Build">
     <Exec Command="tools\nuget\nuget update -self"/>
     <Exec WorkingDirectory="src\Plasma.WebDriver" 
-          Command="..\..\tools\nuget\nuget.exe pack Plasma.WebDriver.csproj -OutputDirectory ..\..\Output\nuget" />
+          Command="..\..\tools\nuget\nuget.exe pack Plasma.WebDriver.csproj -IncludeReferencedProjects -OutputDirectory ..\..\" />
   </Target>
 
 </Project>
