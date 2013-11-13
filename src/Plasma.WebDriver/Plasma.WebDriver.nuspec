@@ -6,7 +6,7 @@
     <authors>$author$</authors>
     <owners>$author$</owners>
     <licenseUrl>http://www.opensource.org/licenses/MS-PL</licenseUrl>
-    <projectUrl>https://github.com/dansweeting/plasma</projectUrl>
+    <projectUrl>https://github.com/jennifersmith/plasma</projectUrl>
     <iconUrl>http://seleniumhq.org/images/big-logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
