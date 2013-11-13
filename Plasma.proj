@@ -100,7 +100,7 @@
         <NUnit OutputXmlFile="$(Reports)\FunctionalTestResults.xml" ToolPath="$(NUnitDir)" ContinueOnError="false" DisableShadowCopy="true" Assemblies="Plasma.Test.Functional.dll" WorkingDirectory="$(FunctionalTestDir)"/>
     </Target>
 
-  <Target Name="NuGet" DependsOnTargets="Build">
+  <Target Name="NuGet" DependsOnTargets="Compile;Tests;">
     <Exec Command="tools\nuget\nuget update -self"/>
     <Exec WorkingDirectory="src\Plasma.WebDriver" 
           Command="..\..\tools\nuget\nuget.exe pack Plasma.WebDriver.csproj -IncludeReferencedProjects -OutputDirectory ..\..\" />
