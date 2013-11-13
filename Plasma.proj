@@ -52,6 +52,7 @@
         <MakeDir Directories="Output"/>
         <MakeDir Directories="Output/lib"/>
         <MakeDir Directories="Output/bin"/>
+        <MakeDir Directories="Output/nuget"/>
         <Copy SourceFiles="@(LibFiles)" DestinationFiles="@(LibFiles->'Output\Lib\%(RecursiveDir)%(Filename)%(Extension)')" />
         <Copy SourceFiles="@(MiscFiles)" DestinationFiles="@(MiscFiles->'Output\%(RecursiveDir)%(Filename)%(Extension)')" />
         <Copy SourceFiles="@(BinFiles)" DestinationFolder="Output\bin" />
@@ -98,5 +99,11 @@
         <NUnit OutputXmlFile="$(Reports)\UnitTestResults.xml" ToolPath="$(NUnitDir)" ContinueOnError="false" DisableShadowCopy="true" Assemblies="Plasma.Test.Unit.dll" WorkingDirectory="$(UnitTestDir)"/>
         <NUnit OutputXmlFile="$(Reports)\FunctionalTestResults.xml" ToolPath="$(NUnitDir)" ContinueOnError="false" DisableShadowCopy="true" Assemblies="Plasma.Test.Functional.dll" WorkingDirectory="$(FunctionalTestDir)"/>
     </Target>
+
+  <Target Name="NuGet" DependsOnTargets="Build">
+    <Exec Command="tools\nuget\nuget update -self"/>
+    <Exec WorkingDirectory="src\Plasma.WebDriver" 
+          Command="..\..\tools\nuget\nuget.exe pack Plasma.WebDriver.csproj -OutputDirectory ..\..\Output\nuget" />
+  </Target>
 
 </Project>
