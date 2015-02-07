@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Net;
 using NUnit.Framework;
 using Plasma.Core;
 using Plasma.Sample.Web.Mvc;
@@ -37,7 +38,9 @@ namespace Plasma.HttpClient.Test.Unit
         {
             var client = PlasmaClient.For<MvcApplication>();
 
-            client.GetAsync("/");
+            var response = client.GetAsync("/").Result;
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
     }
 }
