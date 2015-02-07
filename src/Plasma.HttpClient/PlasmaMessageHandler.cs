@@ -19,6 +19,11 @@ namespace Plasma.HttpClient
         {
             var body = (byte[])null;
 
+            if (request.Content != null)
+            {
+                body = request.Content.ReadAsByteArrayAsync().Result;
+            }
+
             var aspNetRequest = new AspNetRequest(request.RequestUri.AbsolutePath,
                                                   null,
                                                   request.RequestUri.Query,
