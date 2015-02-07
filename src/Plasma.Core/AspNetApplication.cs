@@ -16,8 +16,7 @@ using System.Web;
 using System.Web.Hosting;
 
 namespace Plasma.Core {
-
-    public sealed class AspNetApplication : MarshalByRefObject
+    public sealed class AspNetApplication : MarshalByRefObject, IRequestProcessor
     {
         private readonly IList<Assembly> _references = new List<Assembly>();
 

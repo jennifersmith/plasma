@@ -10,9 +10,9 @@ namespace Plasma.HttpClient
 {
     public class PlasmaMessageHandler : HttpMessageHandler
     {
-        private readonly AspNetApplication _application;
+        private readonly IRequestProcessor _application;
 
-        public PlasmaMessageHandler(AspNetApplication application)
+        public PlasmaMessageHandler(IRequestProcessor application)
         {
             _application = application;
         }
@@ -40,7 +40,6 @@ namespace Plasma.HttpClient
                     Debug.WriteLine(ex);
                 }
             }
-
 
             return Task.Run(() => responseMessage, cancellationToken);
         }

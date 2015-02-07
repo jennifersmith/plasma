@@ -5,7 +5,7 @@ namespace Plasma.HttpClient
 {
     public static class PlasmaClient
     {
-        public static System.Net.Http.HttpClient For(AspNetApplication application)
+        public static System.Net.Http.HttpClient For(IRequestProcessor application)
         {
             return BuildClient(application);
         }
@@ -22,7 +22,7 @@ namespace Plasma.HttpClient
             return BuildClient(app);
         }
 
-        private static System.Net.Http.HttpClient BuildClient(AspNetApplication app)
+        private static System.Net.Http.HttpClient BuildClient(IRequestProcessor app)
         {
             var messageHandler = new PlasmaMessageHandler(app);
             var client = new System.Net.Http.HttpClient(messageHandler) {BaseAddress = new Uri("http://localhost")};
