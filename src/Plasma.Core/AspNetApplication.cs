@@ -35,6 +35,10 @@ namespace Plasma.Core {
             _physicalPath = physicalPath;
         }
 
+        public AspNetApplication(string physicalPath) {
+            _virtualPath = "/";
+            _physicalPath = physicalPath;
+        }
 
         public void AddReference(Assembly assembly) {
             _references.Add(assembly);

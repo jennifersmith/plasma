@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Test.Functional", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Http", "src\Plasma.Http\Plasma.Http.csproj", "{C6D24739-DDED-4AC3-BA28-03F4DE1699DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plasma.Core.Test.Unit", "src\Plasma.Core.Test.Unit\Plasma.Core.Test.Unit.csproj", "{B9F1A603-F7F5-4F8F-A420-24C1C625E91E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{C6D24739-DDED-4AC3-BA28-03F4DE1699DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6D24739-DDED-4AC3-BA28-03F4DE1699DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6D24739-DDED-4AC3-BA28-03F4DE1699DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9F1A603-F7F5-4F8F-A420-24C1C625E91E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9F1A603-F7F5-4F8F-A420-24C1C625E91E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9F1A603-F7F5-4F8F-A420-24C1C625E91E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9F1A603-F7F5-4F8F-A420-24C1C625E91E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
