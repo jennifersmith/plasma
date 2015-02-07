@@ -109,6 +109,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Html5ElementsController.cs" />
     <Compile Include="Controllers\HttpContextController.cs" />
+    <Compile Include="Controllers\PostController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -132,6 +133,7 @@
     <Content Include="Views\GotoPage\Index.aspx" />
     <Content Include="Views\GotoPage\OtherPage.aspx" />
     <Content Include="Views\Html5Elements\Index.aspx" />
+    <Content Include="Views\Post\Data.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Plasma.Core;
@@ -18,17 +19,19 @@ namespace Plasma.HttpClient
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var body = (byte[])null;
+            var requestHeaders = request.Headers.ToKvp();
 
             if (request.Content != null)
             {
                 body = request.Content.ReadAsByteArrayAsync().Result;
+                requestHeaders.AddRange(request.Content.Headers.ToKvp());
             }
 
             var aspNetRequest = new AspNetRequest(request.RequestUri.AbsolutePath,
                                                   null,
                                                   request.RequestUri.Query,
                                                   request.Method.ToString(),
-                                                  request.Headers.ToKvp(),
+                                                  requestHeaders,
                                                   body);
 
             var response = _application.ProcessRequest(aspNetRequest).ToHttpResponseMessage();

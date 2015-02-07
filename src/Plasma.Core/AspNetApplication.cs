@@ -70,34 +70,26 @@ namespace Plasma.Core {
 
         public AspNetResponse ProcessRequest(AspNetRequest request) {
             List<KeyValuePair<string, string>> responseHeaders;
+            string responseStatusDescrption;
             byte[] responseBody;
 
             string requestVirtualPath = VirtualPathUtility.ToAbsolute(request.FilePath, _virtualPath);
 
-            int status = ProcessRequest(requestVirtualPath, request.PathInfo, request.QueryString,
-                                        request.Method, request.Headers, request.Body,
-                                        out responseHeaders, out responseBody);
+            int status = GetHost().ProcessRequest(requestVirtualPath, 
+                request.PathInfo, 
+                request.QueryString,
+                request.Method, 
+                request.Headers, 
+                request.Body, 
+                out responseHeaders,
+                out responseBody, 
+                out responseStatusDescrption);
 
-            return new AspNetResponse(requestVirtualPath, request.QueryString, request.HashUri, status, responseHeaders, responseBody);
+            return new AspNetResponse(requestVirtualPath, request.QueryString, request.HashUri, status, responseHeaders, responseBody, responseStatusDescrption);
         }
 
         public AspNetResponse ProcessRequest(string requestPath) {
             return ProcessRequest(new AspNetRequest(requestPath));
-        }
-
-        private int ProcessRequest(
-            string requestFilePath,
-            string requestPathInfo,
-            string requestQueryString,
-            string requestMethod,
-            IEnumerable<KeyValuePair<string, string>> requestHeaders,
-            byte[] requestBody,
-            out List<KeyValuePair<string, string>> responseHeaders,
-            out byte[] responseBody) {
-
-            return GetHost().ProcessRequest(requestFilePath, requestPathInfo, requestQueryString,
-                                            requestMethod, requestHeaders, requestBody, out responseHeaders,
-                                            out responseBody);
         }
 
         private Host GetHost() {

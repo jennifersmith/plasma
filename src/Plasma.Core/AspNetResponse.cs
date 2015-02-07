@@ -21,54 +21,45 @@ using System.Web;
 
 namespace Plasma.Core
 {
-    public class AspNetResponse {
-        private readonly byte[] _body;
+    public class AspNetResponse 
+    {
         private readonly IEnumerable<KeyValuePair<string, string>> _headers;
-        private readonly string _requestVirtualPath;
-        private readonly string _queryString;
-        private readonly int _status;
-        private string _bodyAsString;
         private readonly string _hashUri;
 
-        internal AspNetResponse(string requestVirtualPath, string queryString, string hashUri,
-                                int status, IEnumerable<KeyValuePair<string, string>> headers, byte[] body) {
-            _requestVirtualPath = requestVirtualPath;
-            _queryString = queryString;
+        internal AspNetResponse(string requestVirtualPath, string queryString, string hashUri, int status, IEnumerable<KeyValuePair<string, string>> headers, byte[] body, string responseStatusDescrption) 
+        {
+            RequestVirtualPath = requestVirtualPath;
+            QueryString = queryString;
             _hashUri = hashUri;
 
-            _status = status;
+            Status = status;
+            StatusDescription = responseStatusDescrption;
             _headers = headers ?? new Dictionary<string, string>();
-            _body = body;
+            Body = body;
         }
 
-        public string RequestVirtualPath {
-            get { return _requestVirtualPath; }
-        }
+        public int Status { get; private set; }
+        public string StatusDescription { get; private set; }
+        public string RequestVirtualPath { get; private set; }
+        public string QueryString { get; private set; }
+        public byte[] Body { get; private set; }
 
-        public string QueryString {
-            get { return _queryString; }
-        }
-
-        public string BaseUrlWithHash { get { return _requestVirtualPath + (_hashUri ?? string.Empty); } }
+        public string BaseUrlWithHash { get { return RequestVirtualPath + (_hashUri ?? string.Empty); } }
 
         public string Url
         {
-            get
-            {
-                return string.IsNullOrEmpty(_queryString) ?
-                BaseUrlWithHash : BaseUrlWithHash + "?" + _queryString;
-            }
-        }
-        public int Status {
-            get { return _status; }
+            get { return string.IsNullOrEmpty(QueryString) ? BaseUrlWithHash : BaseUrlWithHash + "?" + QueryString; }
         }
 
-        public IEnumerable<KeyValuePair<string, string>> Headers {
+        public IEnumerable<KeyValuePair<string, string>> Headers 
+        {
             get { return _headers; }
         }
 
-        public IEnumerable<HttpCookie> Cookies {
-            get {
+        public IEnumerable<HttpCookie> Cookies 
+        {
+            get 
+            {
                 var cookieParser = new CookieParser();
                 return _headers.Where(x => x.Key == "Set-Cookie").Select(x => cookieParser.ParseCookie(x.Value));
             }
@@ -76,47 +67,35 @@ namespace Plasma.Core
 
         public IEnumerable<string> CookieHeader
         {
+            get { return _headers.Where(x => x.Key == "Set-Cookie").Select(x => x.Value); }
+        }
+
+        public string BodyAsString 
+        {
             get
             {
-                return _headers.Where(x => x.Key == "Set-Cookie").Select(x => x.Value);
-            }
-        }
-
-        public byte[] Body {
-            get { return _body; }
-        }
-
-        
-        public string BodyAsString {
-            get {
-                if (_bodyAsString == null) {
-                    if (_body != null && _body.Length > 0) {
-                        _bodyAsString = Encoding.UTF8.GetString(_body);
-                    } else {
-                        _bodyAsString = String.Empty;
-                    }
+                if (Body != null && Body.Length > 0)
+                {
+                    return Encoding.UTF8.GetString(Body);
                 }
 
-                return _bodyAsString;
+                return String.Empty;
             }
         }
-
-
-        public string ToEntireResponseString() {
+        
+        public string ToEntireResponseString() 
+        {
             TextWriter output = new StringWriter();
-
             output.WriteLine("{0} {1}", Status, HttpWorkerRequest.GetStatusDescription(200));
 
-            foreach (var header in Headers) {
+            foreach (var header in Headers) 
+            {
                 output.WriteLine("{0}: {1}", header.Key, header.Value);
             }
 
             output.WriteLine();
-
             output.Write(BodyAsString);
-
             return output.ToString();
         }
-                
     }
 }

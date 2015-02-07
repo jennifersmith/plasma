@@ -8,7 +8,12 @@ namespace Plasma.HttpClient.Extensions
     {
         public static List<KeyValuePair<string, string>> ToKvp(this HttpRequestHeaders headers)
         {
-            return headers.Select(header => new KeyValuePair<string, string>(header.Key, string.Join((string) ";", (IEnumerable<string>) header.Value))).ToList();
+            return headers.Select(header => new KeyValuePair<string, string>(header.Key, string.Join(";", header.Value))).ToList();
+        } 
+
+        public static List<KeyValuePair<string, string>> ToKvp(this HttpContentHeaders headers)
+        {
+            return headers.Select(header => new KeyValuePair<string, string>(header.Key, string.Join(";", header.Value))).ToList();
         } 
     }
 }

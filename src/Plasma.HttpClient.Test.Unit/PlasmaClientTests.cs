@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Net.Http;
 using NUnit.Framework;
 using Plasma.Core;
 using Plasma.Sample.Web.Mvc;
@@ -42,5 +45,23 @@ namespace Plasma.HttpClient.Test.Unit
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
+
+        //[Test]
+        //public void CanPostData()
+        //{
+        //    var client = PlasmaClient.For<MvcApplication>();
+        //    var randomData = Guid.NewGuid().ToString();
+
+        //    var response =
+        //        client.PostAsync("/Post/Data", new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
+        //        {
+        //            new KeyValuePair<string, string>("value", randomData)
+        //        })).Result;
+
+        //    var responseBody = response.Content.ReadAsStringAsync().Result;
+
+        //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        //    Assert.That(responseBody, Is.StringContaining(randomData));
+        //}
     }
 }

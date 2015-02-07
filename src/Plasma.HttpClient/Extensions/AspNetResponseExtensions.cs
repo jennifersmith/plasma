@@ -16,15 +16,17 @@ namespace Plasma.HttpClient.Extensions
                 ReasonPhrase = response.Status.ToString()
             };
 
+
             foreach (var item in response.Headers)
             {
                 try
                 {
                     responseMessage.Headers.Add(item.Key, item.Value);
+                    responseMessage.Content.Headers.Add(item.Key, item.Value);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex);
+                    Debug.WriteLine("Could not add header: '{0}', Value: '{1}', Message: '{2}'", item.Key, item.Value, ex);
                 }
             }
             return responseMessage;
