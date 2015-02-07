@@ -34,11 +34,11 @@ namespace Plasma.HttpClient.Test.Unit
         }
 
         [Test]
-        public void GetCallGet()
+        public async void GetCallGet()
         {
             var client = PlasmaClient.For<MvcApplication>();
 
-            var response = client.GetAsync("/").Result;
+            var response = await client.GetAsync("/");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }

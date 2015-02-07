@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\AspNetResponseExtensions.cs" />
+    <Compile Include="Extensions\HttpRequestHeadersExtensions.cs" />
     <Compile Include="PlasmaMessageHandler.cs" />
     <Compile Include="PlasmaClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

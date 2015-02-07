@@ -1,10 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Plasma.Core;
+using Plasma.HttpClient.Extensions;
 
 namespace Plasma.HttpClient
 {
@@ -19,29 +17,20 @@ namespace Plasma.HttpClient
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var response = _application.ProcessRequest(request.RequestUri.AbsolutePath);
+            var body = (byte[])null;
 
-            var responseMessage = new HttpResponseMessage((HttpStatusCode) response.Status)
-            {
-                Content = new ByteArrayContent(response.Body),
-                ReasonPhrase = response.Status.ToString(),
-                RequestMessage = request,
-                Version = request.Version
-            };
+            var aspNetRequest = new AspNetRequest(request.RequestUri.AbsolutePath,
+                                                  null,
+                                                  request.RequestUri.Query,
+                                                  request.Method.ToString(),
+                                                  request.Headers.ToKvp(),
+                                                  body);
 
-            foreach (var item in response.Headers)
-            {
-                try
-                {
-                    responseMessage.Headers.Add(item.Key, item.Value);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }
-            }
+            var response = _application.ProcessRequest(aspNetRequest).ToHttpResponseMessage();
+            response.RequestMessage = request;
+            response.Version = request.Version;
 
-            return Task.Run(() => responseMessage, cancellationToken);
+            return Task.Run(() => response, cancellationToken);
         }
     }
 }
