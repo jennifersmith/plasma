@@ -8,7 +8,7 @@
         <MSBuildCommunityTasksLib>$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.dll</MSBuildCommunityTasksLib>
         <ExtensionTasksPath>$(ToolsDir)\MSBuild.Extension.Pack\</ExtensionTasksPath>
         <ToolsDir>$(MSBuildProjectDirectory)\tools</ToolsDir>
-        <Reports>$(MSBuildProjectDirectory)\reports</Reports>
+        <Reports>$(MSBuildProjectDirectory)\artifacts\reports</Reports>
         <NUnitDir>$(MSBuildProjectDirectory)\packages\NUnit.Runners.2.6.3\tools</NUnitDir>
         <UnitTestDir>$(MSBuildProjectDirectory)\src\Plasma.Test.Unit\bin\$(Configuration)\</UnitTestDir>
         <FunctionalTestDir>$(MSBuildProjectDirectory)\src\Plasma.Test.Functional\bin\$(Configuration)\</FunctionalTestDir>
@@ -47,18 +47,7 @@
         <BinFiles Include="@(BinFilesInclude)" />
     </ItemGroup>
 
-    <Target Name="CreateReleasePackage">
-        <RemoveDir Directories="Output"/>
-        <MakeDir Directories="Output"/>
-        <MakeDir Directories="Output/lib"/>
-        <MakeDir Directories="Output/bin"/>
-        <MakeDir Directories="Output/nuget"/>
-        <Copy SourceFiles="@(LibFiles)" DestinationFiles="@(LibFiles->'Output\Lib\%(RecursiveDir)%(Filename)%(Extension)')" />
-        <Copy SourceFiles="@(MiscFiles)" DestinationFiles="@(MiscFiles->'Output\%(RecursiveDir)%(Filename)%(Extension)')" />
-        <Copy SourceFiles="@(BinFiles)" DestinationFolder="Output\bin" />
-    </Target>
-
-    <Target Name="ReadVersionInfo" Condition="@(VersionInfo)==''" >
+     <Target Name="ReadVersionInfo" Condition="@(VersionInfo)==''" >
         <Delete Files="version.txt"/>
         <Exec Command="git describe HEAD --tags >> version.txt"/>
         <ReadLinesFromFile File="version.txt" >
@@ -72,7 +61,7 @@
         </MSBuild.ExtensionPack.Framework.MsBuildHelper>
     </Target>
 
-    <Target Name="Build" DependsOnTargets="Compile;Tests;Zip"/>
+    <Target Name="Build" DependsOnTargets="Compile;Tests;NuGet"/>
 
     <Target Name="GenerateAssemblyInfo" DependsOnTargets="ReadVersionInfo">
         <AssemblyInfo CodeLanguage="CS"
@@ -87,13 +76,6 @@
 				 Properties="Configuration=Debug;SkipDefaultVersion=true" />
     </Target>
 
-    <Target Name="Zip" DependsOnTargets="ReadVersionInfo;CreateReleasePackage">
-        <ItemGroup>
-            <ZipFiles Include="Output/**/*.*"/>
-        </ItemGroup>
-        <Zip WorkingDirectory="Output" Files="@(ZipFiles)" ZipFileName="Plasma.@(VersionInfo).zip" />
-    </Target>
-
     <Target Name="Tests">
         <MakeDir Directories="$(Reports)"/>
         <NUnit OutputXmlFile="$(Reports)\UnitTestResults.xml" ToolPath="$(NUnitDir)" ContinueOnError="false" DisableShadowCopy="true" Assemblies="Plasma.Test.Unit.dll" WorkingDirectory="$(UnitTestDir)"/>
@@ -101,9 +83,7 @@
     </Target>
 
   <Target Name="NuGet" DependsOnTargets="Compile;Tests;">
-    <Exec Command="tools\nuget\nuget update -self"/>
-    <Exec WorkingDirectory="src\Plasma.WebDriver" 
-          Command="..\..\tools\nuget\nuget.exe pack Plasma.WebDriver.csproj -IncludeReferencedProjects -OutputDirectory ..\..\" />
+    <Exec Command="package"/>
   </Target>
 
 </Project>

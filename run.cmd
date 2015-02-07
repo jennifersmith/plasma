@@ -14,6 +14,5 @@ more tools\buildflags\passed.txt
 REM color 2F
 
 :TheEnd
-pause
 
 REM color 07
