@@ -17,7 +17,6 @@ namespace Plasma.Sample.Web.Mvc.Controllers
 {
     public class GotoPageController : Controller
     {
-
         public ActionResult Index()
         {
             return View();

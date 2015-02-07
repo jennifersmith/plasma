@@ -65,6 +65,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="WebDriver">
       <HintPath>..\..\packages\Selenium.WebDriver.2.37.0\lib\net40\WebDriver.dll</HintPath>
@@ -79,6 +80,7 @@
     </Compile>
     <Compile Include="Http\CookieTest.cs" />
     <Compile Include="Http\GetRequestTest.cs" />
+    <Compile Include="Http\HttpContextTest.cs" />
     <Compile Include="TestFixture.cs" />
     <Compile Include="WebDriver\FindingElements\FindElementByNameTests.cs" />
     <Compile Include="WebDriver\FindingElements\FindElementsByTagNameTests.cs" />

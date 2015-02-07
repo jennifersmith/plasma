@@ -16,12 +16,10 @@
   <DetectStackOverflow>true</DetectStackOverflow>
   <IncludeStaticReferencesInWorkspace>true</IncludeStaticReferencesInWorkspace>
   <DefaultTestTimeout>60000</DefaultTestTimeout>
-  <UseBuildConfiguration></UseBuildConfiguration>
-  <UseBuildPlatform></UseBuildPlatform>
-  <ProxyProcessPath></ProxyProcessPath>
+  <UseBuildConfiguration />
+  <UseBuildPlatform />
+  <ProxyProcessPath />
   <UseCPUArchitecture>AutoDetect</UseCPUArchitecture>
   <MSTestThreadApartmentState>STA</MSTestThreadApartmentState>
   <BuildProcessArchitecture>x86</BuildProcessArchitecture>
-  <AdditionalFilesToInclude>..\web\Plasma.Sample.Web.Mvc\**.*</AdditionalFilesToInclude>
-  <ImplicitProjectDependencyPathsRelativeToSolutionDirectory>src\web\Plasma.Sample.Web.Mvc\Plasma.Sample.Web.Mvc.csproj</ImplicitProjectDependencyPathsRelativeToSolutionDirectory>
 </ProjectConfiguration>
