@@ -29,5 +29,13 @@ namespace Plasma.Core.Test.Unit
 
             Assert.That(appInstance, Is.Not.Null);
         }
+
+        [Test]
+        public void CanWireUpPathsFromProvidedTypeParameter()
+        {
+            var appInstance = new AspNetApplication<MvcApplication>();
+
+            Assert.That(appInstance, Is.Not.Null);
+        }
     }
 }

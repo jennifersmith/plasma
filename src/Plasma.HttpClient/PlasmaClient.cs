@@ -12,14 +12,12 @@ namespace Plasma.HttpClient
 
         public static System.Net.Http.HttpClient For(string physicalPath, string virtualPath = "/")
         {
-            var app = new AspNetApplication(virtualPath, physicalPath);
-            return BuildClient(app);
+            return BuildClient(new AspNetApplication(virtualPath, physicalPath));
         }
 
         public static System.Net.Http.HttpClient For<TApplicationType>()
         {
-            var app = new AspNetApplication(typeof(TApplicationType));
-            return BuildClient(app);
+            return BuildClient(new AspNetApplication<TApplicationType>());
         }
 
         private static System.Net.Http.HttpClient BuildClient(IRequestProcessor app)
