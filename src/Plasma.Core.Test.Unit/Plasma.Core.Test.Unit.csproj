@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +55,10 @@
     <ProjectReference Include="..\Plasma.Core\Plasma.Core.csproj">
       <Project>{C10B09AA-98AC-4062-AF32-7E0DB602CCCD}</Project>
       <Name>Plasma.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\web\Plasma.Sample.Web.Mvc\Plasma.Sample.Web.Mvc.csproj">
+      <Project>{EFDB142E-4D47-4370-830A-9F964DFD2042}</Project>
+      <Name>Plasma.Sample.Web.Mvc</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

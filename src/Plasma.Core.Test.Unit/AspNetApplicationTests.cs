@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Plasma.Sample.Web.Mvc;
 
 namespace Plasma.Core.Test.Unit
 {
@@ -6,7 +7,7 @@ namespace Plasma.Core.Test.Unit
     public class AspNetApplicationTests
     {
         [Test]
-        public void Ctor_InvokedWithVirtualPathAndPhysicalPath_NotNull()
+        public void CanBeConfigured()
         {
             var app = new AspNetApplication("/", "c:\\temp");
 
@@ -14,11 +15,19 @@ namespace Plasma.Core.Test.Unit
         }
 
         [Test]
-        public void Ctor_InvokedWithPhysicalPathOnly_NotNull()
+        public void DefaultsVirtualPathToRootWhenOnlyProvidedPhysicalPath()
         {
             var app = new AspNetApplication("c:\\temp");
 
             Assert.That(app, Is.Not.Null);
+        }
+
+        [Test]
+        public void CanWireUpPathsFromProvidedType()
+        {
+            var appInstance = new AspNetApplication(typeof(MvcApplication));
+
+            Assert.That(appInstance, Is.Not.Null);
         }
     }
 }
