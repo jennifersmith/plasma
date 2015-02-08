@@ -37,6 +37,8 @@ namespace Plasma.Core
 
         // response data
         private int _responseStatus;
+        private string _responseStatusDescription;
+
         private readonly List<KeyValuePair<string, string>> _responseHeaders;
         private readonly List<byte[]> _responseBuilder;
 
@@ -106,6 +108,11 @@ namespace Plasma.Core
         internal int ResponseStatus
         {
             get { return _responseStatus; }
+        }
+
+        internal string ResponseStatusDescription
+        {
+            get { return _responseStatusDescription; }
         }
 
         internal List<KeyValuePair<string, string>> ResponseHeaders
@@ -284,6 +291,7 @@ namespace Plasma.Core
         public override void SendStatus(int statusCode, string statusDescription)
         {
             _responseStatus = statusCode;
+            _responseStatusDescription = statusDescription;
         }
 
         public override void SendKnownResponseHeader(int index, string value)

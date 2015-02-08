@@ -79,7 +79,8 @@ namespace Plasma.Core
             IEnumerable<KeyValuePair<string, string>> requestHeaders,
             byte[] requestBody,
             out List<KeyValuePair<string, string>> responseHeaders,
-            out byte[] responseBody)
+            out byte[] responseBody,
+            out string responseStatusDescription)
         {
 
             var wr = new WorkerRequest(requestFilePath, requestPathInfo,
@@ -94,6 +95,7 @@ namespace Plasma.Core
 
             responseHeaders = wr.ResponseHeaders;
             responseBody = wr.ResponseBody;
+            responseStatusDescription = wr.ResponseStatusDescription;
             return wr.ResponseStatus;
         }
 
