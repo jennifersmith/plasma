@@ -109,7 +109,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Html5ElementsController.cs" />
     <Compile Include="Controllers\HttpContextController.cs" />
-    <Compile Include="Controllers\PostController.cs" />
+    <Compile Include="Controllers\AllTheVerbsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -118,6 +118,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Views\AllTheVerbs\Trace.aspx" />
+    <Content Include="Views\AllTheVerbs\Options.aspx" />
+    <Content Include="Views\AllTheVerbs\Head.aspx" />
+    <Content Include="Views\AllTheVerbs\Get.aspx" />
+    <Content Include="Views\AllTheVerbs\Delete.aspx" />
+    <Content Include="Views\AllTheVerbs\Patch.aspx" />
+    <Content Include="Views\AllTheVerbs\Put.aspx" />
     <Content Include="Views\Cookies\Expire.aspx" />
     <Content Include="Views\Cookies\Set.aspx" />
     <Content Include="Views\Cookies\SetMany.aspx" />
@@ -133,7 +140,7 @@
     <Content Include="Views\GotoPage\Index.aspx" />
     <Content Include="Views\GotoPage\OtherPage.aspx" />
     <Content Include="Views\Html5Elements\Index.aspx" />
-    <Content Include="Views\Post\Data.aspx" />
+    <Content Include="Views\AllTheVerbs\Post.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
