@@ -16,7 +16,6 @@ namespace Plasma.HttpClient.Extensions
                 ReasonPhrase = response.Status.ToString()
             };
 
-
             foreach (var item in response.Headers)
             {
                 try
