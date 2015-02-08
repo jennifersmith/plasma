@@ -46,22 +46,22 @@ namespace Plasma.HttpClient.Test.Unit
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
-        //[Test]
-        //public void CanPostData()
-        //{
-        //    var client = PlasmaClient.For<MvcApplication>();
-        //    var randomData = Guid.NewGuid().ToString();
+        [Test]
+        public void CanPostData()
+        {
+            var client = PlasmaClient.For<MvcApplication>();
+            var randomData = Guid.NewGuid().ToString();
 
-        //    var response =
-        //        client.PostAsync("/Post/Data", new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
-        //        {
-        //            new KeyValuePair<string, string>("value", randomData)
-        //        })).Result;
+            var response =
+                client.PostAsync("/Post/Data", new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("value", randomData)
+                })).Result;
 
-        //    var responseBody = response.Content.ReadAsStringAsync().Result;
+            var responseBody = response.Content.ReadAsStringAsync().Result;
 
-        //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        //    Assert.That(responseBody, Is.StringContaining(randomData));
-        //}
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(responseBody, Is.StringContaining(randomData));
+        }
     }
 }
