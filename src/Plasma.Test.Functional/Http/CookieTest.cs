@@ -21,8 +21,6 @@ namespace Plasma.Test.Functional.Http
 {
     public class CookieTest
     {
-        readonly Uri uri = new Uri("http://localhost");
-
         [Test]
         public void ShouldBeAbleToSendCookiesToHost()
         {
