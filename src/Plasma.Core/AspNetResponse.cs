@@ -26,7 +26,7 @@ namespace Plasma.Core
         private readonly IEnumerable<KeyValuePair<string, string>> _headers;
         private readonly string _hashUri;
 
-        internal AspNetResponse(string requestVirtualPath, string queryString, string hashUri, int status, IEnumerable<KeyValuePair<string, string>> headers, byte[] body, string responseStatusDescrption) 
+        public AspNetResponse(string requestVirtualPath, string queryString, string hashUri, int status, IEnumerable<KeyValuePair<string, string>> headers, byte[] body, string responseStatusDescrption) 
         {
             RequestVirtualPath = requestVirtualPath;
             QueryString = queryString;

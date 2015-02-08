@@ -53,8 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PlasmaMessageHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PlasmaClientTests.cs" />
+    <Compile Include="TestDoubles\FakeAspNetApp.cs" />
+    <Compile Include="TestDoubles\TestPlasmaHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
