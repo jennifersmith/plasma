@@ -42,5 +42,32 @@ namespace Plasma.HttpClient.Test.Unit
             Assert.That(_fakeAspNetApp.LastRequest.Headers.Any(x => x.Key == "ContentHeader1"));
             Assert.That(_fakeAspNetApp.LastRequest.Headers.Single(x => x.Key == "ContentHeader1").Value, Is.EqualTo("one"));
         }
+
+        [Test]
+        public void SendAsync_WithBody_CreatesRequestWithIdenticalByteArrayBody()
+        {
+            var msgBody = new byte[] {1, 2, 3, 4};
+            _msg.Content = new ByteArrayContent(msgBody);
+
+            _handler.InvokeInternalSendAsync(_msg);
+
+            Assert.That(_fakeAspNetApp.LastRequest.Body, Is.EqualTo(msgBody));
+        }
+
+        [Test]
+        public void SendAsync_ValidRequest_RequestIsMappedIntoReturnedResponse()
+        {
+            var response = _handler.InvokeInternalSendAsync(_msg);
+
+            Assert.That(response.Result.RequestMessage, Is.EqualTo(_msg));
+        }
+
+        [Test]
+        public void SendAsync_ValidRequest_VersionIsMappedFromRequest()
+        {
+            var response = _handler.InvokeInternalSendAsync(_msg);
+
+            Assert.That(response.Result.Version, Is.EqualTo(_msg.Version));
+        }
     }
 }
