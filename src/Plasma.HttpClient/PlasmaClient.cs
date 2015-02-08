@@ -22,9 +22,7 @@ namespace Plasma.HttpClient
 
         private static System.Net.Http.HttpClient BuildClient(IRequestProcessor app)
         {
-            var messageHandler = new PlasmaMessageHandler(app);
-            var client = new System.Net.Http.HttpClient(messageHandler) {BaseAddress = new Uri("http://localhost")};
-            return client;
+            return new System.Net.Http.HttpClient(new PlasmaMessageHandler(app)) {BaseAddress = new Uri("http://localhost")};
         }
     }
 }

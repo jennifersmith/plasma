@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using NUnit.Framework;
+using Plasma.Http;
 using Plasma.HttpClient.Test.Unit.TestDoubles;
 
 namespace Plasma.HttpClient.Test.Unit
@@ -68,6 +71,16 @@ namespace Plasma.HttpClient.Test.Unit
             var response = _handler.InvokeInternalSendAsync(_msg);
 
             Assert.That(response.Result.Version, Is.EqualTo(_msg.Version));
+        }
+
+        [Test]
+        public void SendAsync_ValidRequest_CookiesAreMappedToRequest()
+        {
+            _msg.Headers.Add("Cookie", "cookie1=value1; cookie2=value2");
+
+            _handler.InvokeInternalSendAsync(_msg);
+
+            Assert.That(_fakeAspNetApp.LastRequest.Headers.Any(x=>x.Key == "Cookie"));
         }
     }
 }

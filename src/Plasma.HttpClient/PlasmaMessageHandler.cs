@@ -32,7 +32,7 @@ namespace Plasma.HttpClient
                                                   request.Method.ToString(),
                                                   requestHeaders,
                                                   body);
-
+            
             var response = _application.ProcessRequest(aspNetRequest).ToHttpResponseMessage();
             response.RequestMessage = request;
             response.Version = request.Version;
